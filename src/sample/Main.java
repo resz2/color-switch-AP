@@ -7,7 +7,9 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.BoundingBox;
 import javafx.scene.Group;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -17,6 +19,7 @@ import javafx.scene.shape.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -28,6 +31,9 @@ public class Main extends Application {
     Group obstacle5;
     Group obstacle6;
     Group obstacle7;
+    public boolean cameraMoving = false;
+    double velocity = 0; //Step on y
+    BoundingBox ballBounds = new BoundingBox(375,755,30,30);
     public Group obstacleMaker(){
         Group obstacle = new Group();
         Path path = new Path();
@@ -116,132 +122,98 @@ public class Main extends Application {
     }
     @Override
     public void start(Stage stage) throws Exception, InterruptedException{
-        Stop[] stops = new Stop[] { new Stop(0, Color.DARKGREY), new Stop(1, Color.BLACK)};
-        LinearGradient linear = new LinearGradient(0, 0, 1, 0, true, CycleMethod.NO_CYCLE, stops);
         Pane canvas = new Pane();
         Scene scene = new Scene(canvas, 800, 800, Color.BLACK);
-        scene.setFill(linear);
-        obstacle = this.obstacleMaker();
-        obstacle2 = this.obstacleMaker();
-        obstacle3 = this.obstacleMaker();
-        obstacle4 = this.obstacleMaker();
-        obstacle5 = this.obstacleMaker();
-        obstacle6 = this.obstacleMaker();
-        obstacle7 = this.obstacleMaker();
+        ArrayList<CircularObstacle> circularObstacleArrayList = new ArrayList<CircularObstacle>();
+        for (int i=0;i<5;i++){
+            CircularObstacle obs = new CircularObstacle(85,110,400,400);
+            circularObstacleArrayList.add(obs);
+        }
+        for(int i=0;i<circularObstacleArrayList.size();i++){
+            circularObstacleArrayList.get(i).create();
+            circularObstacleArrayList.get(i).setyCoordinate(-400*i);
+            canvas.getChildren().add(circularObstacleArrayList.get(i).obstacle);
+        }
         Circle ball = new Circle(15, Color.YELLOW);
         ball.relocate(385, 770);
-
-        obstacle.setLayoutX(-100) ;
-                obstacle.setLayoutY(0);
-                obstacle2.setLayoutX(100);
-                obstacle2.setLayoutY(0);
-                obstacle3.setLayoutY(-500);
-        obstacle4.setLayoutY(-1000);
-        obstacle5.setLayoutY(-1500);
-        obstacle6.setLayoutY(-2000);
-        obstacle7.setLayoutY(-2500);
-
-
         canvas.getChildren().add(ball);
-        canvas.getChildren().add(obstacle);
-        canvas.getChildren().add(obstacle2);
-        canvas.getChildren().add(obstacle3);
-        canvas.getChildren().add(obstacle4);
-        canvas.getChildren().add(obstacle5);canvas.getChildren().add(obstacle6);
-        canvas.getChildren().add(obstacle7);
 
         stage.setTitle("Animated Ball");
+
         stage.setScene(scene);
         stage.show();
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(20),
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16.67),
                 new EventHandler<ActionEvent>() {
-                    double velocity = 4; //Step on y
+
                     @Override
                     public void handle(ActionEvent t) {
+                        velocity+=0.4;
                         ball.setLayoutY(ball.getLayoutY() + velocity);
-//                        camera.setOnBall(ball);
+                        ballBounds = new BoundingBox(375,ball.getLayoutY(),30,30);
                     }
                 }));
         timeline.setCycleCount(Timeline.INDEFINITE);
-        Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(1),
+
+        Timeline moveCameraTimeline = new Timeline(new KeyFrame(Duration.millis(2),
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
-                        ball.setLayoutY(ball.getLayoutY() - 1);
+                        for(int i=0;i<circularObstacleArrayList.size();i++) {
+                            circularObstacleArrayList.get(i).setyCoordinate(0.1);
+                        }
                     }
-                }));
-        moveTimeline.setCycleCount(60);
-        Timeline moveCameraTimeline = new Timeline(new KeyFrame(Duration.millis(4),
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent t) {
-                        obstacle.setLayoutY(obstacle.getLayoutY()+1);
-                        obstacle2.setLayoutY(obstacle2.getLayoutY()+1);
-                        obstacle3.setLayoutY(obstacle3.getLayoutY()+1);
-                        obstacle4.setLayoutY(obstacle4.getLayoutY()+1);
-                        obstacle5.setLayoutY(obstacle5.getLayoutY()+1);
-                        obstacle6.setLayoutY(obstacle6.getLayoutY()+1);
-                        obstacle7.setLayoutY(obstacle7.getLayoutY()+1);
-                        ball.setLayoutY(ball.getLayoutY()+1);
-                    }
+
                 }));
         moveCameraTimeline.setCycleCount(100);
-        Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
+         Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
-                        obstacle.setRotate(obstacle.getRotate()+5);
-                        obstacle2.setRotate(obstacle2.getRotate()-4);
-                        obstacle3.setRotate(obstacle3.getRotate()+5);
-                        obstacle4.setRotate(obstacle4.getRotate()+5);
-                        obstacle5.setRotate(obstacle5.getRotate()+5);
-                        obstacle6.setRotate(obstacle6.getRotate()+5);
-                        obstacle7.setRotate(obstacle7.getRotate()+5);
-
+                        for(int i=0;i<circularObstacleArrayList.size();i++){
+                            circularObstacleArrayList.get(i).setAngleOfRotation(5);
+                        }
                     }
                 }));
         rotateTimeline.setCycleCount(Timeline.INDEFINITE);
         rotateTimeline.play();
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event->{
             if (event.getCode() == KeyCode.SPACE) {
-
-                try {
-                    this.moveBall(ball,timeline, moveTimeline);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                timeline.play();
+                velocity=-6;
             }
         });
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
-                if(ball.getLayoutY()<= 450){
-                    System.out.println("Kaboom baby");
+                if(ball.getLayoutY()<= 400 && !cameraMoving){
                     moveCamera(timeline,moveCameraTimeline);
                 }
             }
         };
-        timer.scheduleAtFixedRate(task,100,500);
-    }
-    public void moveBall(Circle ball, Timeline gravityTimeline, Timeline moveTimeline) throws InterruptedException{
-        gravityTimeline.pause();
-        moveTimeline.play();
-        moveTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+        timer.scheduleAtFixedRate(task,100,250);
+        Timer collisionTimer = new Timer();
+        TimerTask task1 = new TimerTask() {
             @Override
-            public void handle(ActionEvent t) {
-                gravityTimeline.play();
+            public void run() {
+
+                for(int i=0;i<circularObstacleArrayList.size();i++){
+                    if(circularObstacleArrayList.get(i).collidesInner(ballBounds) || circularObstacleArrayList.get(i).collidesOuter(ballBounds)){
+                        System.out.println("Kaboom ?");
+                    }
+                }
             }
-        });
+        };
+        collisionTimer.scheduleAtFixedRate(task1,100,100);
     }
     public void moveCamera(Timeline gravityTimeline, Timeline moveCameraTimeline) {
-        gravityTimeline.pause();
+        cameraMoving = true;
         moveCameraTimeline.play();
         moveCameraTimeline.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                gravityTimeline.play();
+                cameraMoving = false;
             }
         });
     }
