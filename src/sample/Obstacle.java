@@ -8,49 +8,83 @@ import javafx.scene.shape.*;
 abstract class Obstacle {
     protected Group obstacle;
     protected int angleOfRotation;
-    protected BoundingBox BboxOuter, BboxInner;
+    protected Rectangle BboxOuter, BboxInner;
+    int rotationsCount=0;
     protected double distInner, distOuter, yCoordinate, xCoordinate;
     public Obstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
         this.distInner = distInner;
         this.distOuter = distOuter;
         this.yCoordinate = yCoordinate;
         this.xCoordinate = xCoordinate;
-        this.BboxInner = new BoundingBox(this.distInner,this.yCoordinate-this.distInner,2*this.distInner,2*this.distInner);
-        this.BboxOuter = new BoundingBox(this.distOuter,this.yCoordinate-this.distOuter,2*this.distOuter,2*this.distOuter);
+        this.BboxInner = new Rectangle(this.xCoordinate-this.distInner,this.yCoordinate-this.distInner,this.distInner*2,this.distInner*2);
+        this.BboxOuter = new Rectangle(this.xCoordinate-this.distOuter,this.yCoordinate-this.distOuter,this.distOuter*2,this.distOuter*2);
     }
-    public boolean collidesInner(BoundingBox b){
-        return this.BboxInner.intersects(b.getMinX(),b.getMinY(),b.getWidth(),b.getHeight());
+    public boolean collidesInner(Rectangle b){
+        return b.getBoundsInParent().intersects(this.BboxInner.getBoundsInParent());
+
     }
-    public boolean collidesOuter(BoundingBox b) {
-        System.out.println(b.getMinY());
-        return this.BboxOuter.intersects(b.getMinX(), b.getMinY(), b.getWidth(), b.getHeight());
+    public boolean collidesOuter(Rectangle b) {
+
+        return b.getBoundsInParent().intersects(this.BboxOuter.getBoundsInParent());
+    }
+    public boolean colorMatch (int color, boolean inside){
+        int flip = inside ? 180:0;
+        boolean match=false;
+        switch(color){
+            case 0:
+                if(this.getAngleOfRotation()>(0-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(90-flip)+(this.rotationsCount)*360){
+                    match=true;
+                }
+                break;
+            case 1:
+                if(this.getAngleOfRotation()>(90-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(180-flip)+(this.rotationsCount)*360){
+                    match=true;
+                }
+                break;
+            case 2:
+                if(this.getAngleOfRotation()>(180-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(270-flip)+(this.rotationsCount)*360){
+                    match=true;
+                }
+                break;
+            case 3:
+                if(this.getAngleOfRotation()>(270-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(360-flip)+(this.rotationsCount)*360){
+                    match=true;
+                }
+                break;
+            default:
+                break;
+        }
+        return match;
     }
     public abstract void create();
-    public int getAngleOfRotation(){
-        return this.angleOfRotation;
+    public double getAngleOfRotation(){
+        return this.obstacle.getRotate();
     }
     public void setAngleOfRotation(double rotateBy){
         this.obstacle.setRotate(this.obstacle.getRotate()+rotateBy);
+        if(this.getAngleOfRotation()%360==0){
+            this.rotationsCount+=1;
+        }
     }
     public void setyCoordinate(double val){
         this.obstacle.setLayoutY(this.obstacle.getLayoutY()+val);
-
+        this.yCoordinate = this.obstacle.getLayoutY();
+        this.BboxInner = new Rectangle(this.xCoordinate-this.distInner,this.yCoordinate-this.distInner,this.distInner*2,this.distInner*2);
+        this.BboxOuter = new Rectangle(this.xCoordinate-this.distOuter,this.yCoordinate-this.distOuter,this.distOuter*2,this.distOuter*2);
     }
 }
 
 class CircularObstacle extends Obstacle{
     public CircularObstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
         super(distInner,distOuter,yCoordinate, xCoordinate);
-        this.BboxInner = new BoundingBox(this.distInner,this.yCoordinate-this.distInner,2*this.distInner,2*this.distInner);
-        this.BboxInner = new BoundingBox(this.distOuter,this.yCoordinate-this.distOuter,2*this.distOuter,2*this.distOuter);
     }
     @Override
-    public boolean collidesInner(BoundingBox b) {
+    public boolean collidesInner(Rectangle b) {
         return super.collidesInner(b);
     }
 
     @Override
-    public boolean collidesOuter(BoundingBox b) {
+    public boolean collidesOuter(Rectangle b) {
         return super.collidesOuter(b);
     }
     public Group getObstacle(){
@@ -69,7 +103,7 @@ class CircularObstacle extends Obstacle{
         ArcTo arcToInner = new ArcTo();
         arcToInner.setX(this.yCoordinate);
         arcToInner.setY(this.yCoordinate-this.distInner);
-        arcToInner.setRadiusX(this.distInner);
+         arcToInner.setRadiusX(this.distInner);
         arcToInner.setRadiusY(this.distInner);
 
         MoveTo moveTo2 = new MoveTo();
