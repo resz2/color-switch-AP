@@ -19,10 +19,12 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,6 +32,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class Main extends Application {
+    PerspectiveCamera cam = new PerspectiveCamera(true);
     int closestObsIndex=0;
     Obstacle closestObstacle;
     public boolean cameraMoving = false;
@@ -39,27 +42,38 @@ public class Main extends Application {
         Pane canvas = new Pane();
         Scene scene = new Scene(canvas, 800, 800, Color.BLACK);
         Ball ball = new Ball(400,785,3);
-        ArrayList<CircularObstacle> circularObstacleArrayList = new ArrayList<CircularObstacle>();
+        ArrayList<Obstacle> circularObstacleArrayList = new ArrayList<Obstacle>();
         ArrayList<Star> StarArrayList = new ArrayList<Star>();
-        for (int i=0;i<10;i++){
-            CircularObstacle obs = new CircularObstacle(85,110,400,400);
-            circularObstacleArrayList.add(obs);
+        for (int i=0;i<9;i++){
+            if(i%3==4){
+                CrossObstacle obs = new CrossObstacle(400,500);
+                circularObstacleArrayList.add(obs);
+            }
+            else if (i%3==1){
+                SquareObstacle obs = new SquareObstacle(110,135,400,400);
+                circularObstacleArrayList.add(obs);
+            }
+//            else{
+//                CircularObstacle obs = new CircularObstacle(125,150,400,400);
+//                circularObstacleArrayList.add(obs);
+//            }
+
         }
 
         for(int i=0;i<circularObstacleArrayList.size();i++){
             circularObstacleArrayList.get(i).create();
-            circularObstacleArrayList.get(i).setyCoordinate(-400*i);
+            circularObstacleArrayList.get(i).setyCoordinate(-500*i);
             canvas.getChildren().add(circularObstacleArrayList.get(i).obstacle);
         }
-        for(int i=0;i<1;i++){
+        for(int i=0;i<5;i++){
             Star star = new Star(400,400);
             StarArrayList.add(star);
             canvas.getChildren().add(StarArrayList.get(i).starBody);
         }
-//        for(int i=0;i<StarArrayList.size();i++){
-//            StarArrayList.get(i).setyCoordinate(-400*i);
-//            System.out.println(StarArrayList.get(i).Bbox.getBoundsInLocal());
-//        }
+        for(int i=0;i<StarArrayList.size();i++){
+            StarArrayList.get(i).setyCoordinate(-400*i);
+            System.out.println(StarArrayList.get(i).Bbox.getBoundsInLocal());
+        }
         closestObstacle = circularObstacleArrayList.get(closestObsIndex);
 
         canvas.getChildren().add(ball.ballBody);
@@ -85,6 +99,7 @@ public class Main extends Application {
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
+
                         for(int i=0;i<circularObstacleArrayList.size();i++) {
                             circularObstacleArrayList.get(i).setyCoordinate(0.3);
                         }
@@ -100,17 +115,18 @@ public class Main extends Application {
                     @Override
                     public void handle(ActionEvent t) {
                         for(int i=0;i<circularObstacleArrayList.size();i++){
-                            circularObstacleArrayList.get(i).setAngleOfRotation(5);
+                            circularObstacleArrayList.get(i).setAngleOfRotation(2.5);
                         }
 
                     }
                 }));
         rotateTimeline.setCycleCount(Timeline.INDEFINITE);
         rotateTimeline.play();
+
         scene.addEventFilter(KeyEvent.KEY_PRESSED, event->{
             if (event.getCode() == KeyCode.SPACE) {
                 timeline.play();
-                velocity=-6;
+                velocity=-7;
             }
         });
         Timer timer = new Timer();
@@ -119,9 +135,6 @@ public class Main extends Application {
             public void run() {
                 if(ball.getyCoordinate()<= 400 && !cameraMoving){
                     moveCamera(timeline,moveCameraTimeline);
-                                            System.out.println(StarArrayList.get(0).Bbox.getBoundsInLocal());
-                                            System.out.println();
-                                            System.out.println();
 //                    for(int i=0;i<StarArrayList.size();i++){
 //                        System.out.println(StarArrayList.get(i).Bbox.getBoundsInParent());
 //                    }
@@ -129,7 +142,7 @@ public class Main extends Application {
                 }
             }
         };
-        timer.scheduleAtFixedRate(task,100,250);
+        timer.scheduleAtFixedRate(task,100,100);
         Timer collisionTimer = new Timer();
         TimerTask task1 = new TimerTask() {
             @Override
@@ -137,8 +150,9 @@ public class Main extends Application {
 
                 if(!closestObstacle.collidesInner(ball.Bbox) && closestObstacle.collidesOuter(ball.Bbox)){
                     if(!closestObstacle.colorMatch(2,ball.isInsideObstacle)){
-//                        System.exit(0);
-                        System.out.println("Game Over");
+
+                       System.exit(0);
+                        //System.out.println("Game Over");
                     }
                 }
                 else if (closestObstacle.collidesInner(ball.Bbox) && closestObstacle.collidesOuter(ball.Bbox)){
@@ -153,10 +167,8 @@ public class Main extends Application {
                 }
 //                        for(int i=0;i<StarArrayList.size();i++){
 //                            if(StarArrayList.get(i).checkCollision(ball.Bbox)){
-//                                System.out.println(StarArrayList.get(i).Bbox.getBoundsInParent() );
 //                                System.out.println("Scoreee");
 //                                StarArrayList.get(i).showAnimation();
-//                                StarArrayList.remove(i);
 //                            }
 //                        }
 
