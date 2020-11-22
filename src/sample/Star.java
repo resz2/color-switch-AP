@@ -2,6 +2,7 @@ package sample;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
 
@@ -18,28 +19,27 @@ public class Star {
     public Star(double xCoordinate, double yCoordinate) throws FileNotFoundException {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        this.Bbox = new Rectangle(this.xCoordinate-25,this.yCoordinate-25,50,50);
+        this.Bbox = new Rectangle(this.xCoordinate-20,this.yCoordinate-20,40,40);
         this.create();
     }
     public void create() throws FileNotFoundException {
-        InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Downloads\\star.png");
+        InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\star.png");
         Image image = new Image(stream);
         starBody = new ImageView();
         starBody.setImage(image);
-        starBody.setX(this.xCoordinate-25);
-        starBody.setY(this.yCoordinate-25);
-        starBody.setFitWidth(50);
+        starBody.setX(this.xCoordinate-20);
+        starBody.setY(this.yCoordinate-20);
+        starBody.setFitWidth(40);
         starBody.setPreserveRatio(true);
     }
     public void setyCoordinate(double val){
-        this.Bbox = new Rectangle(this.xCoordinate-25,this.Bbox.getLayoutY()+val,50,50);
+        this.Bbox = new Rectangle(this.xCoordinate-20,this.Bbox.getLayoutY()+val,20,20);
         this.starBody.setLayoutY(this.starBody.getLayoutY()+val);
         this.yCoordinate = this.starBody.getLayoutY();
 
     }
-    public boolean checkCollision(Rectangle b){
-//        System.out.println(this.Bbox.getBoundsInParent());
-        return b.getBoundsInParent().intersects(this.Bbox.getBoundsInParent());
+    public boolean checkCollision(Circle b){
+        return starBody.getBoundsInParent().intersects(b.getBoundsInParent());
     }
     public void showAnimation(){
         this.starBody.setOpacity(0);

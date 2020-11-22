@@ -29,18 +29,18 @@ public class Ball {
                 ballColor = Color.WHITE;
                 break;
         }
-        ballBody = new Circle(15, ballColor);
+        ballBody = new Circle(10, ballColor);
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.ballBody.setLayoutY(yCoordinate);
         this.ballBody.setLayoutX(xCoordinate);
         this.ballBody.setTranslateZ(0);
-        this.Bbox = new Rectangle(this.xCoordinate-15,this.yCoordinate-15,30,30);
+        this.Bbox = new Rectangle(this.xCoordinate-15,this.yCoordinate-15,20,20);
     }
     public void setyCoordinate(double val) {
         this.ballBody.setLayoutY(this.ballBody.getLayoutY()+val);
         this.yCoordinate = this.ballBody.getLayoutY();
-        this.Bbox = new Rectangle(this.xCoordinate-15,this.yCoordinate-15,30,30);
+        this.Bbox = new Rectangle(this.xCoordinate-15,this.yCoordinate-15,20,20);
     }
     public double getyCoordinate(){
         return this.ballBody.getLayoutY();
