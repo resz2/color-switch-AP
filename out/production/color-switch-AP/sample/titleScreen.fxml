@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<?import java.net.URL?>
+<?import javafx.scene.Cursor?>
+<AnchorPane fx:id="titleBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: black;"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TitleController" styleClass="titleScreen">
+   <ImageView fitHeight="600.0" fitWidth="450.0" opacity="0.45" pickOnBounds="true" preserveRatio="true" fx:id="background">
+      <image>
+         <Image url="@../assets/titlebg.jpg" />
+      </image>
+   </ImageView>
+<!--   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#272727" height="600.0" layoutY="1.0" stroke="BLACK"-->
+<!--              strokeType="INSIDE" width="450.0"/>-->
+
+   <Label alignment="CENTER" layoutX="57.0" layoutY="44.0" prefHeight="213.0" prefWidth="336.0"
+          text="C    L    R&#10;SWITCH" textAlignment="CENTER" textFill="WHITE" fx:id="heading">
+      <font>
+         <Font size="72.0"/>
+      </font>
+   </Label>
+   <ImageView fx:id="tcircle1" fitHeight="60.0" fitWidth="60.0" layoutX="137.0" layoutY="68.0" pickOnBounds="true"
+              preserveRatio="true" styleClass="o">
+      <Image url="@../assets/o2.png"/>
+   </ImageView>
+   <ImageView fx:id="tcircle2" fitHeight="60.0" fitWidth="60.0" layoutX="249.0" layoutY="68.0" pickOnBounds="true"
+              preserveRatio="true" styleClass="o">
+      <Image url="@../assets/o2.png"/>
+   </ImageView>
+   <ImageView fx:id="playButton" fitHeight="100.0" fitWidth="100.0" layoutX="175" layoutY="300"
+              pickOnBounds="true" preserveRatio="true">
+      <Image url="@../assets/play.png"/>
+   </ImageView>
+   <Label fx:id="playLabel" alignment="CENTER" layoutX="150" layoutY="300" prefHeight="100" prefWidth="250"
+          text="Play" textAlignment="CENTER" textFill="WHITE" opacity="0" onMouseExited="#exit" onMouseEntered="#enter" onMouseClicked="#mainMenu">
+      <font>
+         <Font size="60.0"/>
+      </font>
+   </Label>
+   <Circle layoutX="162.0" layoutY="518.0" onMouseClicked="#choosePlayer" radius="25.0" stroke="BLACK" strokeType="INSIDE">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor></Circle>
+   <ImageView fx:id="userLogo" fitHeight="44.0" fitWidth="40.0" layoutX="142.0" layoutY="498.0" onMouseClicked="#choosePlayer" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../assets/userlogo.png" />
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+   </ImageView>
+   <Circle layoutX="287.0" layoutY="518.0" onMouseClicked="#choosePlayer" radius="25.0" stroke="BLACK" strokeType="INSIDE">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+   </Circle>
+   <ImageView fx:id="infoLogo" fitHeight="44.0" fitWidth="40.0" layoutX="267.0" layoutY="498.0" onMouseClicked="#choosePlayer" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../assets/infologo.png" />
+      </image>
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+   </ImageView>
+<!--   <Circle fx:id="playbutton" layoutX="225.0" layoutY="341.0" onMouseClicked="#mainMenu" radius="55.0" stroke="RED"-->
+<!--           strokeType="INSIDE" strokeWidth="3.0" styleClass="playButton">-->
+<!--      <fill>-->
+<!--         <RadialGradient centerX="0.5" centerY="0.5" radius="0.5">-->
+<!--            <stops>-->
+<!--               <Stop color="#00f2ff"/>-->
+<!--               <Stop color="#2a052c" offset="1.0"/>-->
+<!--            </stops>-->
+<!--         </RadialGradient>-->
+<!--      </fill>-->
+<!--   </Circle>-->
+<!--   <Polygon fx:id="playbutton2" fill="#16ff0572" layoutX="232.0" layoutY="351.0" onMouseClicked="#mainMenu"-->
+<!--            points="-50.0, 40.0, 50.0, 40.0, 0.0, -60.0" rotate="90.0" scaleX="0.6" scaleY="0.6" scaleZ="0.6"-->
+<!--            stroke="RED" strokeLineCap="ROUND" strokeLineJoin="ROUND" strokeType="OUTSIDE" strokeWidth="0.0"/>-->
+   <stylesheets>
+      <URL value="@styles.css"/>
+   </stylesheets>
+</AnchorPane>
+<!--<a href='https://www.freepik.com/vectors/background'>Background vector created by freepik - www.freepik.com</a>-->
+<!--        Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->

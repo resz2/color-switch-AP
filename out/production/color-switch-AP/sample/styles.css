@@ -4,3 +4,9 @@
 .root{
     -fx-background-color: #000000;
 }
+.playButton{
+    -fx-cursor: crosshair;
+}
+.resumeButton{
+    -fx-border-color:#fae100 ; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;
+}
