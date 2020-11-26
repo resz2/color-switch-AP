@@ -29,7 +29,7 @@
            stroke="#900dff" strokeType="INSIDE" fx:id="purpleBall1" opacity="0"/>
    <Circle fill="#900dff" layoutX="281" layoutY="515"  radius="15.0"
            stroke="#900dff" strokeType="INSIDE" fx:id="purpleBall2" opacity="0"/>
-   <Label  fx:id="newGameButton" alignment="CENTER" layoutX="-51" layoutY="277.0" onMouseClicked="#newGame" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color:#fae100 ; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="New Game" textFill="#fae100" onMouseEntered="#enterYellow" onMouseExited="#exitYellow">
+   <Label  fx:id="newGameButton" alignment="CENTER" layoutX="-51" layoutY="277.0" onMouseClicked="#newGameAuxiliary" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color:#fae100 ; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="New Game" textFill="#fae100" onMouseEntered="#enterYellow" onMouseExited="#exitYellow">
       <font>
          <Font name="Lucida Sans Unicode" size="20.0" />
       </font>
