@@ -28,6 +28,7 @@ import javafx.util.Duration;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Timer;
@@ -129,7 +130,75 @@ public class Main extends Application {
         enterTimeline.setCycleCount(100);
         enterTimeline.play();
     }
+    public void exitAnimation(int buttonClicked){
+        Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent t) {
+                        yellowBall1.setOpacity(0);
+                        yellowBall2.setOpacity(0);
+                        pinkBall1.setOpacity(0);
+                        pinkBall2.setOpacity(0);
+                        blueBall1.setOpacity(0);
+                        blueBall2.setOpacity(0);
+                        purpleBall1.setOpacity(0);
+                        purpleBall2.setOpacity(0);
+                        backgroundImage.setOpacity(backgroundImage.getOpacity()-0.004);
+                        heading.setOpacity(heading.getOpacity()-0.01);
+                        heading.setLayoutY(heading.getLayoutY()-1);
+                        tcircle1.setOpacity(tcircle1.getOpacity()-0.01);
+                        tcircle1.setLayoutY(tcircle1.getLayoutY()-1);
+                        tcircle2.setOpacity(tcircle2.getOpacity()-0.01);
+                        tcircle2.setLayoutY(tcircle2.getLayoutY()-1);
+                        newGameButton.setOpacity(newGameButton.getOpacity()-0.01);
+                        newGameButton.setLayoutX(newGameButton.getLayoutX()-2);
+                        loadGameButton.setOpacity(loadGameButton.getOpacity()-0.01);
+                        loadGameButton.setLayoutX(loadGameButton.getLayoutX()+2);
+                        highScoreButton.setOpacity(highScoreButton.getOpacity()-0.01);
+                        highScoreButton.setLayoutX(highScoreButton.getLayoutX()-2);
+                        exitButton.setOpacity(exitButton.getOpacity()-0.01);
+                        exitButton.setLayoutX(exitButton.getLayoutX()+2);
+                    }
+                }));
+        enterTimeline.setCycleCount(200);
+        enterTimeline.play();
+        enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                AnchorPane pane = null;
+                switch(buttonClicked){
+                    case 1:
 
+                        try {
+                            pane = FXMLLoader.load(getClass().getResource("loadScreen.fxml"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        menuBG.getChildren().setAll(pane);
+                        break;
+                    case 2:
+
+                        try {
+                            pane = FXMLLoader.load(getClass().getResource("highScoreScreen.fxml"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        menuBG.getChildren().setAll(pane);
+                        break;
+                    case 3:
+                        try {
+                            newGame();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                }
+            }
+        });
+    }
+    public void newGameAuxiliary(){
+        exitAnimation(3);
+    }
     public void newGame() throws  Exception {
 
         Pane canvas = new Pane();
@@ -393,13 +462,12 @@ public class Main extends Application {
 
     }
     public void loadGame() throws Exception {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("loadScreen.fxml"));
-        menuBG.getChildren().setAll(pane);
+        exitAnimation(1);
     }
 
     public void displayHighScores() throws Exception {
-        AnchorPane pane = FXMLLoader.load(getClass().getResource("highScoreScreen.fxml"));
-        menuBG.getChildren().setAll(pane);
+        exitAnimation(2);
+
     }
     public void enterYellow(){
         if(newGameButton.getLayoutX()<=149){
