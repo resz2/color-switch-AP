@@ -1,4 +1,5 @@
 package sample;
+import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -70,11 +71,12 @@ public class Main extends Application {
     private Label exitButton;
     @FXML
     private Label heading;
-    int closestObsIndex=1;
+    int nextObsIndex=0,prevObsIndex=0;
     int newStarPosition=-600;
-    Obstacle closestObstacle;
+    Animation.Status moveCamTimelineStatus;
+    Obstacle nextObstacle,prevObstacle;
     Star closestStar;
-    Label resumeButton=new Label(),saveButton= new Label(),homeButton = new Label();
+    Label resumeButton=new Label(),saveButton= new Label(),homeButton = new Label(),pauseButton= new Label();
     Rectangle overlay;
     public boolean cameraMoving = false;
     double velocity = 0;
@@ -204,7 +206,7 @@ public class Main extends Application {
         Pane canvas = new Pane();
         InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\pause.png");
         Image image = new Image(stream);
-        Label pauseButton = new Label();
+        pauseButton = new Label();
         ImageView pauseIcon = new ImageView(image);
         pauseButton.setGraphic(pauseIcon);
         pauseButton.setLayoutX(375);
@@ -213,19 +215,19 @@ public class Main extends Application {
         pauseIcon.setFitWidth(50);
         pauseIcon.setPreserveRatio(true);
 
-        canvas.getChildren().add(pauseButton);
-        Ball ball = new Ball(225,550,3);
+        Ball ball = new Ball(225,550,1);
         ArrayList<Obstacle> circularObstacleArrayList = new ArrayList<Obstacle>();
         ArrayList<Star> StarArrayList = new ArrayList<Star>();
         for (int i=0;i<9;i++){
+            //circularObstacleArrayList.add(new CircularObstacle(80,95,300-300*(i),225));
             if(i%3==0){
-                circularObstacleArrayList.add(new CrossObstacle(300-300*(i),275));
+                circularObstacleArrayList.add(new CrossObstacle(300-400*(i),275));
             }
             else if (i%3==1){
-                circularObstacleArrayList.add(new SquareObstacle(80,95,300-300*i,225));
+                circularObstacleArrayList.add(new SquareObstacle(80,95,300-400*i,225));
             }
             else{
-                circularObstacleArrayList.add(new CircularObstacle(80,95,300-300*(i),225));
+                circularObstacleArrayList.add(new CircularObstacle(80,95,300-400*(i),225));
             }
         }
         for(int i=0;i<circularObstacleArrayList.size();i++){
@@ -241,7 +243,8 @@ public class Main extends Application {
             System.out.println(StarArrayList.get(i).Bbox.getBoundsInParent());
             System.out.println(ball.ballBody.getBoundsInParent());
         }
-        closestObstacle = circularObstacleArrayList.get(closestObsIndex);
+        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
+        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
         closestStar = StarArrayList.get(0);
         canvas.getChildren().add(ball.ballBody);
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16.67),
@@ -304,28 +307,17 @@ public class Main extends Application {
         TimerTask task1 = new TimerTask() {
             @Override
             public void run() {
-
-//                if(!closestObstacle.collidesInner(ball.Bbox) && closestObstacle.collidesOuter(ball.Bbox)){
-//                    //System.out.println("Kaboom");
-//                    if(!closestObstacle.colorMatch(2,ball.isInsideObstacle)){
-//
-//                        System.exit(0);
-//                        //System.out.println("Game Over");
-//                    }
-//                }
-//                else if (closestObstacle.collidesInner(ball.Bbox) && closestObstacle.collidesOuter(ball.Bbox)){
-//                    ball.setInsideObstacle(true);
-//                    //System.out.println("Inside");
-//                }
-//                else{
-//                    if(ball.isInsideObstacle){
-//                        System.out.println("Changing");
-//                        closestObsIndex+=1;
-//                        closestObstacle = circularObstacleArrayList.get(closestObsIndex);
-//                        ball.setInsideObstacle(false);
-//                    }
-//
-//                }
+                    if( nextObstacle.collides(ball.ballBody,ball.color)==0 || prevObstacle.collides(ball.ballBody,ball.color)==0 ){
+                            System.exit(0);
+                    }
+                    else if (nextObstacle.collides(ball.ballBody,ball.color)==1){
+                        if(nextObsIndex!=prevObsIndex){
+                            prevObsIndex++;
+                        }
+                        nextObsIndex++;
+                        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
+                        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
+                    }
                 if(closestStar.checkCollision(ball.ballBody)){
                     moveCameraTimeline.pause();
                     closestStar.showAnimation();
@@ -351,43 +343,14 @@ public class Main extends Application {
         };
         collisionTimer.scheduleAtFixedRate(task1,100,10);
         menuBG.getChildren().setAll(canvas);
-        EventHandler<MouseEvent> resumeHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                System.out.println("Clicked Resume");
-                Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),
-                        new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent t) {
-                                overlay.setOpacity(overlay.getOpacity()-0.009);
-                                resumeButton.setOpacity(resumeButton.getOpacity()-0.01);
-                                resumeButton.setLayoutY(resumeButton.getLayoutY()+2);
-                                saveButton.setOpacity(saveButton.getOpacity()-0.01);
-                                saveButton.setLayoutY(saveButton.getLayoutY()+2);
-                                homeButton.setOpacity(homeButton.getOpacity()-0.01);
-                                homeButton.setLayoutY(homeButton.getLayoutY()-2);
-                            }
-                        }));
-                enterTimeline.setCycleCount(100);
-                enterTimeline.play();
-                enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        timeline.play();
-                        rotateTimeline.play();
-                        moveCameraTimeline.play();
-                    }
-                });
-            }
-        };
-        resumeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,resumeHandler);
         EventHandler<MouseEvent> pauseEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                System.out.println("Pause clicked");
                 timeline.pause();
                 rotateTimeline.pause();
+                moveCamTimelineStatus = moveCameraTimeline.getStatus();
                 moveCameraTimeline.pause();
-                System.out.println("Clicked");
                 overlay = new Rectangle(0,0,450,600);
                 overlay.setFill(Color.BLACK);
                 overlay.setOpacity(0);
@@ -457,8 +420,46 @@ public class Main extends Application {
                 enterTimeline.play();
             }
         };
-        pauseButton.addEventFilter(MouseEvent.MOUSE_CLICKED,pauseEventHandler);
+        EventHandler<MouseEvent> resumeHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),
+                        new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent t) {
+                                overlay.setOpacity(overlay.getOpacity()-0.009);
+                                resumeButton.setOpacity(resumeButton.getOpacity()-0.01);
+                                resumeButton.setLayoutY(resumeButton.getLayoutY()+2);
+                                saveButton.setOpacity(saveButton.getOpacity()-0.01);
+                                saveButton.setLayoutY(saveButton.getLayoutY()+2);
+                                homeButton.setOpacity(homeButton.getOpacity()-0.01);
+                                homeButton.setLayoutY(homeButton.getLayoutY()-2);
 
+                            }
+                        }));
+                enterTimeline.setCycleCount(100);
+                enterTimeline.play();
+                enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        canvas.getChildren().remove(resumeButton);
+                        canvas.getChildren().remove(homeButton);
+                        canvas.getChildren().remove(saveButton);
+                        canvas.getChildren().remove(overlay);
+                        timeline.play();
+                        rotateTimeline.play();
+                        if(moveCamTimelineStatus== Animation.Status.RUNNING){
+                            moveCameraTimeline.play();
+                        }
+
+                    }
+                });
+            }
+        };
+        resumeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,resumeHandler);
+
+        pauseButton.addEventFilter(MouseEvent.MOUSE_CLICKED,pauseEventHandler);
+        canvas.getChildren().add(pauseButton);
 
     }
     public void loadGame() throws Exception {
