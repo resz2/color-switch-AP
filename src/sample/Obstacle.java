@@ -8,7 +8,7 @@ import javafx.scene.shape.*;
 abstract class Obstacle {
     protected Group obstacle;
     protected int angleOfRotation;
-    protected Rectangle BboxOuter, BboxInner;
+    protected Path pink,blue,purple,yellow;
     int rotationsCount=0;
     protected double distInner, distOuter, yCoordinate, xCoordinate;
     public Obstacle(){
@@ -19,51 +19,44 @@ abstract class Obstacle {
         this.distOuter = distOuter;
         this.yCoordinate = yCoordinate;
         this.xCoordinate = xCoordinate;
-        this.BboxInner = new Rectangle(this.xCoordinate-this.distInner,this.yCoordinate-this.distInner,this.distInner*2,this.distInner*2);
-        this.BboxOuter = new Rectangle(this.xCoordinate-this.distOuter,this.yCoordinate-this.distOuter,this.distOuter*2,this.distOuter*2);
-        //this.BboxOuter.setStroke(Color.LIGHTBLUE);
-        //this.BboxOuter.setFill(Color.TRANSPARENT);
     }
-    public boolean collidesInner(Rectangle b){
-        return b.getBoundsInParent().intersects(this.BboxInner.getBoundsInParent());
-
-    }
-    public boolean collidesOuter(Rectangle b) {
-
-        return b.getBoundsInParent().intersects(this.BboxOuter.getBoundsInParent());
-    }
-    public boolean colorMatch (int color, boolean inside){
-        int flip = inside ? 180:0;
-        boolean match=false;
+    public int collides(Circle ball, int color){
         switch(color){
-            case 0:
-                if(this.getAngleOfRotation()>(0-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(90-flip)+(this.rotationsCount)*360){
-                    System.out.println("Green");
-                    match=true;
-                }
-                break;
             case 1:
-                if(this.getAngleOfRotation()>(90-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(180-flip)+(this.rotationsCount)*360){
-                    System.out.println("Red");
-                    match=true;
+                if (Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+                    return 0;
                 }
-                break;
+                else if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1){
+                    return 1;
+                }
+                return 2;
             case 2:
-                if(this.getAngleOfRotation()>(180-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(270-flip)+(this.rotationsCount)*360){
-                    //System.out.println("Yellow");
-                    match=true;
+                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+                    return  0;
                 }
-                break;
+                else if (Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1){
+                    return 1;
+                }
+                return 2;
             case 3:
-                if(this.getAngleOfRotation()>(270-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(360-flip)+(this.rotationsCount)*360){
-                    System.out.println("Blue");
-                    match=true;
+                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1){
+                    return  0;
                 }
-                break;
-            default:
-                break;
+                else if (Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+                    return 1;
+                }
+                return 2;
+            case 4:
+                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+                    return  0;
+                }
+                else if (Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1){
+                    return 1;
+                }
+                return 2;
+
         }
-        return match;
+        return 2;
     }
     public abstract void create();
     public double getAngleOfRotation(){
@@ -78,24 +71,19 @@ abstract class Obstacle {
     public void setyCoordinate(double val){
         this.obstacle.setLayoutY(this.obstacle.getLayoutY()+val);
         this.yCoordinate = this.obstacle.getLayoutY();
-        this.BboxInner = new Rectangle(this.xCoordinate-this.distInner,this.yCoordinate-this.distInner,this.distInner*2,this.distInner*2);
-        this.BboxOuter = new Rectangle(this.xCoordinate-this.distOuter,this.yCoordinate-this.distOuter,this.distOuter*2,this.distOuter*2);
     }
 }
 
 class CircularObstacle extends Obstacle{
+
     public CircularObstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
         super(distInner,distOuter,yCoordinate, xCoordinate);
     }
     @Override
-    public boolean collidesInner(Rectangle b) {
-        return super.collidesInner(b);
+    public int collides(Circle ball,int color) {
+       return super.collides(ball,color);
     }
 
-    @Override
-    public boolean collidesOuter(Rectangle b) {
-        return super.collidesOuter(b);
-    }
     public Group getObstacle(){
         return this.obstacle;
     }
@@ -138,6 +126,7 @@ class CircularObstacle extends Obstacle{
         path.getElements().add(hLineToLeftLeg);
 
         obstacle.getChildren().add(path);
+
         Path path2 = new Path();
         path2.setFill(Color.web("#900dff"));
         path2.setFillRule(FillRule.EVEN_ODD);
@@ -180,6 +169,10 @@ class CircularObstacle extends Obstacle{
         path4.setScaleX(-1);
         path4.setScaleY(-1);
         obstacle.getChildren().add(path4);
+        this.blue = path4;
+        this.yellow = path3;
+        this.pink = path;
+        this.purple = path2;
         this.obstacle = obstacle;
     }
 }
@@ -188,14 +181,10 @@ class SquareObstacle extends Obstacle{
         super(distInner,distOuter,yCoordinate, xCoordinate);
     }
     @Override
-    public boolean collidesInner(Rectangle b) {
-        return super.collidesInner(b);
+    public int  collides(Circle ball,int color) {
+        return super.collides(ball,color);
     }
 
-    @Override
-    public boolean collidesOuter(Rectangle b) {
-        return super.collidesOuter(b);
-    }
     public Group getObstacle(){
         return this.obstacle;
     }
@@ -283,6 +272,10 @@ class SquareObstacle extends Obstacle{
         path4.setScaleX(-1);
         path4.setScaleY(-1);
         obstacle.getChildren().add(path4);
+        this.blue = path4;
+        this.yellow = path3;
+        this.pink = path;
+        this.purple = path2;
         this.obstacle = obstacle;
     }
 }
@@ -293,13 +286,8 @@ class CrossObstacle extends Obstacle{
         this.yCoordinate = yCoordinate;
     }
     @Override
-    public boolean collidesInner(Rectangle b) {
-        return super.collidesInner(b);
-    }
-
-    @Override
-    public boolean collidesOuter(Rectangle b) {
-        return super.collidesOuter(b);
+    public int collides(Circle ball,int color) {
+        return super.collides(ball,color);
     }
     public Group getObstacle(){
         return this.obstacle;
@@ -385,6 +373,10 @@ class CrossObstacle extends Obstacle{
         path4.setScaleY(-1);
         path4.setRotate(90);
         obstacle.getChildren().add(path4);
+        this.blue = path4;
+        this.yellow = path3;
+        this.pink = path;
+        this.purple = path2;
         this.obstacle = obstacle;
     }
 }
