@@ -1,8 +1,13 @@
 package sample;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class Ball {
     protected double xCoordinate,yCoordinate;
@@ -47,5 +52,6 @@ public class Ball {
     public double getyCoordinate(){
         return this.ballBody.getLayoutY();
     }
+
 
 }
