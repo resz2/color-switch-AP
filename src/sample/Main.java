@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -23,6 +24,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -76,7 +79,7 @@ public class Main extends Application {
     Animation.Status moveCamTimelineStatus;
     Obstacle nextObstacle,prevObstacle;
     Star closestStar;
-    Label resumeButton=new Label(),saveButton= new Label(),homeButton = new Label(),pauseButton= new Label();
+    Label resumeButton=new Label(),saveButton= new Label(),homeButton = new Label(),pauseButton= new Label(),scoreLabel = new Label();
     Rectangle overlay;
     public boolean cameraMoving = false;
     double velocity = 0;
@@ -204,6 +207,7 @@ public class Main extends Application {
     public void newGame() throws  Exception {
 
         Pane canvas = new Pane();
+        //pause icon setup start
         InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\pause.png");
         Image image = new Image(stream);
         pauseButton = new Label();
@@ -214,11 +218,36 @@ public class Main extends Application {
         pauseIcon.setFitHeight(50);
         pauseIcon.setFitWidth(50);
         pauseIcon.setPreserveRatio(true);
-
+        canvas.getChildren().add(pauseButton);
+        //pause icon setup end
+        //score setup start
+        try {
+            stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\silverStar.png");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Image image2 = new Image(stream);
+        ImageView scoreIcon = new ImageView(image2);
+        scoreLabel = new Label("0");
+        scoreLabel.setContentDisplay(ContentDisplay.CENTER);
+        scoreLabel.setTextAlignment(TextAlignment.CENTER);
+        scoreIcon.setFitHeight(50);
+        scoreIcon.setPreserveRatio(true);
+        scoreLabel.setGraphic(scoreIcon);
+        scoreLabel.setLayoutY(30);
+        scoreLabel.setLayoutX(25);
+        Font font = Font.font("Roboto", FontWeight.BOLD,
+                FontPosture.REGULAR, 25);
+        scoreLabel.setFont(font);
+        //Filling color to the label
+        scoreLabel.setTextFill(Color.web("272727"));
+        canvas.getChildren().add(scoreLabel);
+        //score setup end
         Ball ball = new Ball(225,550,1);
+
         ArrayList<Obstacle> circularObstacleArrayList = new ArrayList<Obstacle>();
         ArrayList<Star> StarArrayList = new ArrayList<Star>();
-        for (int i=0;i<9;i++){
+        for (int i=0;i<3;i++){
             //circularObstacleArrayList.add(new CircularObstacle(80,95,300-300*(i),225));
             if(i%3==0){
                 circularObstacleArrayList.add(new CrossObstacle(300-400*(i),275));
@@ -238,10 +267,6 @@ public class Main extends Application {
             Star star = new Star(225,300-300*(i));
             StarArrayList.add(star);
             canvas.getChildren().add(StarArrayList.get(i).starBody);
-        }
-        for(int i=0;i<StarArrayList.size();i++){
-            System.out.println(StarArrayList.get(i).Bbox.getBoundsInParent());
-            System.out.println(ball.ballBody.getBoundsInParent());
         }
         nextObstacle = circularObstacleArrayList.get(nextObsIndex);
         prevObstacle = circularObstacleArrayList.get(prevObsIndex);
@@ -290,7 +315,7 @@ public class Main extends Application {
         canvas.addEventFilter(KeyEvent.KEY_PRESSED, event->{
             if (event.getCode() == KeyCode.SPACE) {
                 timeline.play();
-                velocity=-5;
+                velocity=-6;
             }
         });
         Timer timer = new Timer();
@@ -322,6 +347,9 @@ public class Main extends Application {
                     moveCameraTimeline.pause();
                     closestStar.showAnimation();
                     StarArrayList.remove(closestStar);
+                    int newScore = Integer.parseInt(scoreLabel.getText())+1;
+                    System.out.println(newScore);
+
                     try {
                         Star newStar = new Star(225,newStarPosition);
                         newStarPosition-=300;
@@ -330,6 +358,7 @@ public class Main extends Application {
                             @Override
                             public void run() {
                                 canvas.getChildren().add(newStar.starBody);
+                                scoreLabel.setText(String.valueOf(newScore));
                             }
                         });
                     } catch (FileNotFoundException e) {
@@ -459,7 +488,7 @@ public class Main extends Application {
         resumeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,resumeHandler);
 
         pauseButton.addEventFilter(MouseEvent.MOUSE_CLICKED,pauseEventHandler);
-        canvas.getChildren().add(pauseButton);
+
 
     }
     public void loadGame() throws Exception {

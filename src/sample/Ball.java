@@ -7,11 +7,12 @@ import javafx.scene.shape.Rectangle;
 public class Ball {
     protected double xCoordinate,yCoordinate;
     boolean isInsideObstacle;
+    protected Color ballColor;
     int color;
     protected Circle ballBody;
     protected Rectangle Bbox;
     public  Ball(double xCoordinate, double yCoordinate, int color){
-        Color ballColor;
+
         this.color = color;
         switch(color){
             case 1:
