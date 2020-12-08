@@ -8,7 +8,7 @@ import javafx.scene.shape.*;
 abstract class Obstacle {
     protected Group obstacle;
     protected int angleOfRotation;
-    protected Rectangle BboxOuter, BboxInner;
+    protected Path pink,blue,purple,yellow;
     int rotationsCount=0;
     protected double distInner, distOuter, yCoordinate, xCoordinate;
     public Obstacle(){
@@ -19,51 +19,44 @@ abstract class Obstacle {
         this.distOuter = distOuter;
         this.yCoordinate = yCoordinate;
         this.xCoordinate = xCoordinate;
-        this.BboxInner = new Rectangle(this.xCoordinate-this.distInner,this.yCoordinate-this.distInner,this.distInner*2,this.distInner*2);
-        this.BboxOuter = new Rectangle(this.xCoordinate-this.distOuter,this.yCoordinate-this.distOuter,this.distOuter*2,this.distOuter*2);
-        //this.BboxOuter.setStroke(Color.LIGHTBLUE);
-        //this.BboxOuter.setFill(Color.TRANSPARENT);
     }
-    public boolean collidesInner(Rectangle b){
-        return b.getBoundsInParent().intersects(this.BboxInner.getBoundsInParent());
-
-    }
-    public boolean collidesOuter(Rectangle b) {
-
-        return b.getBoundsInParent().intersects(this.BboxOuter.getBoundsInParent());
-    }
-    public boolean colorMatch (int color, boolean inside){
-        int flip = inside ? 180:0;
-        boolean match=false;
+    public int collides(Circle ball, int color){
         switch(color){
-            case 0:
-                if(this.getAngleOfRotation()>(0-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(90-flip)+(this.rotationsCount)*360){
-                    System.out.println("Green");
-                    match=true;
-                }
-                break;
             case 1:
-                if(this.getAngleOfRotation()>(90-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(180-flip)+(this.rotationsCount)*360){
-                    System.out.println("Red");
-                    match=true;
+                if (Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+                    return 0;
                 }
-                break;
+                else if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1){
+                    return 1;
+                }
+                return 2;
             case 2:
-                if(this.getAngleOfRotation()>(180-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(270-flip)+(this.rotationsCount)*360){
-                    //System.out.println("Yellow");
-                    match=true;
+                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+                    return  0;
                 }
-                break;
+                else if (Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1){
+                    return 1;
+                }
+                return 2;
             case 3:
-                if(this.getAngleOfRotation()>(270-flip)+(this.rotationsCount)*360 && this.getAngleOfRotation()<(360-flip)+(this.rotationsCount)*360){
-                    System.out.println("Blue");
-                    match=true;
+                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1){
+                    return  0;
                 }
-                break;
-            default:
-                break;
+                else if (Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+                    return 1;
+                }
+                return 2;
+            case 4:
+                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+                    return  0;
+                }
+                else if (Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1){
+                    return 1;
+                }
+                return 2;
+
         }
-        return match;
+        return 2;
     }
     public abstract void create();
     public double getAngleOfRotation(){
@@ -78,24 +71,19 @@ abstract class Obstacle {
     public void setyCoordinate(double val){
         this.obstacle.setLayoutY(this.obstacle.getLayoutY()+val);
         this.yCoordinate = this.obstacle.getLayoutY();
-        this.BboxInner = new Rectangle(this.xCoordinate-this.distInner,this.yCoordinate-this.distInner,this.distInner*2,this.distInner*2);
-        this.BboxOuter = new Rectangle(this.xCoordinate-this.distOuter,this.yCoordinate-this.distOuter,this.distOuter*2,this.distOuter*2);
     }
 }
 
 class CircularObstacle extends Obstacle{
+
     public CircularObstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
         super(distInner,distOuter,yCoordinate, xCoordinate);
     }
     @Override
-    public boolean collidesInner(Rectangle b) {
-        return super.collidesInner(b);
+    public int collides(Circle ball,int color) {
+       return super.collides(ball,color);
     }
 
-    @Override
-    public boolean collidesOuter(Rectangle b) {
-        return super.collidesOuter(b);
-    }
     public Group getObstacle(){
         return this.obstacle;
     }
@@ -138,6 +126,7 @@ class CircularObstacle extends Obstacle{
         path.getElements().add(hLineToLeftLeg);
 
         obstacle.getChildren().add(path);
+
         Path path2 = new Path();
         path2.setFill(Color.web("#900dff"));
         path2.setFillRule(FillRule.EVEN_ODD);
@@ -180,6 +169,10 @@ class CircularObstacle extends Obstacle{
         path4.setScaleX(-1);
         path4.setScaleY(-1);
         obstacle.getChildren().add(path4);
+        this.blue = path4;
+        this.yellow = path3;
+        this.pink = path;
+        this.purple = path2;
         this.obstacle = obstacle;
     }
 }
@@ -188,14 +181,10 @@ class SquareObstacle extends Obstacle{
         super(distInner,distOuter,yCoordinate, xCoordinate);
     }
     @Override
-    public boolean collidesInner(Rectangle b) {
-        return super.collidesInner(b);
+    public int  collides(Circle ball,int color) {
+        return super.collides(ball,color);
     }
 
-    @Override
-    public boolean collidesOuter(Rectangle b) {
-        return super.collidesOuter(b);
-    }
     public Group getObstacle(){
         return this.obstacle;
     }
@@ -283,6 +272,10 @@ class SquareObstacle extends Obstacle{
         path4.setScaleX(-1);
         path4.setScaleY(-1);
         obstacle.getChildren().add(path4);
+        this.blue = path4;
+        this.yellow = path3;
+        this.pink = path;
+        this.purple = path2;
         this.obstacle = obstacle;
     }
 }
@@ -293,13 +286,8 @@ class CrossObstacle extends Obstacle{
         this.yCoordinate = yCoordinate;
     }
     @Override
-    public boolean collidesInner(Rectangle b) {
-        return super.collidesInner(b);
-    }
-
-    @Override
-    public boolean collidesOuter(Rectangle b) {
-        return super.collidesOuter(b);
+    public int collides(Circle ball,int color) {
+        return super.collides(ball,color);
     }
     public Group getObstacle(){
         return this.obstacle;
@@ -385,6 +373,410 @@ class CrossObstacle extends Obstacle{
         path4.setScaleY(-1);
         path4.setRotate(90);
         obstacle.getChildren().add(path4);
+        this.blue = path4;
+        this.yellow = path3;
+        this.pink = path;
+        this.purple = path2;
+        this.obstacle = obstacle;
+    }
+}
+class BowObstacle extends Obstacle{
+    protected double height;
+    public BowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height){
+        super(distInner,distOuter,yCoordinate, xCoordinate);
+        this.height = height;
+    }
+    @Override
+    public int collides(Circle ball,int color) {
+        return super.collides(ball,color);
+    }
+    public Group getObstacle(){
+        return this.obstacle;
+    }
+    @Override
+    public void create() {
+        Group obstacle = new Group();
+        Path path = new Path();
+        path.setFill(Color.web("#ff0181"));
+        path.setStroke(Color.RED);
+        path.setFillRule(FillRule.EVEN_ODD);
+        MoveTo moveTo = new MoveTo();
+        moveTo.setX(this.xCoordinate+this.distOuter);
+        moveTo.setY(this.yCoordinate);
+
+        LineTo line1 = new LineTo();
+        line1.setY(this.yCoordinate-this.height);
+        line1.setX(this.xCoordinate+this.distOuter+50);
+
+        LineTo line2 = new LineTo();
+        line2.setX(this.xCoordinate+this.distInner+ 50 );
+        line2.setY(this.yCoordinate-this.height);
+
+        LineTo line3 = new LineTo();
+        line3.setX(this.xCoordinate+this.distInner);
+        line3.setY(this.yCoordinate);
+
+        LineTo line4 = new LineTo();
+        line4.setX(this.xCoordinate+this.distInner +50);
+        line4.setY(this.yCoordinate+this.height);
+
+        LineTo line5 = new LineTo();
+        line5.setY(this.yCoordinate + this.height);
+        line5.setX(this.xCoordinate + this.distOuter +50);
+
+        LineTo line6 = new LineTo();
+        line6.setY(this.yCoordinate );
+        line6.setX(this.xCoordinate + this.distOuter);
+        path.getElements().add(moveTo);
+        path.getElements().add(line1);
+        path.getElements().add(line2);
+        path.getElements().add(line3);
+        path.getElements().add(line4);
+        path.getElements().add(line5);
+        path.getElements().add(line6);
+
+        obstacle.getChildren().add(path);
+        Path path2 = new Path();
+        path2.setFill(Color.web("#900dff"));
+        path2.setFillRule(FillRule.EVEN_ODD);
+        moveTo = new MoveTo();
+        moveTo.setX(this.xCoordinate-this.distOuter);
+        moveTo.setY(this.yCoordinate);
+
+        line1 = new LineTo();
+        line1.setY(this.yCoordinate-this.height);
+        line1.setX(this.xCoordinate-this.distOuter-50);
+
+        line2 = new LineTo();
+        line2.setX(this.xCoordinate-this.distInner-50 );
+        line2.setY(this.yCoordinate-this.height);
+
+        line3 = new LineTo();
+        line3.setX(this.xCoordinate-this.distInner);
+        line3.setY(this.yCoordinate);
+
+        line4 = new LineTo();
+        line4.setX(this.xCoordinate-this.distInner -50);
+        line4.setY(this.yCoordinate+this.height);
+
+        line5 = new LineTo();
+        line5.setY(this.yCoordinate + this.height);
+        line5.setX(this.xCoordinate - this.distOuter -50);
+
+        line6 = new LineTo();
+        line6.setY(this.yCoordinate );
+        line6.setX(this.xCoordinate - this.distOuter);
+        path2.getElements().add(moveTo);
+        path2.getElements().add(line1);
+        path2.getElements().add(line2);
+        path2.getElements().add(line3);
+        path2.getElements().add(line4);
+        path2.getElements().add(line5);
+        path2.getElements().add(line6);
+
+        obstacle.getChildren().add(path2);
+
+        Path path3 = new Path();
+        path3.setFill(Color.web("#fae100"));
+        path3.setFillRule(FillRule.EVEN_ODD);
+        moveTo = new MoveTo();
+        moveTo.setX(this.xCoordinate+this.distInner+ 50 );
+        moveTo.setY(this.yCoordinate-this.height);
+
+        line1 = new LineTo();
+        line1.setY(this.yCoordinate-this.height);
+        line1.setX(this.xCoordinate-this.distInner-50);
+
+        line2 = new LineTo();
+        line2.setX(this.xCoordinate-this.distInner-50 + this.distOuter - this.distInner - (this.distOuter-this.distInner)/2 );
+        line2.setY(this.yCoordinate-this.height + this.distOuter - this.distInner);
+
+        line3 = new LineTo();
+        line3.setX(this.xCoordinate+this.distInner+50-this.distOuter +this.distInner + (this.distOuter-this.distInner)/2 );
+        line3.setY(this.yCoordinate-this.height + this.distOuter - this.distInner );
+
+        line4 = new LineTo();
+        line4.setX(this.xCoordinate+this.distInner+ 50);
+        line4.setY(this.yCoordinate-this.height);
+
+
+        path3.getElements().add(moveTo);
+        path3.getElements().add(line1);
+        path3.getElements().add(line2);
+        path3.getElements().add(line3);
+        path3.getElements().add(line4);
+        obstacle.getChildren().add(path3);
+
+        Path path4 = new Path();
+        path4.setFill(Color.web("#32dbf0"));
+        path4.setFillRule(FillRule.EVEN_ODD);
+        moveTo = new MoveTo();
+        moveTo.setX(this.xCoordinate+this.distInner+ 50 );
+        moveTo.setY(this.yCoordinate+this.height);
+
+        line1 = new LineTo();
+        line1.setY(this.yCoordinate+this.height);
+        line1.setX(this.xCoordinate-this.distInner-50);
+
+        line2 = new LineTo();
+        line2.setX(this.xCoordinate-this.distInner-50 + this.distOuter - this.distInner - (this.distOuter-this.distInner)/2 );
+        line2.setY(this.yCoordinate+this.height - this.distOuter + this.distInner);
+
+        line3 = new LineTo();
+        line3.setX(this.xCoordinate+this.distInner+50-this.distOuter +this.distInner + (this.distOuter-this.distInner)/2 );
+        line3.setY(this.yCoordinate+this.height - this.distOuter + this.distInner );
+
+        line4 = new LineTo();
+        line4.setX(this.xCoordinate+this.distInner+ 50);
+        line4.setY(this.yCoordinate+this.height);
+
+
+        path4.getElements().add(moveTo);
+        path4.getElements().add(line1);
+        path4.getElements().add(line2);
+        path4.getElements().add(line3);
+        path4.getElements().add(line4);
+        obstacle.getChildren().add(path4);
+        this.blue = path4;
+        this.yellow = path3;
+        this.pink = path;
+        this.purple = path2;
+        this.obstacle = obstacle;
+    }
+}
+class HalfBowObstacle extends Obstacle{
+    protected double height;
+    public HalfBowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height){
+        super(distInner,distOuter,yCoordinate, xCoordinate);
+        this.height = height;
+    }
+    @Override
+    public int collides(Circle ball,int color) {
+        return super.collides(ball,color);
+    }
+    public Group getObstacle(){
+        return this.obstacle;
+    }
+    @Override
+    public void create() {
+        Group obstacle = new Group();
+        Path path = new Path();
+        path.setFill(Color.web("#ff0181"));
+        path.setStroke(Color.RED);
+        path.setFillRule(FillRule.EVEN_ODD);
+        MoveTo moveTo = new MoveTo();
+        moveTo.setX(this.xCoordinate+this.distOuter);
+        moveTo.setY(this.yCoordinate);
+
+        LineTo line1 = new LineTo();
+        line1.setY(this.yCoordinate-this.height);
+        line1.setX(this.xCoordinate+this.distOuter+50);
+
+        LineTo line2 = new LineTo();
+        line2.setX(this.xCoordinate+this.distInner+ 50 );
+        line2.setY(this.yCoordinate-this.height);
+
+        LineTo line3 = new LineTo();
+        line3.setX(this.xCoordinate+this.distInner);
+        line3.setY(this.yCoordinate);
+
+        LineTo line4 = new LineTo();
+        line4.setX(this.xCoordinate+this.distOuter);
+        line4.setY(this.yCoordinate);
+
+        path.getElements().add(moveTo);
+        path.getElements().add(line1);
+        path.getElements().add(line2);
+        path.getElements().add(line3);
+        path.getElements().add(line4);
+
+
+        obstacle.getChildren().add(path);
+        Path path2 = new Path();
+        path2.setFill(Color.web("#900dff"));
+        path2.setFillRule(FillRule.EVEN_ODD);
+        moveTo = new MoveTo();
+        moveTo.setX(this.xCoordinate+this.distInner);
+        moveTo.setY(this.yCoordinate);
+
+        line1 = new LineTo();
+        line1.setX(this.xCoordinate+this.distInner +50);
+        line1.setY(this.yCoordinate+this.height);
+
+        line2 = new LineTo();
+        line2.setY(this.yCoordinate + this.height);
+        line2.setX(this.xCoordinate + this.distOuter +50);
+
+        line3 = new LineTo();
+        line3.setY(this.yCoordinate );
+        line3.setX(this.xCoordinate + this.distOuter);
+
+        line4 = new LineTo();
+        line4.setX(this.xCoordinate+this.distInner);
+        line4.setY(this.yCoordinate);
+
+        path2.getElements().add(moveTo);
+        path2.getElements().add(line1);
+        path2.getElements().add(line2);
+        path2.getElements().add(line3);
+        path2.getElements().add(line4);
+
+
+        obstacle.getChildren().add(path2);
+
+        Path path3 = new Path();
+        path3.setFill(Color.web("#fae100"));
+        path3.setFillRule(FillRule.EVEN_ODD);
+        moveTo = new MoveTo();
+        moveTo.setX(this.xCoordinate-this.distOuter);
+        moveTo.setY(this.yCoordinate);
+
+        line1 = new LineTo();
+        line1.setY(this.yCoordinate-this.height);
+        line1.setX(this.xCoordinate-this.distOuter-50);
+
+        line2 = new LineTo();
+        line2.setX(this.xCoordinate-this.distInner-50 );
+        line2.setY(this.yCoordinate-this.height);
+
+        line3 = new LineTo();
+        line3.setX(this.xCoordinate-this.distInner);
+        line3.setY(this.yCoordinate);
+
+        line4 = new LineTo();
+        line4.setX(this.xCoordinate+this.distOuter);
+        line4.setY(this.yCoordinate);
+
+
+        path3.getElements().add(moveTo);
+        path3.getElements().add(line1);
+        path3.getElements().add(line2);
+        path3.getElements().add(line3);
+        path3.getElements().add(line4);
+        obstacle.getChildren().add(path3);
+
+        Path path4 = new Path();
+        path4.setFill(Color.web("#32dbf0"));
+        path4.setFillRule(FillRule.EVEN_ODD);
+        moveTo = new MoveTo();
+        moveTo.setX(this.xCoordinate-this.distInner);
+        moveTo.setY(this.yCoordinate);
+
+        line1 = new LineTo();
+        line1.setX(this.xCoordinate-this.distInner -50);
+        line1.setY(this.yCoordinate+this.height);
+
+        line2 = new LineTo();
+        line2.setY(this.yCoordinate + this.height);
+        line2.setX(this.xCoordinate - this.distOuter -50);
+
+        line3 = new LineTo();
+        line3.setY(this.yCoordinate );
+        line3.setX(this.xCoordinate - this.distOuter);
+
+        line4 = new LineTo();
+        line4.setX(this.xCoordinate-this.distInner);
+        line4.setY(this.yCoordinate);
+
+        path4.getElements().add(moveTo);
+        path4.getElements().add(line1);
+        path4.getElements().add(line2);
+        path4.getElements().add(line3);
+        path4.getElements().add(line4);
+        obstacle.getChildren().add(path4);
+        this.blue = path4;
+        this.yellow = path3;
+        this.pink = path;
+        this.purple = path2;
+        this.obstacle = obstacle;
+    }
+}
+class ThornObstacle extends Obstacle{
+    protected double thornLength;
+    public ThornObstacle(double distInner ,double yCoordinate, double xCoordinate, double thornLength){
+        this.distInner = distInner;
+        this.thornLength = thornLength;
+        this.yCoordinate = yCoordinate;
+        this.xCoordinate = xCoordinate;
+    }
+    @Override
+    public int collides(Circle ball,int color) {
+        return super.collides(ball,color);
+    }
+
+    public Group getObstacle(){
+        return this.obstacle;
+    }
+    @Override
+    public void create() {
+        Group obstacle = new Group();
+        Path path = new Path();
+        path.setFill(Color.web("#ff0181"));
+        path.setStroke(Color.RED);
+        path.setFillRule(FillRule.EVEN_ODD);
+        MoveTo moveTo = new MoveTo();
+        moveTo.setX(this.xCoordinate + this.distInner);
+        moveTo.setY(this.yCoordinate);
+        ArcTo arcToInner = new ArcTo();
+        arcToInner.setX(this.xCoordinate);
+        arcToInner.setY(this.yCoordinate-this.distInner);
+        arcToInner.setRadiusX(this.distInner);
+        arcToInner.setRadiusY(this.distInner);
+
+        LineTo line1 = new LineTo();
+        line1.setY(this.yCoordinate-this.thornLength*this.distInner);
+        line1.setX(this.xCoordinate+this.thornLength*this.distInner);
+
+        LineTo line2 = new LineTo();
+        line2.setX(this.xCoordinate+this.distInner);
+        line2.setY(this.yCoordinate);
+
+        path.getElements().add(moveTo);
+        path.getElements().add(arcToInner);
+        path.getElements().add(line1);
+        path.getElements().add(line2);
+        obstacle.getChildren().add(path);
+
+        Path path2 = new Path();
+        path2.setFill(Color.web("#900dff"));
+        path2.setFillRule(FillRule.EVEN_ODD);
+        path2.setLayoutY(path.getLayoutY()+this.thornLength*this.distInner);
+        path2.getElements().add(moveTo);
+        path2.getElements().add(arcToInner);
+        path2.getElements().add(line1);
+        path2.getElements().add(line2);
+        path2.setScaleX(1);
+        path2.setScaleY(-1);
+        obstacle.getChildren().add(path2);
+
+        Path path3 = new Path();
+        path3.setFill(Color.web("#fae100"));
+        path3.setFillRule(FillRule.EVEN_ODD);
+        path3.setLayoutX(path.getLayoutY()-this.thornLength*this.distInner);
+        path3.getElements().add(moveTo);
+        path3.getElements().add(arcToInner);
+        path3.getElements().add(line1);
+        path3.getElements().add(line2);
+        path3.setScaleX(-1);
+        path3.setScaleY(1);
+        obstacle.getChildren().add(path3);
+
+        Path path4 = new Path();
+        path4.setFill(Color.web("#32dbf0"));
+        path4.setFillRule(FillRule.EVEN_ODD);
+        path4.setLayoutX(path.getLayoutX()-this.thornLength*this.distInner);
+        path4.setLayoutY(path.getLayoutY()+this.thornLength*this.distInner);
+        path4.getElements().add(moveTo);
+        path4.getElements().add(arcToInner);
+        path4.getElements().add(line1);
+        path4.getElements().add(line2);
+        path4.setScaleX(-1);
+        path4.setScaleY(-1);
+        obstacle.getChildren().add(path4);
+        this.blue = path4;
+        this.yellow = path3;
+        this.pink = path;
+        this.purple = path2;
         this.obstacle = obstacle;
     }
 }

@@ -34,7 +34,7 @@
               strokeType="INSIDE" strokeWidth="0.0" width="450.0"/>
    <ImageView fitHeight="60.0" fitWidth="160.0" layoutX="146.0" layoutY="196.0" pickOnBounds="true"
               preserveRatio="true">
-      <Image url="@../assets/score.png"/>
+<!--      <Image url="@../assets/score.png"/>-->
    </ImageView>
    <Text fill="WHITE" layoutX="215.0" layoutY="280.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
       <font>

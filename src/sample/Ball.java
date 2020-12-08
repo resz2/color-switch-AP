@@ -1,29 +1,36 @@
 package sample;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class Ball {
     protected double xCoordinate,yCoordinate;
     boolean isInsideObstacle;
+    protected Color ballColor;
     int color;
     protected Circle ballBody;
     protected Rectangle Bbox;
     public  Ball(double xCoordinate, double yCoordinate, int color){
-        Color ballColor;
+
+        this.color = color;
         switch(color){
             case 1:
-                ballColor = Color.GREEN;
+                ballColor = Color.web("fae100");
                 break;
             case 2:
-                ballColor = Color.RED;
+                ballColor = Color.web("ff0181");
                 break;
             case 3:
-                ballColor = Color.YELLOW;
+                ballColor = Color.web("32dbf0");
                 break;
             case 4:
-                ballColor = Color.BLUE;
+                ballColor = Color.web("900dff");
                 break;
             default:
                 ballColor = Color.WHITE;
@@ -45,7 +52,6 @@ public class Ball {
     public double getyCoordinate(){
         return this.ballBody.getLayoutY();
     }
-    public void setInsideObstacle(boolean val){
-        this.isInsideObstacle = val;
-    }
+
+
 }

@@ -1,27 +1,28 @@
 package sample;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
+import javafx.animation.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Bounds;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.Label;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -31,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -70,11 +72,13 @@ public class Main extends Application {
     private Label exitButton;
     @FXML
     private Label heading;
-    int closestObsIndex=1;
+    int nextObsIndex=0,prevObsIndex=0;
     int newStarPosition=-600;
-    Obstacle closestObstacle;
+    Animation.Status moveCamTimelineStatus;
+    Obstacle nextObstacle,prevObstacle;
+    Boolean over=false;
     Star closestStar;
-    Label resumeButton=new Label(),saveButton= new Label(),homeButton = new Label();
+    Label resumeButton=new Label(),saveButton= new Label(),homeButton = new Label(),pauseButton= new Label(),scoreLabel = new Label(),restartButton=new Label();
     Rectangle overlay;
     public boolean cameraMoving = false;
     double velocity = 0;
@@ -174,6 +178,7 @@ public class Main extends Application {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+
                         menuBG.getChildren().setAll(pane);
                         break;
                     case 2:
@@ -202,9 +207,10 @@ public class Main extends Application {
     public void newGame() throws  Exception {
 
         Pane canvas = new Pane();
+        //pause icon setup start
         InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\pause.png");
         Image image = new Image(stream);
-        Label pauseButton = new Label();
+        pauseButton = new Label();
         ImageView pauseIcon = new ImageView(image);
         pauseButton.setGraphic(pauseIcon);
         pauseButton.setLayoutX(375);
@@ -212,24 +218,50 @@ public class Main extends Application {
         pauseIcon.setFitHeight(50);
         pauseIcon.setFitWidth(50);
         pauseIcon.setPreserveRatio(true);
-
         canvas.getChildren().add(pauseButton);
-        Ball ball = new Ball(225,550,3);
+        //pause icon setup end
+        //score setup start
+        try {
+            stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\silverStar.png");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Image image2 = new Image(stream);
+        ImageView scoreIcon = new ImageView(image2);
+        scoreLabel = new Label("0");
+        scoreLabel.setContentDisplay(ContentDisplay.CENTER);
+        scoreLabel.setTextAlignment(TextAlignment.CENTER);
+        scoreIcon.setFitHeight(75);
+        scoreIcon.setPreserveRatio(true);
+        scoreLabel.setGraphic(scoreIcon);
+        scoreLabel.setLayoutY(30);
+        scoreLabel.setLayoutX(25);
+        Font font = Font.font("Roboto", FontWeight.BOLD,
+                FontPosture.REGULAR, 25);
+        scoreLabel.setFont(font);
+        //Filling color to the label
+        scoreLabel.setTextFill(Color.web("272727"));
+        canvas.getChildren().add(scoreLabel);
+        //score setup end
+        Ball ball = new Ball(225,550,1);
+
         ArrayList<Obstacle> circularObstacleArrayList = new ArrayList<Obstacle>();
         ArrayList<Star> StarArrayList = new ArrayList<Star>();
-        for (int i=0;i<9;i++){
-            if(i%3==0){
-                circularObstacleArrayList.add(new CrossObstacle(300-300*(i),275));
-            }
-            else if (i%3==1){
-                circularObstacleArrayList.add(new SquareObstacle(80,95,300-300*i,225));
-            }
-            else{
-                circularObstacleArrayList.add(new CircularObstacle(80,95,300-300*(i),225));
-            }
+        for (int i=0;i<1;i++){
+             circularObstacleArrayList.add(new ThornObstacle(50,300,225,1.5));
+//            if(i%3==0){
+//                circularObstacleArrayList.add(new CrossObstacle(300-400*(i),275));
+//            }
+//            else if (i%3==1){
+//                circularObstacleArrayList.add(new SquareObstacle(80,95,300-400*i,225));
+//            }
+//            else{
+//                circularObstacleArrayList.add(new CircularObstacle(80,95,300-400*(i),225));
+//            }
         }
         for(int i=0;i<circularObstacleArrayList.size();i++){
             circularObstacleArrayList.get(i).create();
+            //circularObstacleArrayList.get(i).obstacle.setOpacity(0);
             canvas.getChildren().add(circularObstacleArrayList.get(i).obstacle);
         }
         for(int i=0;i<3;i++){
@@ -237,11 +269,8 @@ public class Main extends Application {
             StarArrayList.add(star);
             canvas.getChildren().add(StarArrayList.get(i).starBody);
         }
-        for(int i=0;i<StarArrayList.size();i++){
-            System.out.println(StarArrayList.get(i).Bbox.getBoundsInParent());
-            System.out.println(ball.ballBody.getBoundsInParent());
-        }
-        closestObstacle = circularObstacleArrayList.get(closestObsIndex);
+        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
+        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
         closestStar = StarArrayList.get(0);
         canvas.getChildren().add(ball.ballBody);
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16.67),
@@ -282,12 +311,12 @@ public class Main extends Application {
                     }
                 }));
         rotateTimeline.setCycleCount(Timeline.INDEFINITE);
-        rotateTimeline.play();
+        //rotateTimeline.play();
         canvas.setFocusTraversable(true);
         canvas.addEventFilter(KeyEvent.KEY_PRESSED, event->{
             if (event.getCode() == KeyCode.SPACE) {
                 timeline.play();
-                velocity=-5;
+                velocity=-6;
             }
         });
         Timer timer = new Timer();
@@ -295,7 +324,12 @@ public class Main extends Application {
             @Override
             public void run() {
                 if(ball.getyCoordinate()<= 300 && !cameraMoving){
-                    moveCamera(timeline,moveCameraTimeline);
+                    //moveCamera(timeline,moveCameraTimeline);
+                    try {
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         };
@@ -304,32 +338,29 @@ public class Main extends Application {
         TimerTask task1 = new TimerTask() {
             @Override
             public void run() {
-
-//                if(!closestObstacle.collidesInner(ball.Bbox) && closestObstacle.collidesOuter(ball.Bbox)){
-//                    //System.out.println("Kaboom");
-//                    if(!closestObstacle.colorMatch(2,ball.isInsideObstacle)){
-//
-//                        System.exit(0);
-//                        //System.out.println("Game Over");
-//                    }
-//                }
-//                else if (closestObstacle.collidesInner(ball.Bbox) && closestObstacle.collidesOuter(ball.Bbox)){
-//                    ball.setInsideObstacle(true);
-//                    //System.out.println("Inside");
-//                }
-//                else{
-//                    if(ball.isInsideObstacle){
-//                        System.out.println("Changing");
-//                        closestObsIndex+=1;
-//                        closestObstacle = circularObstacleArrayList.get(closestObsIndex);
-//                        ball.setInsideObstacle(false);
-//                    }
-//
-//                }
+                    if( (nextObstacle.collides(ball.ballBody,ball.color)==0 || prevObstacle.collides(ball.ballBody,ball.color)==0) && !over){
+                        try {
+                            over = true;
+                            gameOver(ball,canvas,timeline);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else if (nextObstacle.collides(ball.ballBody,ball.color)==1){
+                        if(nextObsIndex!=prevObsIndex){
+                            prevObsIndex++;
+                        }
+                        nextObsIndex++;
+                        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
+                        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
+                    }
                 if(closestStar.checkCollision(ball.ballBody)){
                     moveCameraTimeline.pause();
-                    closestStar.showAnimation();
+                    closestStar.showAnimation(canvas);
                     StarArrayList.remove(closestStar);
+                    int newScore = Integer.parseInt(scoreLabel.getText())+1;
+                    System.out.println(newScore);
+
                     try {
                         Star newStar = new Star(225,newStarPosition);
                         newStarPosition-=300;
@@ -338,8 +369,10 @@ public class Main extends Application {
                             @Override
                             public void run() {
                                 canvas.getChildren().add(newStar.starBody);
+                                scoreLabel.setText(String.valueOf(newScore));
                             }
                         });
+//                        collectedStar(canvas,closestStar);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
@@ -351,43 +384,13 @@ public class Main extends Application {
         };
         collisionTimer.scheduleAtFixedRate(task1,100,10);
         menuBG.getChildren().setAll(canvas);
-        EventHandler<MouseEvent> resumeHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                System.out.println("Clicked Resume");
-                Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),
-                        new EventHandler<ActionEvent>() {
-                            @Override
-                            public void handle(ActionEvent t) {
-                                overlay.setOpacity(overlay.getOpacity()-0.009);
-                                resumeButton.setOpacity(resumeButton.getOpacity()-0.01);
-                                resumeButton.setLayoutY(resumeButton.getLayoutY()+2);
-                                saveButton.setOpacity(saveButton.getOpacity()-0.01);
-                                saveButton.setLayoutY(saveButton.getLayoutY()+2);
-                                homeButton.setOpacity(homeButton.getOpacity()-0.01);
-                                homeButton.setLayoutY(homeButton.getLayoutY()-2);
-                            }
-                        }));
-                enterTimeline.setCycleCount(100);
-                enterTimeline.play();
-                enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent actionEvent) {
-                        timeline.play();
-                        rotateTimeline.play();
-                        moveCameraTimeline.play();
-                    }
-                });
-            }
-        };
-        resumeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,resumeHandler);
         EventHandler<MouseEvent> pauseEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 timeline.pause();
                 rotateTimeline.pause();
+                moveCamTimelineStatus = moveCameraTimeline.getStatus();
                 moveCameraTimeline.pause();
-                System.out.println("Clicked");
                 overlay = new Rectangle(0,0,450,600);
                 overlay.setFill(Color.BLACK);
                 overlay.setOpacity(0);
@@ -403,7 +406,7 @@ public class Main extends Application {
                 resumeIcon.setFitHeight(60);
                 resumeIcon.setPreserveRatio(true);
                 resumeButton.setGraphic(resumeIcon);
-                resumeButton.setLayoutY(425);
+                resumeButton.setLayoutY(375);
                 resumeButton.setLayoutX(195);
                 try {
                     stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\save.png");
@@ -416,15 +419,27 @@ public class Main extends Application {
                 saveIcon.setPreserveRatio(true);
                 saveButton = new Label();
                 saveButton.setGraphic(saveIcon);
-                saveButton.setLayoutY(525);
+                saveButton.setLayoutY(475);
                 saveButton.setLayoutX(195);
+                try {
+                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\restart.png");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Image image3 = new Image(stream);
+                ImageView restartIcon = new ImageView(image3);
+                restartIcon.setFitHeight(60);
+                restartIcon.setPreserveRatio(true);
+                restartButton.setGraphic(restartIcon);
+                restartButton.setLayoutY(575);
+                restartButton.setLayoutX(195);
                 try {
                     stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\home.png");
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                Image image3 = new Image(stream);
-                ImageView homeIcon = new ImageView(image3);
+                Image image4 = new Image(stream);
+                ImageView homeIcon = new ImageView(image4);
                 saveIcon.setFitHeight(60);
                 saveIcon.setPreserveRatio(true);
                 homeButton = new Label();
@@ -436,9 +451,11 @@ public class Main extends Application {
                 resumeButton.setOpacity(0);
                 saveButton.setOpacity(0);
                 homeButton.setOpacity(0);
+                restartButton.setOpacity(0);
                 canvas.getChildren().add(resumeButton);
                 canvas.getChildren().add(saveButton);
                 canvas.getChildren().add(homeButton);
+                canvas.getChildren().add(restartButton);
                 Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),
                         new EventHandler<ActionEvent>() {
                             @Override
@@ -447,6 +464,8 @@ public class Main extends Application {
 
                                 resumeButton.setOpacity(resumeButton.getOpacity()+0.01);
                                 resumeButton.setLayoutY(resumeButton.getLayoutY()-2);
+                                restartButton.setOpacity(restartButton.getOpacity()+0.01);
+                                restartButton.setLayoutY(restartButton.getLayoutY()-2);
                                 saveButton.setOpacity(saveButton.getOpacity()+0.01);
                                 saveButton.setLayoutY(saveButton.getLayoutY()-2);
                                 homeButton.setOpacity(homeButton.getOpacity()+0.01);
@@ -457,6 +476,47 @@ public class Main extends Application {
                 enterTimeline.play();
             }
         };
+        EventHandler<MouseEvent> resumeHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),
+                        new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent t) {
+                                overlay.setOpacity(overlay.getOpacity()-0.009);
+                                resumeButton.setOpacity(resumeButton.getOpacity()-0.01);
+                                resumeButton.setLayoutY(resumeButton.getLayoutY()+2);
+                                saveButton.setOpacity(saveButton.getOpacity()-0.01);
+                                saveButton.setLayoutY(saveButton.getLayoutY()+2);
+                                restartButton.setOpacity(restartButton.getOpacity()-0.01);
+                                restartButton.setLayoutY(restartButton.getLayoutY()+2);
+                                homeButton.setOpacity(homeButton.getOpacity()-0.01);
+                                homeButton.setLayoutY(homeButton.getLayoutY()-2);
+
+                            }
+                        }));
+                enterTimeline.setCycleCount(100);
+                enterTimeline.play();
+                enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        canvas.getChildren().remove(resumeButton);
+                        canvas.getChildren().remove(homeButton);
+                        canvas.getChildren().remove(saveButton);
+                        canvas.getChildren().remove(restartButton);
+                        canvas.getChildren().remove(overlay);
+                        timeline.play();
+                        rotateTimeline.play();
+                        if(moveCamTimelineStatus== Animation.Status.RUNNING){
+                            moveCameraTimeline.play();
+                        }
+
+                    }
+                });
+            }
+        };
+        resumeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,resumeHandler);
+
         pauseButton.addEventFilter(MouseEvent.MOUSE_CLICKED,pauseEventHandler);
 
 
@@ -467,7 +527,202 @@ public class Main extends Application {
 
     public void displayHighScores() throws Exception {
         exitAnimation(2);
+    }
 
+    public void gameOver(Ball ball,Pane canvas,Timeline gravityTimeline) throws Exception{
+            gravityTimeline.pause();
+            Timeline enlargeTimeline = new Timeline(new KeyFrame(Duration.millis(1),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            ball.ballBody.setScaleX(ball.ballBody.getScaleX()+0.015);
+                            ball.ballBody.setScaleY(ball.ballBody.getScaleY()+0.015);
+                        }
+                    }));
+            enlargeTimeline.setCycleCount(100);
+
+            enlargeTimeline.play();
+
+            enlargeTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    ball.ballBody.setOpacity(0);
+                    System.out.println("hello");
+
+                    ArrayList<Circle> smallBalls = new ArrayList<Circle>();
+                    ArrayList<PathTransition> paths = new ArrayList<>();
+                    Random randomGen = new Random();
+                    for(int i=0;i<24;i++){
+                        if(i%4==0){
+                            Circle newCircle = new Circle();
+                            newCircle.setRadius(2+randomGen.nextInt(8));
+                            newCircle.setLayoutX(225);
+                            newCircle.setLayoutY(ball.yCoordinate);
+                            newCircle.setFill(Color.web("fae100"));
+                            smallBalls.add(newCircle);
+                            int offset = (i/4)*2;
+                            canvas.getChildren().add(newCircle);
+                            Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                                    new EventHandler<ActionEvent>() {
+                                        int xVelocity = 4+offset,yVelocity = 3+ offset;
+                                        @Override
+                                        public void handle(ActionEvent t) {
+                                            newCircle.setLayoutX(newCircle.getLayoutX()+ xVelocity);
+                                            newCircle.setLayoutY(newCircle.getLayoutY()+ yVelocity);
+                                            Bounds bounds = canvas.getBoundsInLocal();
+
+                                            //If the ball reaches the left or right border make the step negative
+                                            if(newCircle.getLayoutX() <= (bounds.getMinX() + newCircle.getRadius()) ||
+                                                    newCircle.getLayoutX() >= (bounds.getMaxX() - newCircle.getRadius()) ){
+
+                                                xVelocity = -xVelocity;
+
+                                            }
+
+                                            //If the ball reaches the bottom or top border make the step negative
+                                            if((newCircle.getLayoutY() >= (bounds.getMaxY() - newCircle.getRadius())) ||
+                                                    (newCircle.getLayoutY() <= (bounds.getMinY() + newCircle.getRadius()))){
+
+                                                yVelocity = -yVelocity;
+
+                                            }
+                                        }
+                                    }));
+                            moveTimeline.setCycleCount(200);
+                            moveTimeline.play();
+                        }
+                        else if (i%4==1){
+                            Circle newCircle = new Circle();
+                            newCircle.setRadius(2+randomGen.nextInt(8));
+                            newCircle.setLayoutX(225);
+                            newCircle.setLayoutY(ball.yCoordinate);
+                            newCircle.setFill(Color.web("ff0181"));
+                            smallBalls.add(newCircle);
+                            int offset = (i/4)*2;
+                            canvas.getChildren().add(newCircle);
+                            Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                                    new EventHandler<ActionEvent>() {
+                                        int xVelocity = -4 -offset,yVelocity = 3 + offset;
+                                        @Override
+                                        public void handle(ActionEvent t) {
+                                            newCircle.setLayoutX(newCircle.getLayoutX()+ xVelocity);
+                                            newCircle.setLayoutY(newCircle.getLayoutY()+ yVelocity);
+                                            Bounds bounds = canvas.getBoundsInLocal();
+
+                                            //If the ball reaches the left or right border make the step negative
+                                            if(newCircle.getLayoutX() <= (bounds.getMinX() + newCircle.getRadius()) ||
+                                                    newCircle.getLayoutX() >= (bounds.getMaxX() - newCircle.getRadius()) ){
+
+                                                xVelocity = -xVelocity;
+
+                                            }
+
+                                            //If the ball reaches the bottom or top border make the step negative
+                                            if((newCircle.getLayoutY() >= (bounds.getMaxY() - newCircle.getRadius())) ||
+                                                    (newCircle.getLayoutY() <= (bounds.getMinY() + newCircle.getRadius()))){
+
+                                                yVelocity = -yVelocity;
+
+                                            }
+                                        }
+                                    }));
+                            moveTimeline.setCycleCount(200);
+                            moveTimeline.play();
+                        }
+                        else if (i%4==2){
+                            Circle newCircle = new Circle();
+                            newCircle.setRadius(5);
+                            newCircle.setLayoutX(2+randomGen.nextInt(8));
+                            newCircle.setLayoutY(ball.yCoordinate);
+                            newCircle.setFill(Color.web("32dbf0"));
+                            smallBalls.add(newCircle);
+                            int offset = (i/4)*2;
+                            canvas.getChildren().add(newCircle);
+                            Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                                    new EventHandler<ActionEvent>() {
+                                        int xVelocity = 4 + offset,yVelocity = -3 + offset;
+                                        @Override
+                                        public void handle(ActionEvent t) {
+                                            newCircle.setLayoutX(newCircle.getLayoutX()+ xVelocity);
+                                            newCircle.setLayoutY(newCircle.getLayoutY()+ yVelocity);
+                                            Bounds bounds = canvas.getBoundsInLocal();
+
+                                            //If the ball reaches the left or right border make the step negative
+                                            if(newCircle.getLayoutX() <= (bounds.getMinX() + newCircle.getRadius()) ||
+                                                    newCircle.getLayoutX() >= (bounds.getMaxX() - newCircle.getRadius()) ){
+
+                                                xVelocity = -xVelocity;
+
+                                            }
+
+                                            //If the ball reaches the bottom or top border make the step negative
+                                            if((newCircle.getLayoutY() >= (bounds.getMaxY() - newCircle.getRadius())) ||
+                                                    (newCircle.getLayoutY() <= (bounds.getMinY() + newCircle.getRadius()))){
+
+                                                yVelocity = -yVelocity;
+
+                                            }
+                                        }
+                                    }));
+                            moveTimeline.setCycleCount(200);
+                            moveTimeline.play();
+
+                        }
+                        else if (i%4==3){
+                            Circle newCircle = new Circle();
+                            newCircle.setRadius(2+randomGen.nextInt(8));
+                            newCircle.setLayoutX(225);
+                            newCircle.setLayoutY(ball.yCoordinate);
+                            newCircle.setFill(Color.web("900dff"));
+                            smallBalls.add(newCircle);
+                            int offset = (i/4)*2;
+                            canvas.getChildren().add(newCircle);
+                            Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                                    new EventHandler<ActionEvent>() {
+                                        int xVelocity = -4 + offset,yVelocity = -3 + offset;
+                                        @Override
+                                        public void handle(ActionEvent t) {
+                                            newCircle.setLayoutX(newCircle.getLayoutX()+ xVelocity);
+                                            newCircle.setLayoutY(newCircle.getLayoutY()+ yVelocity);
+                                            Bounds bounds = canvas.getBoundsInLocal();
+
+                                            //If the ball reaches the left or right border make the step negative
+                                            if(newCircle.getLayoutX() <= (bounds.getMinX() + newCircle.getRadius()) ||
+                                                    newCircle.getLayoutX() >= (bounds.getMaxX() - newCircle.getRadius()) ){
+
+                                                xVelocity = -xVelocity;
+
+                                            }
+
+                                            //If the ball reaches the bottom or top border make the step negative
+                                            if((newCircle.getLayoutY() >= (bounds.getMaxY() - newCircle.getRadius())) ||
+                                                    (newCircle.getLayoutY() <= (bounds.getMinY() + newCircle.getRadius()))){
+
+                                                yVelocity = -yVelocity;
+
+                                            }
+                                        }
+                                    }));
+                            moveTimeline.setCycleCount(200);
+                            moveTimeline.play();
+                            moveTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+                                @Override
+                                public void handle(ActionEvent actionEvent) {
+                                    AnchorPane pane = null;
+                                    try {
+                                        pane = FXMLLoader.load(getClass().getResource("gameOverScreen.fxml"));
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                    menuBG.getChildren().setAll(pane);
+                                }
+                            });
+                        }
+                    }
+
+                }
+            });
     }
     public void enterYellow(){
         if(newGameButton.getLayoutX()<=149){
