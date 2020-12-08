@@ -247,21 +247,21 @@ public class Main extends Application {
 
         ArrayList<Obstacle> circularObstacleArrayList = new ArrayList<Obstacle>();
         ArrayList<Star> StarArrayList = new ArrayList<Star>();
-        for (int i=0;i<3;i++){
-            //circularObstacleArrayList.add(new CircularObstacle(80,95,300-300*(i),225));
-            if(i%3==0){
-                circularObstacleArrayList.add(new CrossObstacle(300-400*(i),275));
-            }
-            else if (i%3==1){
-                circularObstacleArrayList.add(new SquareObstacle(80,95,300-400*i,225));
-            }
-            else{
-                circularObstacleArrayList.add(new CircularObstacle(80,95,300-400*(i),225));
-            }
+        for (int i=0;i<1;i++){
+             circularObstacleArrayList.add(new ThornObstacle(50,300,225,1.5));
+//            if(i%3==0){
+//                circularObstacleArrayList.add(new CrossObstacle(300-400*(i),275));
+//            }
+//            else if (i%3==1){
+//                circularObstacleArrayList.add(new SquareObstacle(80,95,300-400*i,225));
+//            }
+//            else{
+//                circularObstacleArrayList.add(new CircularObstacle(80,95,300-400*(i),225));
+//            }
         }
         for(int i=0;i<circularObstacleArrayList.size();i++){
             circularObstacleArrayList.get(i).create();
-            circularObstacleArrayList.get(i).obstacle.setOpacity(0);
+            //circularObstacleArrayList.get(i).obstacle.setOpacity(0);
             canvas.getChildren().add(circularObstacleArrayList.get(i).obstacle);
         }
         for(int i=0;i<3;i++){
@@ -311,7 +311,7 @@ public class Main extends Application {
                     }
                 }));
         rotateTimeline.setCycleCount(Timeline.INDEFINITE);
-        rotateTimeline.play();
+        //rotateTimeline.play();
         canvas.setFocusTraversable(true);
         canvas.addEventFilter(KeyEvent.KEY_PRESSED, event->{
             if (event.getCode() == KeyCode.SPACE) {
@@ -338,22 +338,22 @@ public class Main extends Application {
         TimerTask task1 = new TimerTask() {
             @Override
             public void run() {
-//                    if( (nextObstacle.collides(ball.ballBody,ball.color)==0 || prevObstacle.collides(ball.ballBody,ball.color)==0) && !over){
-//                        try {
-//                            over = true;
-//                            gameOver(ball,canvas,timeline);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    else if (nextObstacle.collides(ball.ballBody,ball.color)==1){
-//                        if(nextObsIndex!=prevObsIndex){
-//                            prevObsIndex++;
-//                        }
-//                        nextObsIndex++;
-//                        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
-//                        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
-//                    }
+                    if( (nextObstacle.collides(ball.ballBody,ball.color)==0 || prevObstacle.collides(ball.ballBody,ball.color)==0) && !over){
+                        try {
+                            over = true;
+                            gameOver(ball,canvas,timeline);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    else if (nextObstacle.collides(ball.ballBody,ball.color)==1){
+                        if(nextObsIndex!=prevObsIndex){
+                            prevObsIndex++;
+                        }
+                        nextObsIndex++;
+                        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
+                        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
+                    }
                 if(closestStar.checkCollision(ball.ballBody)){
                     moveCameraTimeline.pause();
                     closestStar.showAnimation(canvas);
