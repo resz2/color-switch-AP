@@ -27,7 +27,6 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -208,7 +207,7 @@ public class Main extends Application {
 
         Pane canvas = new Pane();
         //pause icon setup start
-        InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\pause.png");
+        InputStream stream = this.getClass().getResourceAsStream("/pause.png");
         Image image = new Image(stream);
         pauseButton = new Label();
         ImageView pauseIcon = new ImageView(image);
@@ -222,8 +221,8 @@ public class Main extends Application {
         //pause icon setup end
         //score setup start
         try {
-            stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\silverStar.png");
-        } catch (FileNotFoundException e) {
+            stream = this.getClass().getResourceAsStream("/silverStar.png");
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Image image2 = new Image(stream);
@@ -373,7 +372,7 @@ public class Main extends Application {
                             }
                         });
 //                        collectedStar(canvas,closestStar);
-                    } catch (FileNotFoundException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -397,8 +396,8 @@ public class Main extends Application {
                 canvas.getChildren().add(overlay);
                 InputStream stream = null;
                 try {
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\resume.png");
-                } catch (FileNotFoundException e) {
+                    stream = this.getClass().getResourceAsStream("/resume.png");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Image image = new Image(stream);
@@ -409,8 +408,8 @@ public class Main extends Application {
                 resumeButton.setLayoutY(375);
                 resumeButton.setLayoutX(195);
                 try {
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\save.png");
-                } catch (FileNotFoundException e) {
+                    stream = this.getClass().getResourceAsStream("/save.png");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Image image1 = new Image(stream);
@@ -422,8 +421,8 @@ public class Main extends Application {
                 saveButton.setLayoutY(475);
                 saveButton.setLayoutX(195);
                 try {
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\restart.png");
-                } catch (FileNotFoundException e) {
+                    stream = this.getClass().getResourceAsStream("/restart.png");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Image image3 = new Image(stream);
@@ -434,8 +433,8 @@ public class Main extends Application {
                 restartButton.setLayoutY(575);
                 restartButton.setLayoutX(195);
                 try {
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\home.png");
-                } catch (FileNotFoundException e) {
+                    stream = this.getClass().getResourceAsStream("/home.png");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 Image image4 = new Image(stream);

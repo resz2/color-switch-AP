@@ -9,14 +9,13 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-public class Ball {
-    protected double xCoordinate,yCoordinate;
+public class Ball extends GameElement {
     boolean isInsideObstacle;
-    protected Color ballColor;
+    protected transient Color ballColor;
     int color;
-    protected Circle ballBody;
-    protected Rectangle Bbox;
-    public  Ball(double xCoordinate, double yCoordinate, int color){
+    protected transient Circle ballBody;
+    protected transient Rectangle Bbox;
+    public Ball(double xCoordinate, double yCoordinate, int color){
 
         this.color = color;
         switch(color){
@@ -44,14 +43,14 @@ public class Ball {
         this.ballBody.setTranslateZ(0);
         this.Bbox = new Rectangle(this.xCoordinate-15,this.yCoordinate-15,20,20);
     }
+    @Override
     public void setyCoordinate(double val) {
         this.ballBody.setLayoutY(this.ballBody.getLayoutY()+val);
         this.yCoordinate = this.ballBody.getLayoutY();
         this.Bbox = new Rectangle(this.xCoordinate-15,this.yCoordinate-15,20,20);
     }
+    @Override
     public double getyCoordinate(){
         return this.ballBody.getLayoutY();
     }
-
-
 }

@@ -5,12 +5,12 @@ import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
-abstract class Obstacle {
-    protected Group obstacle;
+abstract class Obstacle extends GameElement {
+    protected transient Group obstacle;
     protected int angleOfRotation;
-    protected Path pink,blue,purple,yellow;
+    protected transient Path pink,blue,purple,yellow;
     int rotationsCount=0;
-    protected double distInner, distOuter, yCoordinate, xCoordinate;
+    protected double distInner, distOuter;
     public Obstacle(){
 
     }
@@ -68,6 +68,7 @@ abstract class Obstacle {
             this.rotationsCount+=1;
         }
     }
+    @Override
     public void setyCoordinate(double val){
         this.obstacle.setLayoutY(this.obstacle.getLayoutY()+val);
         this.yCoordinate = this.obstacle.getLayoutY();

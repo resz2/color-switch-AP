@@ -19,19 +19,18 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Star {
+public class Star extends GameElement {
     private double angle = Math.PI / 5;
-    protected double xCoordinate,yCoordinate;
-    protected Rectangle Bbox;
-    protected ImageView starBody;
-    public Star(double xCoordinate, double yCoordinate) throws FileNotFoundException {
+    protected transient Rectangle Bbox;
+    protected transient ImageView starBody;
+    public Star(double xCoordinate, double yCoordinate) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.Bbox = new Rectangle(this.xCoordinate-20,this.yCoordinate-20,40,40);
         this.create();
     }
-    public void create() throws FileNotFoundException {
-        InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\star.png");
+    public void create() {
+        InputStream stream = this.getClass().getResourceAsStream("/star.png");
         Image image = new Image(stream);
         starBody = new ImageView();
         starBody.setImage(image);
@@ -62,8 +61,8 @@ public class Star {
         ArrayList<ImageView> smallStars = new ArrayList<>();
         InputStream stream = null;
         try {
-            stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\star.png");
-        } catch (FileNotFoundException e) {
+            stream = this.getClass().getResourceAsStream("/star.png");
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Random randomGen = new Random();
