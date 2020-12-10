@@ -61,7 +61,7 @@ public class Main extends Application {
     @FXML
     private ImageView backgroundImage;
     @FXML
-    private AnchorPane menuBG;
+    private AnchorPane menuBG,newGameBG;
     @FXML
     private Label newGameButton;
     @FXML
@@ -72,8 +72,25 @@ public class Main extends Application {
     private Label exitButton;
     @FXML
     private Label heading;
+    @FXML
+    private ImageView diffBackgroundImage;
+    @FXML
+    private ImageView easyImage;
+    @FXML
+    private ImageView mediumImage;
+    @FXML
+    private ImageView hardImage;
+    @FXML
+    private ImageView chooseImage;
+    @FXML
+    private Label easyLabel,mediumLabel,hardLabel;
+    @FXML
+    private ImageView diffBackIcon;
+    @FXML
+            private Circle diffBackIconCircle;
     int nextObsIndex=0,prevObsIndex=0;
     int newStarPosition=-600;
+    int difficulty;
     int newColorChangerPosition=-2800;
     Animation.Status moveCamTimelineStatus;
     Obstacle nextObstacle,prevObstacle;
@@ -102,39 +119,69 @@ public class Main extends Application {
     }
 
     public void initialize(){
-        Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent t) {
-                        tcircle1.setRotate(tcircle1.getRotate()+5);
-                        tcircle2.setRotate(tcircle2.getRotate()+5);
-                    }
-                }));
-        rotateTimeline.setCycleCount(Timeline.INDEFINITE);
-        rotateTimeline.play();
-        Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent t) {
-                        backgroundImage.setOpacity(backgroundImage.getOpacity()+0.004);
-                        heading.setOpacity(heading.getOpacity()+0.01);
-                        heading.setLayoutY(heading.getLayoutY()+1);
-                        tcircle1.setOpacity(tcircle1.getOpacity()+0.01);
-                        tcircle1.setLayoutY(tcircle1.getLayoutY()+1);
-                        tcircle2.setOpacity(tcircle2.getOpacity()+0.01);
-                        tcircle2.setLayoutY(tcircle2.getLayoutY()+1);
-                        newGameButton.setOpacity(newGameButton.getOpacity()+0.01);
-                        newGameButton.setLayoutX(newGameButton.getLayoutX()+2);
-                        loadGameButton.setOpacity(loadGameButton.getOpacity()+0.01);
-                        loadGameButton.setLayoutX(loadGameButton.getLayoutX()-2);
-                        highScoreButton.setOpacity(highScoreButton.getOpacity()+0.01);
-                        highScoreButton.setLayoutX(highScoreButton.getLayoutX()+2);
-                        exitButton.setOpacity(exitButton.getOpacity()+0.01);
-                        exitButton.setLayoutX(exitButton.getLayoutX()-2);
-                    }
-                }));
-        enterTimeline.setCycleCount(100);
-        enterTimeline.play();
+        if(tcircle1!=null){
+            Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            tcircle1.setRotate(tcircle1.getRotate()+5);
+                            tcircle2.setRotate(tcircle2.getRotate()+5);
+                        }
+                    }));
+            rotateTimeline.setCycleCount(Timeline.INDEFINITE);
+            rotateTimeline.play();
+            Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            backgroundImage.setOpacity(backgroundImage.getOpacity()+0.004);
+                            heading.setOpacity(heading.getOpacity()+0.01);
+                            heading.setLayoutY(heading.getLayoutY()+1);
+                            tcircle1.setOpacity(tcircle1.getOpacity()+0.01);
+                            tcircle1.setLayoutY(tcircle1.getLayoutY()+1);
+                            tcircle2.setOpacity(tcircle2.getOpacity()+0.01);
+                            tcircle2.setLayoutY(tcircle2.getLayoutY()+1);
+                            newGameButton.setOpacity(newGameButton.getOpacity()+0.01);
+                            newGameButton.setLayoutX(newGameButton.getLayoutX()+2);
+                            loadGameButton.setOpacity(loadGameButton.getOpacity()+0.01);
+                            loadGameButton.setLayoutX(loadGameButton.getLayoutX()-2);
+                            highScoreButton.setOpacity(highScoreButton.getOpacity()+0.01);
+                            highScoreButton.setLayoutX(highScoreButton.getLayoutX()+2);
+                            exitButton.setOpacity(exitButton.getOpacity()+0.01);
+                            exitButton.setLayoutX(exitButton.getLayoutX()-2);
+                        }
+                    }));
+            enterTimeline.setCycleCount(100);
+            enterTimeline.play();
+        }
+        else{
+            Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            diffBackgroundImage.setOpacity(diffBackgroundImage.getOpacity()+0.004);
+                            easyLabel.setOpacity(easyLabel.getOpacity()+0.01);
+                            easyLabel.setLayoutX(easyLabel.getLayoutX()+1.25);
+                            easyImage.setOpacity(easyImage.getOpacity()+0.01);
+                            easyImage.setLayoutX(easyImage.getLayoutX()+1.77);
+                            mediumLabel.setLayoutX(mediumLabel.getLayoutX()-1.25);
+                            mediumLabel.setOpacity(mediumLabel.getOpacity()+0.01);
+                            mediumImage.setOpacity(mediumLabel.getOpacity()+0.01);
+                            mediumImage.setLayoutX(mediumImage.getLayoutX()-1.25);
+                            hardLabel.setLayoutX(hardLabel.getLayoutX()+1.25);
+                            hardLabel.setOpacity(hardLabel.getOpacity()+0.01);
+                            hardImage.setOpacity(hardImage.getOpacity()+0.01);
+                            hardImage.setLayoutX(hardImage.getLayoutX()+1.77);
+                            diffBackIcon.setOpacity(diffBackIcon.getOpacity()+0.01);
+                            diffBackIconCircle.setOpacity(diffBackIconCircle.getOpacity()+0.01);
+                            chooseImage.setLayoutY(chooseImage.getLayoutY()+0.7);
+                            chooseImage.setOpacity(chooseImage.getOpacity()+0.01);
+                        }
+                    }));
+            enterTimeline.setCycleCount(100);
+            enterTimeline.play();
+        }
+
     }
     public void exitAnimation(int buttonClicked){
         Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
@@ -194,14 +241,41 @@ public class Main extends Application {
                         break;
                     case 3:
                         try {
-                            newGame();
+                              pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
+//                            newGame();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        menuBG.getChildren().setAll(pane);
                         break;
                 }
             }
         });
+    }
+    public void goBack(){
+        AnchorPane pane=null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch(NullPointerException e){
+            System.out.println(e.getMessage());
+        }
+        newGameBG.getChildren().setAll(pane);
+
+    }
+    public void setDifficultyToEasy() throws Exception {
+        difficulty=0;
+        newGame();
+    }
+    public void setDifficultyToMedium() throws Exception {
+        difficulty=1;
+        newGame();
+    }
+    public void setDifficultyToHard() throws Exception {
+        difficulty=2;
+        newGame();
     }
     public void newGameAuxiliary(){
         exitAnimation(3);
@@ -424,7 +498,7 @@ public class Main extends Application {
             }
         };
         collisionTimer.scheduleAtFixedRate(task1,100,10);
-        menuBG.getChildren().setAll(canvas);
+        newGameBG .getChildren().setAll(canvas);
         EventHandler<MouseEvent> pauseEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
