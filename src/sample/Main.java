@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
@@ -184,75 +185,115 @@ public class Main extends Application {
 
     }
     public void exitAnimation(int buttonClicked){
-        Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent t) {
-                        yellowBall1.setOpacity(0);
-                        yellowBall2.setOpacity(0);
-                        pinkBall1.setOpacity(0);
-                        pinkBall2.setOpacity(0);
-                        blueBall1.setOpacity(0);
-                        blueBall2.setOpacity(0);
-                        purpleBall1.setOpacity(0);
-                        purpleBall2.setOpacity(0);
-                        backgroundImage.setOpacity(backgroundImage.getOpacity()-0.004);
-                        heading.setOpacity(heading.getOpacity()-0.01);
-                        heading.setLayoutY(heading.getLayoutY()-1);
-                        tcircle1.setOpacity(tcircle1.getOpacity()-0.01);
-                        tcircle1.setLayoutY(tcircle1.getLayoutY()-1);
-                        tcircle2.setOpacity(tcircle2.getOpacity()-0.01);
-                        tcircle2.setLayoutY(tcircle2.getLayoutY()-1);
-                        newGameButton.setOpacity(newGameButton.getOpacity()-0.01);
-                        newGameButton.setLayoutX(newGameButton.getLayoutX()-2);
-                        loadGameButton.setOpacity(loadGameButton.getOpacity()-0.01);
-                        loadGameButton.setLayoutX(loadGameButton.getLayoutX()+2);
-                        highScoreButton.setOpacity(highScoreButton.getOpacity()-0.01);
-                        highScoreButton.setLayoutX(highScoreButton.getLayoutX()-2);
-                        exitButton.setOpacity(exitButton.getOpacity()-0.01);
-                        exitButton.setLayoutX(exitButton.getLayoutX()+2);
-                    }
-                }));
-        enterTimeline.setCycleCount(200);
-        enterTimeline.play();
-        enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                AnchorPane pane = null;
-                switch(buttonClicked){
-                    case 1:
-
-                        try {
-                            pane = FXMLLoader.load(getClass().getResource("loadScreen.fxml"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+        Timeline exitTimeline;
+        if(menuBG!=null) {
+            exitTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            yellowBall1.setOpacity(0);
+                            yellowBall2.setOpacity(0);
+                            pinkBall1.setOpacity(0);
+                            pinkBall2.setOpacity(0);
+                            blueBall1.setOpacity(0);
+                            blueBall2.setOpacity(0);
+                            purpleBall1.setOpacity(0);
+                            purpleBall2.setOpacity(0);
+                            backgroundImage.setOpacity(backgroundImage.getOpacity() - 0.004);
+                            heading.setOpacity(heading.getOpacity() - 0.01);
+                            heading.setLayoutY(heading.getLayoutY() - 1);
+                            tcircle1.setOpacity(tcircle1.getOpacity() - 0.01);
+                            tcircle1.setLayoutY(tcircle1.getLayoutY() - 1);
+                            tcircle2.setOpacity(tcircle2.getOpacity() - 0.01);
+                            tcircle2.setLayoutY(tcircle2.getLayoutY() - 1);
+                            newGameButton.setOpacity(newGameButton.getOpacity() - 0.01);
+                            newGameButton.setLayoutX(newGameButton.getLayoutX() - 2);
+                            loadGameButton.setOpacity(loadGameButton.getOpacity() - 0.01);
+                            loadGameButton.setLayoutX(loadGameButton.getLayoutX() + 2);
+                            highScoreButton.setOpacity(highScoreButton.getOpacity() - 0.01);
+                            highScoreButton.setLayoutX(highScoreButton.getLayoutX() - 2);
+                            exitButton.setOpacity(exitButton.getOpacity() - 0.01);
+                            exitButton.setLayoutX(exitButton.getLayoutX() + 2);
                         }
-
-                        menuBG.getChildren().setAll(pane);
-                        break;
-                    case 2:
-
-                        try {
-                            pane = FXMLLoader.load(getClass().getResource("highScoreScreen.fxml"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    }));
+            exitTimeline.setCycleCount(200);
+        }
+        else{
+            exitTimeline = new Timeline(new KeyFrame(Duration.millis(3),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            overlay.setOpacity(overlay.getOpacity()-0.009);
+                            resumeButton.setOpacity(resumeButton.getOpacity()-0.01);
+                            resumeButton.setLayoutY(resumeButton.getLayoutY()+2);
+                            restartButton.setOpacity(restartButton.getOpacity()-0.01);
+                            restartButton.setLayoutY(restartButton.getLayoutY()+2);
+                            saveButton.setOpacity(saveButton.getOpacity()-0.01);
+                            saveButton.setLayoutY(saveButton.getLayoutY()+2);
+                            homeButton.setOpacity(homeButton.getOpacity()-0.01);
+                            homeButton.setLayoutY(homeButton.getLayoutY()-2);
                         }
-                        menuBG.getChildren().setAll(pane);
-                        break;
-                    case 3:
-                        try {
-                              pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
+                    }));
+            exitTimeline.setCycleCount(100);
+        }
+
+            exitTimeline.play();
+            exitTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    AnchorPane pane = null;
+                    switch(buttonClicked){
+                        case 1:
+
+                            try {
+                                pane = FXMLLoader.load(getClass().getResource("loadScreen.fxml"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if(menuBG!=null){
+                                menuBG.getChildren().setAll(pane);
+                            }
+                            else{
+                                newGameBG.getChildren().setAll(pane);
+                            }
+                            break;
+                        case 2:
+
+                            try {
+                                pane = FXMLLoader.load(getClass().getResource("highScoreScreen.fxml"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if(menuBG!=null){
+                                menuBG.getChildren().setAll(pane);
+                            }
+                            else{
+                                newGameBG.getChildren().setAll(pane);
+                            }
+                            break;
+                        case 3:
+                            try {
+                                pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
 //                            newGame();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        menuBG.getChildren().setAll(pane);
-                        break;
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if(menuBG!=null){
+                                menuBG.getChildren().setAll(pane);
+                            }
+                            else{
+                                newGameBG.getChildren().setAll(pane);
+                            }
+
+                            break;
+                    }
                 }
-            }
-        });
+            });
+
+
     }
     public void goBack(){
+        System.out.println("Fuck yes");
         AnchorPane pane=null;
         try {
             pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
@@ -281,7 +322,6 @@ public class Main extends Application {
         exitAnimation(3);
     }
     public void newGame() throws  Exception {
-
         Pane canvas = new Pane();
 
         //pause icon setup start
@@ -498,7 +538,12 @@ public class Main extends Application {
             }
         };
         collisionTimer.scheduleAtFixedRate(task1,100,10);
-        newGameBG .getChildren().setAll(canvas);
+        EventHandler<MouseEvent> homeHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                goBack();
+            }
+        };
         EventHandler<MouseEvent> pauseEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -523,6 +568,7 @@ public class Main extends Application {
                 resumeButton.setGraphic(resumeIcon);
                 resumeButton.setLayoutY(375);
                 resumeButton.setLayoutX(195);
+                resumeButton.setCursor(Cursor.HAND);
                 try {
                     stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\save.png");
                 } catch (FileNotFoundException e) {
@@ -536,6 +582,7 @@ public class Main extends Application {
                 saveButton.setGraphic(saveIcon);
                 saveButton.setLayoutY(475);
                 saveButton.setLayoutX(195);
+                saveButton.setCursor(Cursor.HAND);
                 try {
                     stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\restart.png");
                 } catch (FileNotFoundException e) {
@@ -548,6 +595,7 @@ public class Main extends Application {
                 restartButton.setGraphic(restartIcon);
                 restartButton.setLayoutY(575);
                 restartButton.setLayoutX(195);
+                restartButton.setCursor(Cursor.HAND);
                 try {
                     stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\home.png");
                 } catch (FileNotFoundException e) {
@@ -555,14 +603,13 @@ public class Main extends Application {
                 }
                 Image image4 = new Image(stream);
                 ImageView homeIcon = new ImageView(image4);
-                saveIcon.setFitHeight(60);
-                saveIcon.setPreserveRatio(true);
-                homeButton = new Label();
-                homeButton.setGraphic(homeIcon);
                 homeIcon.setFitHeight(75);
                 homeIcon.setPreserveRatio(true);
+                homeButton.setGraphic(homeIcon);
                 homeButton.setLayoutY(-170);
                 homeButton.setLayoutX(30);
+                homeButton.setCursor(Cursor.HAND);
+
                 resumeButton.setOpacity(0);
                 saveButton.setOpacity(0);
                 homeButton.setOpacity(0);
@@ -591,6 +638,17 @@ public class Main extends Application {
                 enterTimeline.play();
             }
         };
+        EventHandler<MouseEvent> restartHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    newGameAuxiliary();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
         EventHandler<MouseEvent> resumeHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -631,9 +689,10 @@ public class Main extends Application {
             }
         };
         resumeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,resumeHandler);
-
+        restartButton.addEventFilter(MouseEvent.MOUSE_CLICKED,restartHandler);
         pauseButton.addEventFilter(MouseEvent.MOUSE_CLICKED,pauseEventHandler);
-
+        homeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,homeHandler);
+        newGameBG .getChildren().setAll(canvas);
 
     }
     public void loadGame() throws Exception {

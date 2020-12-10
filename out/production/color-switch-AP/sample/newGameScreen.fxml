@@ -13,7 +13,7 @@
     <ImageView fx:id="diffBackgroundImage" fitHeight="600.0" fitWidth="450.0" opacity="0" pickOnBounds="true">
         <Image url="@../assets/stripes.jpg" />
     </ImageView>
-    <Label fx:id="easyLabel"  opacity="0" alignment="CENTER" layoutX="0" layoutY="150.0" onMouseClicked="#setDifficultyToEasy" prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #00ff00; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
+    <Label fx:id="easyLabel"  opacity="0" alignment="CENTER" layoutX="0" layoutY="150.0" prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #00ff00; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
         <font>
           <Font name="HoloLens MDL2 Assets" size="30.0" />
         </font>
@@ -24,7 +24,7 @@
          <Glow level="1.0" />
       </effect>
     </Label>
-    <Label fx:id="mediumLabel" opacity="0" alignment="CENTER" layoutX="250.0" layoutY="270.0" onMouseClicked="#setDifficultyToMedium" prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #ffff00; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
+    <Label fx:id="mediumLabel" opacity="0" alignment="CENTER" layoutX="250.0" layoutY="270.0"  prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #ffff00; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
         <font>
           <Font name="HoloLens MDL2 Assets" size="30.0" />
         </font>
@@ -35,7 +35,7 @@
          <Glow level="1.0" />
       </effect>
     </Label>
-    <Label fx:id="hardLabel" opacity="0" alignment="CENTER" layoutX="0.0" layoutY="390.0" onMouseClicked="#setDifficultyToHard" prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #ff0000; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
+    <Label fx:id="hardLabel" opacity="0" alignment="CENTER" layoutX="0.0" layoutY="390.0"  prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #ff0000; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
         <font>
           <Font name="HoloLens MDL2 Assets" size="30.0" />
         </font>
@@ -58,7 +58,7 @@
          <Image url="@../assets/choose.png" />
       </image>
    </ImageView>
-   <ImageView fx:id="easyImage" fitHeight="27.0" fitWidth="96.0" layoutX="0" layoutY="177.0" pickOnBounds="true" preserveRatio="true" opacity="0">
+   <ImageView fx:id="easyImage"  onMouseClicked="#setDifficultyToEasy" fitHeight="27.0" fitWidth="96.0" layoutX="0" layoutY="177.0" pickOnBounds="true" preserveRatio="true" opacity="0">
       <image>
          <Image url="@../assets/easy.png" />
       </image>
@@ -66,7 +66,7 @@
          <Cursor fx:constant="HAND" />
       </cursor>
    </ImageView>
-   <ImageView fx:id="mediumImage" fitHeight="27.0" fitWidth="130.0" layoutX="285" layoutY="298.0" pickOnBounds="true" preserveRatio="true" opacity="0">
+   <ImageView fx:id="mediumImage"  onMouseClicked="#setDifficultyToMedium" fitHeight="27.0" fitWidth="130.0" layoutX="285" layoutY="298.0" pickOnBounds="true" preserveRatio="true" opacity="0">
       <image>
          <Image url="@../assets/medium.png" />
       </image>
@@ -74,7 +74,7 @@
          <Cursor fx:constant="HAND" />
       </cursor>
    </ImageView>
-   <ImageView fx:id="hardImage" fitHeight="27.0" fitWidth="96.0" layoutX="0" layoutY="417.0" pickOnBounds="true" preserveRatio="true"  opacity="0">
+   <ImageView fx:id="hardImage"  onMouseClicked="#setDifficultyToHard" fitHeight="27.0" fitWidth="96.0" layoutX="0" layoutY="417.0" pickOnBounds="true" preserveRatio="true"  opacity="0">
       <image>
          <Image url="@../assets/hard.png" />
       </image>
