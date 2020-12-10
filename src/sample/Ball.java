@@ -7,15 +7,12 @@ import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
 
 public class Ball {
     protected double xCoordinate,yCoordinate;
-    boolean isInsideObstacle;
     protected Color ballColor;
     int color;
     protected Circle ballBody;
-    protected Rectangle Bbox;
     public  Ball(double xCoordinate, double yCoordinate, int color){
 
         this.color = color;
@@ -42,15 +39,30 @@ public class Ball {
         this.ballBody.setLayoutY(yCoordinate);
         this.ballBody.setLayoutX(xCoordinate);
         this.ballBody.setTranslateZ(0);
-        this.Bbox = new Rectangle(this.xCoordinate-15,this.yCoordinate-15,20,20);
     }
     public void setyCoordinate(double val) {
         this.ballBody.setLayoutY(this.ballBody.getLayoutY()+val);
         this.yCoordinate = this.ballBody.getLayoutY();
-        this.Bbox = new Rectangle(this.xCoordinate-15,this.yCoordinate-15,20,20);
     }
     public double getyCoordinate(){
         return this.ballBody.getLayoutY();
+    }
+    public void changeColor(int color){
+        switch(color){
+            case 0:
+                ballColor = Color.web("32dbf0");
+                break;
+            case 1:
+                ballColor = Color.web("fae100");
+                break;
+            case 2:
+                ballColor = Color.web("ff0181");
+                break;
+            case 3:
+                ballColor = Color.web("900dff");
+                break;
+        }
+        this.ballBody.setFill(ballColor);
     }
 
 

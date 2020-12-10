@@ -22,12 +22,10 @@ import java.util.Random;
 public class Star {
     private double angle = Math.PI / 5;
     protected double xCoordinate,yCoordinate;
-    protected Rectangle Bbox;
     protected ImageView starBody;
     public Star(double xCoordinate, double yCoordinate) throws FileNotFoundException {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        this.Bbox = new Rectangle(this.xCoordinate-20,this.yCoordinate-20,40,40);
         this.create();
     }
     public void create() throws FileNotFoundException {
@@ -41,7 +39,7 @@ public class Star {
         starBody.setPreserveRatio(true);
     }
     public void setyCoordinate(double val){
-        this.Bbox = new Rectangle(this.xCoordinate-20,this.Bbox.getLayoutY()+val,20,20);
+
         this.starBody.setLayoutY(this.starBody.getLayoutY()+val);
         this.yCoordinate = this.starBody.getLayoutY();
 
@@ -130,24 +128,5 @@ public class Star {
                 }
             }
         });
-//        this.starBody = null;
-//        Path smallStar = new Path();
-//        ArrayList<Path> smallStars = new ArrayList<>();
-//        for(int j=0;j<10;j++){
-//            for (int i = 0; i < 10; i++) {
-//                double r = (i & 1) == 0 ? 10 : 5;
-//                Point2D p = new Point2D(
-//                        this.xCoordinate-20 + Math.cos(i * angle) * r,
-//                        this.yCoordinate-(j-2)*15 + Math.sin(i * angle) * r);
-//                if (i == 0) {
-//                    smallStar.getElements().add(new MoveTo(p.getX(), p.getY()));
-//                }
-//                else {
-//                    smallStar.getElements().add(new LineTo(p.getX(), p.getY()));
-//                }
-//                smallStars.add(smallStar);
-//            }
-//        }
-//        return smallStars;
     }
 }
