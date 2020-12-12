@@ -25,7 +25,10 @@ public class LoadController {
     }
 
     public void loadSave(MouseEvent mouseEvent) {
-        //loads the selected game
+        // loads the selected game
+        // for now loads game 0
+        Main.getCurrentPlayer().setCurrentState(Main.getCurrentPlayer().getSavedGames().get(0));
+        Main.getCurrentPlayer().getCurrentState().loadGame(loadBG);
     }
 
     public void goBack() throws Exception {

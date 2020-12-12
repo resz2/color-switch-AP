@@ -15,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
 
 public class TitleController {
@@ -79,6 +80,14 @@ public class TitleController {
         enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                Database db = Main.getDB();
+                if(db.getPlayers().isEmpty())   {
+                    prompt();
+                }
+                else    {
+                    // sets the last playing player as the current one
+                    Main.setCurrentPlayer(db.getPlayers().get(db.getLastPlayer()));
+                }
                 AnchorPane pane = null;
                 try {
                     pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
@@ -90,10 +99,29 @@ public class TitleController {
         });
 
     }
-    @FXML
-    public void choosePlayer(){
 
+    @FXML
+    public void choosePlayer()  {
+        // displays player list and sets currentPlayer and lastPlayer
+        // For now sets player 0 as current player
+        Database db = Main.getDB();
+        Main.setCurrentPlayer(db.getPlayers().get(0));
+        db.setLastPlayer(0);
     }
+
+    private void prompt()   {
+        // prompts player to enter name and create a new player
+        // default for now
+        Database db = Main.getDB();
+        Player p = new Player("ur mom");
+        db.getPlayers().add(p);
+        db.setLastPlayer(0);
+    }
+
+
+
+    // ANIMATION
+
     public void enter(){
         if(exitTimeline.getStatus()!= Animation.Status.RUNNING){
             enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
@@ -113,6 +141,7 @@ public class TitleController {
         }
 
     }
+
     public void exit(){
         if(enterTimeline.getStatus()!= Animation.Status.RUNNING){
             exitTimeline = new Timeline(new KeyFrame(Duration.millis(5),
@@ -128,9 +157,6 @@ public class TitleController {
             exitTimeline.setCycleCount(100);
             exitTimeline.play();
         }
-
-
-
     }
 
 }
