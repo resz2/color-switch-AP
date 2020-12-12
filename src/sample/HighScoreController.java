@@ -38,6 +38,7 @@ public class HighScoreController {
         highScoreList.getItems().add("    4                         hard");
         highScoreList.getItems().add("    3                         hard");
         highScoreList.getItems().add("    2                         hard");
+
         Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
                 new EventHandler<ActionEvent>() {
                     @Override
@@ -59,7 +60,6 @@ public class HighScoreController {
                 }));
         enterTimeline.setCycleCount(100);
         enterTimeline.play();
-
     }
 
     public void goBack() throws Exception {

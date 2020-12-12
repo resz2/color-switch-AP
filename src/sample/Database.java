@@ -42,11 +42,10 @@ public class Database implements Serializable {
         try {
             in = new ObjectInputStream(new FileInputStream("database.txt"));
             db = (Database)in.readObject();
-        }
-        catch(FileNotFoundException | NullPointerException e)  {
-            db = new Database();
-        } finally {
             in.close();
+        }
+        catch(NullPointerException | FileNotFoundException e)  {
+            db = new Database();
         }
         return db;
     }

@@ -36,14 +36,16 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameState implements Serializable {
-    private int nextObsIndex, prevObsIndex, stars;
-    private int newStarPosition;
+    private int difficulty, nextObsIndex, prevObsIndex, stars, newStarPosition, newColorChangerPosition;
+    ;
     private boolean over;
     private double velocity;
     private Obstacle nextObstacle,prevObstacle;
     private Star closestStar;
+    private ColorChanger closestColorChanger;
     private ArrayList<Obstacle> circularObstacleArrayList;
     private ArrayList<Star> StarArrayList;
+    private ArrayList<ColorChanger> ColorChangerArraylist;
     private transient Animation.Status moveCamTimelineStatus;
     private transient Label resumeButton, saveButton, homeButton, pauseButton, scoreLabel, restartButton;
     private transient Rectangle overlay;
@@ -53,6 +55,7 @@ public class GameState implements Serializable {
         nextObsIndex = prevObsIndex = stars = 0;
         velocity = 0;
         newStarPosition = -600;
+        newColorChangerPosition = -2800;
         over = cameraMoving = false;
         resumeButton = new Label();
         saveButton = new Label();
@@ -62,11 +65,10 @@ public class GameState implements Serializable {
         restartButton = new Label();
         circularObstacleArrayList = new ArrayList<Obstacle>();
         StarArrayList = new ArrayList<Star>();
+        ColorChangerArraylist = new ArrayList<ColorChanger>();
     }
 
-    public void newGame(AnchorPane bgPane) throws  Exception {
-
-        Pane canvas = new Pane();
+    private void gameScreenSetup() {
         //pause icon setup start
         InputStream stream = this.getClass().getResourceAsStream("/pause.png");
         Image image = new Image(stream);
@@ -78,8 +80,8 @@ public class GameState implements Serializable {
         pauseIcon.setFitHeight(50);
         pauseIcon.setFitWidth(50);
         pauseIcon.setPreserveRatio(true);
-        canvas.getChildren().add(pauseButton);
         //pause icon setup end
+
         //score setup start
         try {
             stream = this.getClass().getResourceAsStream("/silverStar.png");
@@ -101,35 +103,121 @@ public class GameState implements Serializable {
         scoreLabel.setFont(font);
         //Filling color to the label
         scoreLabel.setTextFill(Color.web("272727"));
-        canvas.getChildren().add(scoreLabel);
         //score setup end
+    }
+
+    private void pauseSetup()   {
+        InputStream stream = null;
+        try {
+            stream = this.getClass().getResourceAsStream("/resume.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Image image = new Image(stream);
+        ImageView resumeIcon = new ImageView(image);
+        resumeIcon.setFitHeight(60);
+        resumeIcon.setPreserveRatio(true);
+        resumeButton.setGraphic(resumeIcon);
+        resumeButton.setLayoutY(375);
+        resumeButton.setLayoutX(195);
+        try {
+            stream = this.getClass().getResourceAsStream("/save.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Image image1 = new Image(stream);
+        ImageView saveIcon = new ImageView(image1);
+        saveIcon.setFitHeight(60);
+        saveIcon.setPreserveRatio(true);
+        saveButton = new Label();
+        saveButton.setGraphic(saveIcon);
+        saveButton.setLayoutY(475);
+        saveButton.setLayoutX(195);
+        try {
+            stream = this.getClass().getResourceAsStream("/restart.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Image image3 = new Image(stream);
+        ImageView restartIcon = new ImageView(image3);
+        restartIcon.setFitHeight(60);
+        restartIcon.setPreserveRatio(true);
+        restartButton.setGraphic(restartIcon);
+        restartButton.setLayoutY(575);
+        restartButton.setLayoutX(195);
+        try {
+            stream = this.getClass().getResourceAsStream("/home.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Image image4 = new Image(stream);
+        ImageView homeIcon = new ImageView(image4);
+        saveIcon.setFitHeight(60);
+        saveIcon.setPreserveRatio(true);
+        homeButton = new Label();
+        homeButton.setGraphic(homeIcon);
+        homeIcon.setFitHeight(75);
+        homeIcon.setPreserveRatio(true);
+        homeButton.setLayoutY(-170);
+        homeButton.setLayoutX(30);
+        resumeButton.setOpacity(0);
+        saveButton.setOpacity(0);
+        homeButton.setOpacity(0);
+        restartButton.setOpacity(0);
+    }
+
+    public void newGame(AnchorPane bgPane) throws  Exception {
+
+        Pane canvas = new Pane();
+
+        gameScreenSetup();
+        canvas.getChildren().add(pauseButton);
+        canvas.getChildren().add(scoreLabel);
+
         Ball ball = new Ball(225,550,1);
 
-        for (int i=0;i<1;i++){
-            circularObstacleArrayList.add(new ThornObstacle(50,300,225,1.5));
-//            if(i%3==0){
-//                circularObstacleArrayList.add(new CrossObstacle(300-400*(i),275));
-//            }
-//            else if (i%3==1){
-//                circularObstacleArrayList.add(new SquareObstacle(80,95,300-400*i,225));
-//            }
-//            else{
-//                circularObstacleArrayList.add(new CircularObstacle(80,95,300-400*(i),225));
-//            }
+        for (int i=0;i<16;i++)  {
+
+            if(i%6==0){
+                circularObstacleArrayList.add(new BowObstacle(300-400*i,225,75,90,125));
+                //circularObstacleArrayList.add(new CrossObstacle(300-400*(i),275));
+            }
+            else if (i%6==1){
+                circularObstacleArrayList.add(new HalfBowObstacle(300-400*i,225,75,90,125));
+                //circularObstacleArrayList.add(new SquareObstacle(80,95,300-400*i,225));
+            }
+            else if (i%6==2){
+                circularObstacleArrayList.add(new ThornObstacle(50,300-400*i,225,1.5));
+            }
+            else if (i%6==3){
+
+            }
+            else if (i%6==4){
+
+            }
+            else{
+                circularObstacleArrayList.add(new CircularObstacle(80,95,300-400*(i),225));
+            }
         }
+
         for(int i=0;i<circularObstacleArrayList.size();i++){
             circularObstacleArrayList.get(i).create();
-            //circularObstacleArrayList.get(i).obstacle.setOpacity(0);
+            circularObstacleArrayList.get(i).obstacle.setOpacity(0);
             canvas.getChildren().add(circularObstacleArrayList.get(i).obstacle);
         }
         for(int i=0;i<3;i++){
             Star star = new Star(225,300-300*(i));
             StarArrayList.add(star);
+            ColorChanger c = new ColorChanger(225,200-1000*(i));
+            ColorChangerArraylist.add(c);
+            canvas.getChildren().add(ColorChangerArraylist.get(i).colorChangerBody);
             canvas.getChildren().add(StarArrayList.get(i).starBody);
         }
+
         nextObstacle = circularObstacleArrayList.get(nextObsIndex);
         prevObstacle = circularObstacleArrayList.get(prevObsIndex);
         closestStar = StarArrayList.get(0);
+        closestColorChanger = ColorChangerArraylist.get(0);
         canvas.getChildren().add(ball.ballBody);
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16.67),
                 new EventHandler<ActionEvent>() {
@@ -154,10 +242,14 @@ public class GameState implements Serializable {
                         for(int i=0;i<StarArrayList.size();i++){
                             StarArrayList.get(i).setyCoordinate(0.3);
                         }
-                    }
+                        for(int i=0;i<ColorChangerArraylist.size();i++){
+                            ColorChangerArraylist.get(i).setyCoordinate(0.3);
+
+                        }}
 
                 }));
         moveCameraTimeline.setCycleCount(100);
+
         Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
                 new EventHandler<ActionEvent>() {
                     @Override
@@ -168,8 +260,9 @@ public class GameState implements Serializable {
 
                     }
                 }));
+
         rotateTimeline.setCycleCount(Timeline.INDEFINITE);
-        //rotateTimeline.play();
+        rotateTimeline.play();
         canvas.setFocusTraversable(true);
         canvas.addEventFilter(KeyEvent.KEY_PRESSED, event->{
             if (event.getCode() == KeyCode.SPACE) {
@@ -182,7 +275,7 @@ public class GameState implements Serializable {
             @Override
             public void run() {
                 if(ball.getyCoordinate()<= 300 && !cameraMoving){
-                    //moveCamera(timeline,moveCameraTimeline);
+                    moveCamera(timeline,moveCameraTimeline);
                     try {
 
                     } catch (Exception e) {
@@ -193,56 +286,76 @@ public class GameState implements Serializable {
         };
         timer.scheduleAtFixedRate(task,100,100);
         Timer collisionTimer = new Timer();
+
         TimerTask task1 = new TimerTask() {
             @Override
             public void run() {
-                if( (nextObstacle.collides(ball.ballBody,ball.color)==0 || prevObstacle.collides(ball.ballBody,ball.color)==0) && !over){
-                    try {
-                        over = true;
-                        gameOver(ball,canvas,timeline, bgPane);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                else if (nextObstacle.collides(ball.ballBody,ball.color)==1){
-                    if(nextObsIndex!=prevObsIndex){
-                        prevObsIndex++;
-                    }
-                    nextObsIndex++;
-                    nextObstacle = circularObstacleArrayList.get(nextObsIndex);
-                    prevObstacle = circularObstacleArrayList.get(prevObsIndex);
-                }
-                if(closestStar.checkCollision(ball.ballBody)){
+//                    if( (nextObstacle.collides(ball.ballBody,ball.color)==0 || prevObstacle.collides(ball.ballBody,ball.color)==0) && !over){
+//                        try {
+//                            over = true;
+//                            gameOver(ball,canvas,timeline);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                    else if (nextObstacle.collides(ball.ballBody,ball.color)==1){
+//                        if(nextObsIndex!=prevObsIndex){
+//                            prevObsIndex++;
+//                        }
+//                        nextObsIndex++;
+//                        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
+//                        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
+//                    }
+//                if(closestStar.checkCollision(ball.ballBody)){
+//                    moveCameraTimeline.pause();
+//                    closestStar.showAnimation(canvas);
+//                    StarArrayList.remove(closestStar);
+//                    int newScore = Integer.parseInt(scoreLabel.getText())+1;
+//                    System.out.println(newScore);
+//
+//                    try {
+//                        Star newStar = new Star(225,newStarPosition);
+//                        newStarPosition-=300;
+//                        StarArrayList.add(newStar);
+//                        Platform.runLater(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                canvas.getChildren().remove(closestStar);
+//                                canvas.getChildren().add(newStar.starBody);
+//                                scoreLabel.setText(String.valueOf(newScore));
+//                            }
+//                        });
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+//                    closestStar = StarArrayList.get(0);
+//                    moveCameraTimeline.play();
+//                }
+                if(closestColorChanger.checkCollision(ball.ballBody)){
                     moveCameraTimeline.pause();
-                    closestStar.showAnimation(canvas);
-                    StarArrayList.remove(closestStar);
-                    int newScore = Integer.parseInt(scoreLabel.getText())+1;
-                    System.out.println(newScore);
+                    int newColor = closestColorChanger.showAnimation(canvas);
+                    System.out.println(newColor);
+                    ball.changeColor(newColor);
+                    ColorChangerArraylist.remove(closestColorChanger);
+                    canvas.getChildren().remove(closestColorChanger);
+                    ColorChanger c = new ColorChanger(225,newColorChangerPosition);
+                    newColorChangerPosition-=300;
+                    ColorChangerArraylist.add(c);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            canvas.getChildren().add(c.colorChangerBody);
+                        }
+                    });
 
-                    try {
-                        Star newStar = new Star(225,newStarPosition);
-                        newStarPosition-=300;
-                        StarArrayList.add(newStar);
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                canvas.getChildren().add(newStar.starBody);
-                                scoreLabel.setText(String.valueOf(newScore));
-                                stars = newScore;
-                            }
-                        });
-//                        collectedStar(canvas,closestStar);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    closestStar = StarArrayList.get(0);
+                    closestColorChanger = ColorChangerArraylist.get(0);
                     moveCameraTimeline.play();
                 }
             }
         };
         collisionTimer.scheduleAtFixedRate(task1,100,10);
         bgPane.getChildren().setAll(canvas);
+
         EventHandler<MouseEvent> pauseEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -254,63 +367,9 @@ public class GameState implements Serializable {
                 overlay.setFill(Color.BLACK);
                 overlay.setOpacity(0);
                 canvas.getChildren().add(overlay);
-                InputStream stream = null;
-                try {
-                    stream = this.getClass().getResourceAsStream("/resume.png");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Image image = new Image(stream);
-                ImageView resumeIcon = new ImageView(image);
-                resumeIcon.setFitHeight(60);
-                resumeIcon.setPreserveRatio(true);
-                resumeButton.setGraphic(resumeIcon);
-                resumeButton.setLayoutY(375);
-                resumeButton.setLayoutX(195);
-                try {
-                    stream = this.getClass().getResourceAsStream("/save.png");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Image image1 = new Image(stream);
-                ImageView saveIcon = new ImageView(image1);
-                saveIcon.setFitHeight(60);
-                saveIcon.setPreserveRatio(true);
-                saveButton = new Label();
-                saveButton.setGraphic(saveIcon);
-                saveButton.setLayoutY(475);
-                saveButton.setLayoutX(195);
-                try {
-                    stream = this.getClass().getResourceAsStream("/restart.png");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Image image3 = new Image(stream);
-                ImageView restartIcon = new ImageView(image3);
-                restartIcon.setFitHeight(60);
-                restartIcon.setPreserveRatio(true);
-                restartButton.setGraphic(restartIcon);
-                restartButton.setLayoutY(575);
-                restartButton.setLayoutX(195);
-                try {
-                    stream = this.getClass().getResourceAsStream("/home.png");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                Image image4 = new Image(stream);
-                ImageView homeIcon = new ImageView(image4);
-                saveIcon.setFitHeight(60);
-                saveIcon.setPreserveRatio(true);
-                homeButton = new Label();
-                homeButton.setGraphic(homeIcon);
-                homeIcon.setFitHeight(75);
-                homeIcon.setPreserveRatio(true);
-                homeButton.setLayoutY(-170);
-                homeButton.setLayoutX(30);
-                resumeButton.setOpacity(0);
-                saveButton.setOpacity(0);
-                homeButton.setOpacity(0);
-                restartButton.setOpacity(0);
+
+                pauseSetup();
+
                 canvas.getChildren().add(resumeButton);
                 canvas.getChildren().add(saveButton);
                 canvas.getChildren().add(homeButton);
@@ -335,6 +394,7 @@ public class GameState implements Serializable {
                 enterTimeline.play();
             }
         };
+
         EventHandler<MouseEvent> resumeHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -374,11 +434,9 @@ public class GameState implements Serializable {
                 });
             }
         };
+
         resumeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,resumeHandler);
-
         pauseButton.addEventFilter(MouseEvent.MOUSE_CLICKED,pauseEventHandler);
-
-
     }
 
     public void loadGame(AnchorPane bgPane) {
@@ -395,7 +453,7 @@ public class GameState implements Serializable {
         });
     }
 
-    public void gameOver(Ball ball,Pane canvas,Timeline gravityTimeline, AnchorPane menuBG) throws Exception{
+    public void gameOver(Ball ball,Pane canvas,Timeline gravityTimeline, AnchorPane bgPane) throws Exception{
         gravityTimeline.pause();
         Timeline enlargeTimeline = new Timeline(new KeyFrame(Duration.millis(1),
                 new EventHandler<ActionEvent>() {
@@ -581,7 +639,7 @@ public class GameState implements Serializable {
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                                menuBG.getChildren().setAll(pane);
+                                bgPane.getChildren().setAll(pane);
                             }
                         });
                     }
