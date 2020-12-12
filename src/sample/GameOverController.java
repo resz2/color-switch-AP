@@ -10,6 +10,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
 
+import java.io.IOException;
+
 public class GameOverController {
     @FXML
     private AnchorPane gameOverBG;
@@ -44,9 +46,15 @@ public class GameOverController {
 //        enterTimeline.play();
 
     }
-    public void restartGame() {
+    public void restartGame() throws IOException {
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
+        gameOverBG.getChildren().setAll(pane);
     }
 
-    public void continueGame() {
+    public void continueGame() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("newGameScreen.fxml"));
+        Main mainCont = loader.getController();
+        System.out.println("Reviving now :)");
+        mainCont.revive();
     }
 }

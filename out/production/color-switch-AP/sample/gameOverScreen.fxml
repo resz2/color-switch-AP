@@ -12,7 +12,7 @@
 
 <AnchorPane fx:id="gameOverBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #272727;"
             xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="sample.GameOverController">
+            fx:controller="sample.Main">
    <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="150.0" layoutY="14.0" pickOnBounds="true">
       <Image url="@../assets/game-over.png"/>
    </ImageView>

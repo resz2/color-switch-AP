@@ -7,6 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ContentDisplay;
@@ -31,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
@@ -61,7 +63,7 @@ public class Main extends Application {
     @FXML
     private ImageView backgroundImage;
     @FXML
-    private AnchorPane menuBG;
+    private AnchorPane menuBG,newGameBG,gameOverBG;
     @FXML
     private Label newGameButton;
     @FXML
@@ -72,11 +74,30 @@ public class Main extends Application {
     private Label exitButton;
     @FXML
     private Label heading;
+    @FXML
+    private ImageView diffBackgroundImage;
+    @FXML
+    private ImageView easyImage;
+    @FXML
+    private ImageView mediumImage;
+    @FXML
+    private ImageView hardImage;
+    @FXML
+    private ImageView chooseImage;
+    @FXML
+    private Label easyLabel,mediumLabel,hardLabel;
+    @FXML
+    private ImageView diffBackIcon;
+    Boolean played = false;
+    @FXML
+            private Circle diffBackIconCircle;
     int nextObsIndex=0,prevObsIndex=0;
     int newStarPosition=-600;
+    int newObstaclePosititon=-1000;
+    int difficulty;
     int newColorChangerPosition=-2800;
     Animation.Status moveCamTimelineStatus;
-    Obstacle nextObstacle,prevObstacle;
+    Obstacle nextObstacle,prevObstacle,newObs;
     Boolean over=false;
     Star closestStar;
     ColorChanger closestColorChanger;
@@ -84,7 +105,9 @@ public class Main extends Application {
     Rectangle overlay;
     public boolean cameraMoving = false;
     double velocity = 0;
-
+    Pane canvas;
+    int numStarsCollected=0;
+    int numRetry = 0;
     @Override
     public void start(Stage stage) throws Exception, InterruptedException{
         Parent root = FXMLLoader.load(getClass().getResource("titleScreen.fxml"));
@@ -102,114 +125,211 @@ public class Main extends Application {
     }
 
     public void initialize(){
-        Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent t) {
-                        tcircle1.setRotate(tcircle1.getRotate()+5);
-                        tcircle2.setRotate(tcircle2.getRotate()+5);
-                    }
-                }));
-        rotateTimeline.setCycleCount(Timeline.INDEFINITE);
-        rotateTimeline.play();
-        Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent t) {
-                        backgroundImage.setOpacity(backgroundImage.getOpacity()+0.004);
-                        heading.setOpacity(heading.getOpacity()+0.01);
-                        heading.setLayoutY(heading.getLayoutY()+1);
-                        tcircle1.setOpacity(tcircle1.getOpacity()+0.01);
-                        tcircle1.setLayoutY(tcircle1.getLayoutY()+1);
-                        tcircle2.setOpacity(tcircle2.getOpacity()+0.01);
-                        tcircle2.setLayoutY(tcircle2.getLayoutY()+1);
-                        newGameButton.setOpacity(newGameButton.getOpacity()+0.01);
-                        newGameButton.setLayoutX(newGameButton.getLayoutX()+2);
-                        loadGameButton.setOpacity(loadGameButton.getOpacity()+0.01);
-                        loadGameButton.setLayoutX(loadGameButton.getLayoutX()-2);
-                        highScoreButton.setOpacity(highScoreButton.getOpacity()+0.01);
-                        highScoreButton.setLayoutX(highScoreButton.getLayoutX()+2);
-                        exitButton.setOpacity(exitButton.getOpacity()+0.01);
-                        exitButton.setLayoutX(exitButton.getLayoutX()-2);
-                    }
-                }));
-        enterTimeline.setCycleCount(100);
-        enterTimeline.play();
+        if(tcircle1!=null){
+            Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            tcircle1.setRotate(tcircle1.getRotate()+5);
+                            tcircle2.setRotate(tcircle2.getRotate()+5);
+                        }
+                    }));
+            rotateTimeline.setCycleCount(Timeline.INDEFINITE);
+            rotateTimeline.play();
+            Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            backgroundImage.setOpacity(backgroundImage.getOpacity()+0.004);
+                            heading.setOpacity(heading.getOpacity()+0.01);
+                            heading.setLayoutY(heading.getLayoutY()+1);
+                            tcircle1.setOpacity(tcircle1.getOpacity()+0.01);
+                            tcircle1.setLayoutY(tcircle1.getLayoutY()+1);
+                            tcircle2.setOpacity(tcircle2.getOpacity()+0.01);
+                            tcircle2.setLayoutY(tcircle2.getLayoutY()+1);
+                            newGameButton.setOpacity(newGameButton.getOpacity()+0.01);
+                            newGameButton.setLayoutX(newGameButton.getLayoutX()+2);
+                            loadGameButton.setOpacity(loadGameButton.getOpacity()+0.01);
+                            loadGameButton.setLayoutX(loadGameButton.getLayoutX()-2);
+                            highScoreButton.setOpacity(highScoreButton.getOpacity()+0.01);
+                            highScoreButton.setLayoutX(highScoreButton.getLayoutX()+2);
+                            exitButton.setOpacity(exitButton.getOpacity()+0.01);
+                            exitButton.setLayoutX(exitButton.getLayoutX()-2);
+                        }
+                    }));
+            enterTimeline.setCycleCount(100);
+            enterTimeline.play();
+        }
+        else if(diffBackgroundImage!=null){
+            Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            diffBackgroundImage.setOpacity(diffBackgroundImage.getOpacity()+0.004);
+                            easyLabel.setOpacity(easyLabel.getOpacity()+0.01);
+                            easyLabel.setLayoutX(easyLabel.getLayoutX()+1.25);
+                            easyImage.setOpacity(easyImage.getOpacity()+0.01);
+                            easyImage.setLayoutX(easyImage.getLayoutX()+1.77);
+                            mediumLabel.setLayoutX(mediumLabel.getLayoutX()-1.25);
+                            mediumLabel.setOpacity(mediumLabel.getOpacity()+0.01);
+                            mediumImage.setOpacity(mediumLabel.getOpacity()+0.01);
+                            mediumImage.setLayoutX(mediumImage.getLayoutX()-1.25);
+                            hardLabel.setLayoutX(hardLabel.getLayoutX()+1.25);
+                            hardLabel.setOpacity(hardLabel.getOpacity()+0.01);
+                            hardImage.setOpacity(hardImage.getOpacity()+0.01);
+                            hardImage.setLayoutX(hardImage.getLayoutX()+1.77);
+                            diffBackIcon.setOpacity(diffBackIcon.getOpacity()+0.01);
+                            diffBackIconCircle.setOpacity(diffBackIconCircle.getOpacity()+0.01);
+                            chooseImage.setLayoutY(chooseImage.getLayoutY()+0.7);
+                            chooseImage.setOpacity(chooseImage.getOpacity()+0.01);
+                        }
+                    }));
+            enterTimeline.setCycleCount(100);
+            enterTimeline.play();
+        }
+        else{
+
+        }
+
     }
     public void exitAnimation(int buttonClicked){
-        Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
-                new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent t) {
-                        yellowBall1.setOpacity(0);
-                        yellowBall2.setOpacity(0);
-                        pinkBall1.setOpacity(0);
-                        pinkBall2.setOpacity(0);
-                        blueBall1.setOpacity(0);
-                        blueBall2.setOpacity(0);
-                        purpleBall1.setOpacity(0);
-                        purpleBall2.setOpacity(0);
-                        backgroundImage.setOpacity(backgroundImage.getOpacity()-0.004);
-                        heading.setOpacity(heading.getOpacity()-0.01);
-                        heading.setLayoutY(heading.getLayoutY()-1);
-                        tcircle1.setOpacity(tcircle1.getOpacity()-0.01);
-                        tcircle1.setLayoutY(tcircle1.getLayoutY()-1);
-                        tcircle2.setOpacity(tcircle2.getOpacity()-0.01);
-                        tcircle2.setLayoutY(tcircle2.getLayoutY()-1);
-                        newGameButton.setOpacity(newGameButton.getOpacity()-0.01);
-                        newGameButton.setLayoutX(newGameButton.getLayoutX()-2);
-                        loadGameButton.setOpacity(loadGameButton.getOpacity()-0.01);
-                        loadGameButton.setLayoutX(loadGameButton.getLayoutX()+2);
-                        highScoreButton.setOpacity(highScoreButton.getOpacity()-0.01);
-                        highScoreButton.setLayoutX(highScoreButton.getLayoutX()-2);
-                        exitButton.setOpacity(exitButton.getOpacity()-0.01);
-                        exitButton.setLayoutX(exitButton.getLayoutX()+2);
+        Timeline exitTimeline;
+        if(menuBG!=null) {
+            exitTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            yellowBall1.setOpacity(0);
+                            yellowBall2.setOpacity(0);
+                            pinkBall1.setOpacity(0);
+                            pinkBall2.setOpacity(0);
+                            blueBall1.setOpacity(0);
+                            blueBall2.setOpacity(0);
+                            purpleBall1.setOpacity(0);
+                            purpleBall2.setOpacity(0);
+                            backgroundImage.setOpacity(backgroundImage.getOpacity() - 0.004);
+                            heading.setOpacity(heading.getOpacity() - 0.01);
+                            heading.setLayoutY(heading.getLayoutY() - 1);
+                            tcircle1.setOpacity(tcircle1.getOpacity() - 0.01);
+                            tcircle1.setLayoutY(tcircle1.getLayoutY() - 1);
+                            tcircle2.setOpacity(tcircle2.getOpacity() - 0.01);
+                            tcircle2.setLayoutY(tcircle2.getLayoutY() - 1);
+                            newGameButton.setOpacity(newGameButton.getOpacity() - 0.01);
+                            newGameButton.setLayoutX(newGameButton.getLayoutX() - 2);
+                            loadGameButton.setOpacity(loadGameButton.getOpacity() - 0.01);
+                            loadGameButton.setLayoutX(loadGameButton.getLayoutX() + 2);
+                            highScoreButton.setOpacity(highScoreButton.getOpacity() - 0.01);
+                            highScoreButton.setLayoutX(highScoreButton.getLayoutX() - 2);
+                            exitButton.setOpacity(exitButton.getOpacity() - 0.01);
+                            exitButton.setLayoutX(exitButton.getLayoutX() + 2);
+                        }
+                    }));
+            exitTimeline.setCycleCount(200);
+        }
+        else{
+            exitTimeline = new Timeline(new KeyFrame(Duration.millis(3),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            overlay.setOpacity(overlay.getOpacity()-0.009);
+                            resumeButton.setOpacity(resumeButton.getOpacity()-0.01);
+                            resumeButton.setLayoutY(resumeButton.getLayoutY()+2);
+                            restartButton.setOpacity(restartButton.getOpacity()-0.01);
+                            restartButton.setLayoutY(restartButton.getLayoutY()+2);
+                            saveButton.setOpacity(saveButton.getOpacity()-0.01);
+                            saveButton.setLayoutY(saveButton.getLayoutY()+2);
+                            homeButton.setOpacity(homeButton.getOpacity()-0.01);
+                            homeButton.setLayoutY(homeButton.getLayoutY()-2);
+                        }
+                    }));
+            exitTimeline.setCycleCount(100);
+        }
+
+            exitTimeline.play();
+            exitTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    AnchorPane pane = null;
+                    switch(buttonClicked){
+                        case 1:
+
+                            try {
+                                pane = FXMLLoader.load(getClass().getResource("loadScreen.fxml"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if(menuBG!=null){
+                                menuBG.getChildren().setAll(pane);
+                            }
+                            else{
+                                newGameBG.getChildren().setAll(pane);
+                            }
+                            break;
+                        case 2:
+
+                            try {
+                                pane = FXMLLoader.load(getClass().getResource("highScoreScreen.fxml"));
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            if(menuBG!=null){
+                                menuBG.getChildren().setAll(pane);
+                            }
+                            else{
+                                newGameBG.getChildren().setAll(pane);
+                            }
+                            break;
+                        case 3:
+                            try {
+                                pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
+//                            newGame();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if(menuBG!=null){
+                                menuBG.getChildren().setAll(pane);
+                            }
+                            else{
+                                newGameBG.getChildren().setAll(pane);
+                            }
+
+                            break;
                     }
-                }));
-        enterTimeline.setCycleCount(200);
-        enterTimeline.play();
-        enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                AnchorPane pane = null;
-                switch(buttonClicked){
-                    case 1:
-
-                        try {
-                            pane = FXMLLoader.load(getClass().getResource("loadScreen.fxml"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        menuBG.getChildren().setAll(pane);
-                        break;
-                    case 2:
-
-                        try {
-                            pane = FXMLLoader.load(getClass().getResource("highScoreScreen.fxml"));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        menuBG.getChildren().setAll(pane);
-                        break;
-                    case 3:
-                        try {
-                            newGame();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        break;
                 }
-            }
-        });
+            });
+
+
+    }
+    public void goBack(){
+        AnchorPane pane=null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch(NullPointerException e){
+            System.out.println(e.getMessage());
+        }
+        newGameBG.getChildren().setAll(pane);
+
+    }
+    public void setDifficultyToEasy() throws Exception {
+        difficulty=0;
+        newGame();
+    }
+    public void setDifficultyToMedium() throws Exception {
+        difficulty=1;
+        newGame();
+    }
+    public void setDifficultyToHard() throws Exception {
+        difficulty=2;
+        newGame();
     }
     public void newGameAuxiliary(){
         exitAnimation(3);
     }
     public void newGame() throws  Exception {
-
-        Pane canvas = new Pane();
-
+        canvas = new Pane();
         //pause icon setup start
         InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\pause.png");
         Image image = new Image(stream);
@@ -251,32 +371,22 @@ public class Main extends Application {
         ArrayList<Obstacle> circularObstacleArrayList = new ArrayList<Obstacle>();
         ArrayList<Star> StarArrayList = new ArrayList<>();
         ArrayList<ColorChanger> ColorChangerArraylist = new ArrayList<>();
-        for (int i=0;i<16;i++){
+        Random randGen = new Random();
+        for (int i=0;i<5;i++){
+            int obsNumber = randGen.nextInt(6);
+            switch (obsNumber) {
+                case 0 -> circularObstacleArrayList.add(new CrossObstacle(300 - 500 * (i), 275));
+                case 1 -> circularObstacleArrayList.add(new SquareObstacle(80, 95, 300 - 500 * i, 225));
+                case 2 -> circularObstacleArrayList.add(new ThornObstacle(100, 300 - 500 * i, 225, 1.3));
+                case 3 -> circularObstacleArrayList.add(new BowObstacle(300 - 500 * i, 225, 75, 90, 125));
+                case 4 -> circularObstacleArrayList.add(new HalfBowObstacle(300 - 500 * i, 225, 75, 90, 125));
+                case 5 -> circularObstacleArrayList.add(new CircularObstacle(80, 95, 300 - 500 * (i), 225));
+            }
 
-            if(i%6==0){
-                circularObstacleArrayList.add(new BowObstacle(300-400*i,225,75,90,125));
-               //circularObstacleArrayList.add(new CrossObstacle(300-400*(i),275));
-            }
-            else if (i%6==1){
-                circularObstacleArrayList.add(new HalfBowObstacle(300-400*i,225,75,90,125));
-                //circularObstacleArrayList.add(new SquareObstacle(80,95,300-400*i,225));
-            }
-            else if (i%6==2){
-                circularObstacleArrayList.add(new ThornObstacle(50,300-400*i,225,1.5));
-            }
-            else if (i%6==3){
-
-            }
-            else if (i%6==4){
-
-            }
-            else{
-                circularObstacleArrayList.add(new CircularObstacle(80,95,300-400*(i),225));
-            }
         }
         for(int i=0;i<circularObstacleArrayList.size();i++){
             circularObstacleArrayList.get(i).create();
-            circularObstacleArrayList.get(i).obstacle.setOpacity(0);
+            //circularObstacleArrayList.get(i).obstacle.setOpacity(0);
             canvas.getChildren().add(circularObstacleArrayList.get(i).obstacle);
         }
         for(int i=0;i<3;i++){
@@ -304,12 +414,12 @@ public class Main extends Application {
                 }));
         timeline.setCycleCount(Timeline.INDEFINITE);
 
-        Timeline moveCameraTimeline = new Timeline(new KeyFrame(Duration.millis(2),
+        Timeline moveCameraTimeline = new Timeline(new KeyFrame(Duration.millis(3),
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
-
                         for(int i=0;i<circularObstacleArrayList.size();i++) {
+
                             circularObstacleArrayList.get(i).setyCoordinate(0.3);
                         }
                         for(int i=0;i<StarArrayList.size();i++){
@@ -318,10 +428,16 @@ public class Main extends Application {
                         for(int i=0;i<ColorChangerArraylist.size();i++){
                             ColorChangerArraylist.get(i).setyCoordinate(0.3);
 
-                        }}
+                        }
+                        //velocity+=0.35;
+//                        if(velocity<0){
+//
+//                        }
+                    }
 
                 }));
         moveCameraTimeline.setCycleCount(100);
+
         Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
                 new EventHandler<ActionEvent>() {
                     @Override
@@ -335,9 +451,15 @@ public class Main extends Application {
         rotateTimeline.setCycleCount(Timeline.INDEFINITE);
         rotateTimeline.play();
         canvas.setFocusTraversable(true);
+
         canvas.addEventFilter(KeyEvent.KEY_PRESSED, event->{
+
             if (event.getCode() == KeyCode.SPACE) {
-                timeline.play();
+                if(!played){
+                    timeline.play();
+                    played =true;
+                }
+
                 velocity=-6;
             }
         });
@@ -345,62 +467,98 @@ public class Main extends Application {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
+//                System.out.println(ball.getyCoordinate());
                 if(ball.getyCoordinate()<= 300 && !cameraMoving){
+//                    timeline.pause();
+//                    if(velocity>=0){
+//                        System.out.println("Hallelujuah");
+//                        //moveCameraTimeline.stop();
+//                        timeline.play();
+//                    }
+                    //moveCameraTimeline.play();
                     moveCamera(timeline,moveCameraTimeline);
-                    try {
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
                 }
             }
         };
-        timer.scheduleAtFixedRate(task,100,100);
+        timer.scheduleAtFixedRate(task,100,10);
         Timer collisionTimer = new Timer();
         TimerTask task1 = new TimerTask() {
             @Override
             public void run() {
-//                    if( (nextObstacle.collides(ball.ballBody,ball.color)==0 || prevObstacle.collides(ball.ballBody,ball.color)==0) && !over){
-//                        try {
-//                            over = true;
-//                            gameOver(ball,canvas,timeline);
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                    else if (nextObstacle.collides(ball.ballBody,ball.color)==1){
-//                        if(nextObsIndex!=prevObsIndex){
-//                            prevObsIndex++;
-//                        }
-//                        nextObsIndex++;
-//                        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
-//                        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
-//                    }
-//                if(closestStar.checkCollision(ball.ballBody)){
-//                    moveCameraTimeline.pause();
-//                    closestStar.showAnimation(canvas);
-//                    StarArrayList.remove(closestStar);
-//                    int newScore = Integer.parseInt(scoreLabel.getText())+1;
-//                    System.out.println(newScore);
-//
-//                    try {
-//                        Star newStar = new Star(225,newStarPosition);
-//                        newStarPosition-=300;
-//                        StarArrayList.add(newStar);
-//                        Platform.runLater(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                canvas.getChildren().remove(closestStar);
-//                                canvas.getChildren().add(newStar.starBody);
-//                                scoreLabel.setText(String.valueOf(newScore));
-//                            }
-//                        });
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//                    closestStar = StarArrayList.get(0);
-////                    moveCameraTimeline.play();
-//                }
+
+                    if( (nextObstacle.collides(ball.ballBody,ball.color)==0 || prevObstacle.collides(ball.ballBody,ball.color)==0) && !over){
+                        try {
+                            over = true;
+                            gameOver(ball,canvas,timeline);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (nextObstacle.collides(ball.ballBody,ball.color)==1){
+                        if(prevObsIndex==2 && nextObsIndex==3){
+                            System.out.println("Adding new");
+//                            rotateTimeline.pause();
+//                            moveCameraTimeline.pause();
+
+                            circularObstacleArrayList.remove(0);
+                            nextObsIndex--;
+                            prevObsIndex--;
+                            int obsNumber = randGen.nextInt(6);
+                            newObs = new CrossObstacle(newObstaclePosititon, 275);;
+                            switch (obsNumber) {
+                                case 0 -> newObs = new CrossObstacle(newObstaclePosititon, 275);
+                                case 1 -> newObs = new SquareObstacle(80, 95, newObstaclePosititon, 225);
+                                case 2 -> newObs = new ThornObstacle(50, newObstaclePosititon, 225, 1.5);
+                                case 3 -> newObs = new BowObstacle(newObstaclePosititon, 225, 75, 90, 125);
+                                case 4 -> newObs = new HalfBowObstacle(newObstaclePosititon, 225, 75, 90, 125);
+                                case 5 -> newObs = new CircularObstacle(80, 95, newObstaclePosititon, 225);
+                            }
+                            newObs.create();
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    canvas.getChildren().add(newObs.obstacle);
+                                }
+                            });
+
+                            circularObstacleArrayList.add(newObs);
+
+//                            moveCameraTimeline.play();
+//                            rotateTimeline.play();
+                        }
+                        if(nextObsIndex!=prevObsIndex){
+                            prevObsIndex++;
+                        }
+                        nextObsIndex++;
+                        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
+                        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
+                    }
+
+                if(closestStar.checkCollision(ball.ballBody)){
+                    moveCameraTimeline.pause();
+                    closestStar.showAnimation(canvas);
+                    StarArrayList.remove(closestStar);
+                    numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
+
+
+                    try {
+                        Star newStar = new Star(225,newStarPosition);
+                        newStarPosition-=300;
+                        StarArrayList.add(newStar);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                canvas.getChildren().remove(closestStar);
+                                canvas.getChildren().add(newStar.starBody);
+                                scoreLabel.setText(String.valueOf(numStarsCollected));
+                            }
+                        });
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    closestStar = StarArrayList.get(0);
+//                    moveCameraTimeline.play();
+                }
                 if(closestColorChanger.checkCollision(ball.ballBody)){
                     moveCameraTimeline.pause();
                     int newColor = closestColorChanger.showAnimation(canvas);
@@ -424,14 +582,19 @@ public class Main extends Application {
             }
         };
         collisionTimer.scheduleAtFixedRate(task1,100,10);
-        menuBG.getChildren().setAll(canvas);
+        EventHandler<MouseEvent> homeHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                goBack();
+            }
+        };
         EventHandler<MouseEvent> pauseEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 timeline.pause();
                 rotateTimeline.pause();
-                moveCamTimelineStatus = moveCameraTimeline.getStatus();
-                moveCameraTimeline.pause();
+//                moveCamTimelineStatus = moveCameraTimeline.getStatus();
+//                moveCameraTimeline.pause();
                 overlay = new Rectangle(0,0,450,600);
                 overlay.setFill(Color.BLACK);
                 overlay.setOpacity(0);
@@ -449,6 +612,7 @@ public class Main extends Application {
                 resumeButton.setGraphic(resumeIcon);
                 resumeButton.setLayoutY(375);
                 resumeButton.setLayoutX(195);
+                resumeButton.setCursor(Cursor.HAND);
                 try {
                     stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\save.png");
                 } catch (FileNotFoundException e) {
@@ -462,6 +626,7 @@ public class Main extends Application {
                 saveButton.setGraphic(saveIcon);
                 saveButton.setLayoutY(475);
                 saveButton.setLayoutX(195);
+                saveButton.setCursor(Cursor.HAND);
                 try {
                     stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\restart.png");
                 } catch (FileNotFoundException e) {
@@ -474,6 +639,7 @@ public class Main extends Application {
                 restartButton.setGraphic(restartIcon);
                 restartButton.setLayoutY(575);
                 restartButton.setLayoutX(195);
+                restartButton.setCursor(Cursor.HAND);
                 try {
                     stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\home.png");
                 } catch (FileNotFoundException e) {
@@ -481,14 +647,13 @@ public class Main extends Application {
                 }
                 Image image4 = new Image(stream);
                 ImageView homeIcon = new ImageView(image4);
-                saveIcon.setFitHeight(60);
-                saveIcon.setPreserveRatio(true);
-                homeButton = new Label();
-                homeButton.setGraphic(homeIcon);
                 homeIcon.setFitHeight(75);
                 homeIcon.setPreserveRatio(true);
+                homeButton.setGraphic(homeIcon);
                 homeButton.setLayoutY(-170);
                 homeButton.setLayoutX(30);
+                homeButton.setCursor(Cursor.HAND);
+
                 resumeButton.setOpacity(0);
                 saveButton.setOpacity(0);
                 homeButton.setOpacity(0);
@@ -517,6 +682,17 @@ public class Main extends Application {
                 enterTimeline.play();
             }
         };
+        EventHandler<MouseEvent> restartHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    newGameAuxiliary();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
         EventHandler<MouseEvent> resumeHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -549,17 +725,25 @@ public class Main extends Application {
                         timeline.play();
                         rotateTimeline.play();
                         if(moveCamTimelineStatus== Animation.Status.RUNNING){
-                            moveCameraTimeline.play();
+                            //moveCameraTimeline.play();
                         }
 
                     }
                 });
             }
         };
+        EventHandler<MouseEvent> saveHandler = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                //GD yahan pe aaga code
+            }
+        };
         resumeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,resumeHandler);
-
+        restartButton.addEventFilter(MouseEvent.MOUSE_CLICKED,restartHandler);
+        saveButton.addEventFilter(MouseEvent.MOUSE_CLICKED,saveHandler);
         pauseButton.addEventFilter(MouseEvent.MOUSE_CLICKED,pauseEventHandler);
-
+        homeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,homeHandler);
+        newGameBG .getChildren().setAll(canvas);
 
     }
     public void loadGame() throws Exception {
@@ -569,8 +753,20 @@ public class Main extends Application {
     public void displayHighScores() throws Exception {
         exitAnimation(2);
     }
+    public void exitToMainMenu() throws Exception {
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
+        newGameBG.getChildren().setAll(pane);
+    }
+    public void restartGame() throws IOException {
+        AnchorPane pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
+        gameOverBG.getChildren().setAll(pane);
+    }
 
+    public void continueGame() {
+
+    }
     public void gameOver(Ball ball,Pane canvas,Timeline gravityTimeline) throws Exception{
+
             gravityTimeline.pause();
             Timeline enlargeTimeline = new Timeline(new KeyFrame(Duration.millis(1),
                     new EventHandler<ActionEvent>() {
@@ -756,7 +952,14 @@ public class Main extends Application {
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
-                                    menuBG.getChildren().setAll(pane);
+                                    if(menuBG !=null){
+                                        System.out.println("Menu fucker");
+                                        menuBG.getChildren().setAll(pane);
+                                    }
+                                    else{
+                                        newGameBG.getChildren().setAll(pane);
+                                    }
+
                                 }
                             });
                         }
@@ -764,6 +967,9 @@ public class Main extends Application {
 
                 }
             });
+    }
+    public void revive(){
+        gameOverBG.getChildren().setAll(canvas);
     }
     public void enterYellow(){
         if(newGameButton.getLayoutX()<=149){
