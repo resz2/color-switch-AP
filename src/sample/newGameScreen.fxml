@@ -9,77 +9,77 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="newGameBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Main">
-    <ImageView fitHeight="600.0" fitWidth="450.0" opacity="0.15" pickOnBounds="true">
+<AnchorPane fx:id="newGameBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.NewGameController">
+    <ImageView fx:id="diffBackgroundImage" fitHeight="600.0" fitWidth="450.0" opacity="0" pickOnBounds="true">
         <Image url="@../assets/stripes.jpg" />
     </ImageView>
-    <Label alignment="CENTER" layoutX="125.0" layoutY="150.0" onMouseClicked="#newGame" prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #00ff00; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
+    <Label fx:id="easyLabel"  opacity="0" alignment="CENTER" layoutX="0" layoutY="150.0" prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #00ff00; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
         <font>
-          <Font name="HoloLens MDL2 Assets" size="30.0" />
+            <Font name="HoloLens MDL2 Assets" size="30.0" />
         </font>
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
-      <effect>
-         <Glow level="1.0" />
-      </effect>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <effect>
+            <Glow level="1.0" />
+        </effect>
     </Label>
-    <Label alignment="CENTER" layoutX="125.0" layoutY="270.0" onMouseClicked="#newGame" prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #ffff00; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
+    <Label fx:id="mediumLabel" opacity="0" alignment="CENTER" layoutX="250.0" layoutY="270.0"  prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #ffff00; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
         <font>
-          <Font name="HoloLens MDL2 Assets" size="30.0" />
+            <Font name="HoloLens MDL2 Assets" size="30.0" />
         </font>
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
-      <effect>
-         <Glow level="1.0" />
-      </effect>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <effect>
+            <Glow level="1.0" />
+        </effect>
     </Label>
-    <Label alignment="CENTER" layoutX="125.0" layoutY="390.0" onMouseClicked="#newGame" prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #ff0000; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
+    <Label fx:id="hardLabel" opacity="0" alignment="CENTER" layoutX="0.0" layoutY="390.0"  prefHeight="75.0" prefWidth="200.0" style="-fx-border-color: #ff0000; -fx-border-width: 5; -fx-border-radius: 20;" textFill="WHITE">
         <font>
-          <Font name="HoloLens MDL2 Assets" size="30.0" />
+            <Font name="HoloLens MDL2 Assets" size="30.0" />
         </font>
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
-      <effect>
-         <Glow level="1.0" />
-      </effect>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <effect>
+            <Glow level="1.0" />
+        </effect>
     </Label>
-   <Circle centerX="222.0" centerY="540.0" fill="WHITE" layoutX="3.0" layoutY="1.0" onMouseClicked="#goBack" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
-    <ImageView fitHeight="47.0" fitWidth="53.0" layoutX="202.0" layoutY="517.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
+    <Circle fx:id="diffBackIconCircle" opacity="0" centerX="222.0" centerY="540.0" fill="WHITE" layoutX="3.0" layoutY="1.0" onMouseClicked="#goBack" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
+    <ImageView fx:id="diffBackIcon" fitHeight="47.0" fitWidth="53.0" layoutX="202" layoutY="517.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true" opacity="0">
         <Image url="@../assets/back.png" />
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
     </ImageView>
-   <ImageView fitHeight="48.0" fitWidth="313.0" layoutX="69.0" layoutY="66.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../assets/choose.png" />
-      </image>
-   </ImageView>
-   <ImageView fitHeight="27.0" fitWidth="96.0" layoutX="177.0" layoutY="177.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../assets/easy.png" />
-      </image>
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
-   </ImageView>
-   <ImageView fitHeight="27.0" fitWidth="130.0" layoutX="160.0" layoutY="298.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../assets/medium.png" />
-      </image>
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
-   </ImageView>
-   <ImageView fitHeight="27.0" fitWidth="96.0" layoutX="177.0" layoutY="417.0" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../assets/hard.png" />
-      </image>
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor>
-   </ImageView>
+    <ImageView fx:id="chooseImage" fitHeight="48.0" fitWidth="313.0" layoutX="69.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true" opacity="0">
+        <image>
+            <Image url="@../assets/choose.png" />
+        </image>
+    </ImageView>
+    <ImageView fx:id="easyImage"  onMouseClicked="#setDifficultyToEasy" fitHeight="27.0" fitWidth="96.0" layoutX="0" layoutY="177.0" pickOnBounds="true" preserveRatio="true" opacity="0">
+        <image>
+            <Image url="@../assets/easy.png" />
+        </image>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </ImageView>
+    <ImageView fx:id="mediumImage"  onMouseClicked="#setDifficultyToMedium" fitHeight="27.0" fitWidth="130.0" layoutX="285" layoutY="298.0" pickOnBounds="true" preserveRatio="true" opacity="0">
+        <image>
+            <Image url="@../assets/medium.png" />
+        </image>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </ImageView>
+    <ImageView fx:id="hardImage"  onMouseClicked="#setDifficultyToHard" fitHeight="27.0" fitWidth="96.0" layoutX="0" layoutY="417.0" pickOnBounds="true" preserveRatio="true"  opacity="0">
+        <image>
+            <Image url="@../assets/hard.png" />
+        </image>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </ImageView>
 </AnchorPane>

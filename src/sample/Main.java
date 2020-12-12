@@ -169,6 +169,7 @@ public class Main extends Application {
                 }));
         enterTimeline.setCycleCount(200);
         enterTimeline.play();
+
         enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -194,12 +195,13 @@ public class Main extends Application {
                         menuBG.getChildren().setAll(pane);
                         break;
                     case 3:
+
                         try {
-                            currentPlayer.setCurrentState(new GameState());
-                            currentPlayer.getCurrentState().newGame(menuBG);
-                        } catch (Exception e) {
+                            pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        menuBG.getChildren().setAll(pane);
                         break;
                 }
             }

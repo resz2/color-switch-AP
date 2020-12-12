@@ -111,6 +111,10 @@ public class ColorChanger extends GameElement {
         return colorChangerBody.getBoundsInParent().intersects(b.getBoundsInParent());
     }
 
+
+
+    // ANIMATION
+
     public int showAnimation(Pane canvas){
         Timeline fadeTimeline = new Timeline(new KeyFrame(Duration.millis(2),
                 new EventHandler<ActionEvent>() {
@@ -144,6 +148,7 @@ public class ColorChanger extends GameElement {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         Image image = new Image(stream);
         ImageView confettiBody = new ImageView();
         confettiBody.setImage(image);
