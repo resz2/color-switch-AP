@@ -11,7 +11,7 @@ import javafx.util.Duration;
 
 public class Ball extends GameElement {
     protected transient Color ballColor;
-    int color;
+    private int color;
     protected transient Circle ballBody;
 
     public Ball(double xCoordinate, double yCoordinate, int color)  {
@@ -49,6 +49,8 @@ public class Ball extends GameElement {
     public double getyCoordinate(){
         return this.ballBody.getLayoutY();
     }
+
+    public int getColor()   { return this.color; }
 
     public void changeColor(int color){
         switch(color){

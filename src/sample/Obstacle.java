@@ -9,7 +9,7 @@ abstract class Obstacle extends GameElement {
     protected transient Group obstacle;
     protected int angleOfRotation;
     protected transient Path pink,blue,purple,yellow;
-    int rotationsCount=0;
+    protected int rotationsCount=0;
     protected double distInner, distOuter;
     public Obstacle(){
 
@@ -59,15 +59,18 @@ abstract class Obstacle extends GameElement {
         return 2;
     }
     public abstract void create();
+
     public double getAngleOfRotation(){
         return this.obstacle.getRotate();
     }
+
     public void setAngleOfRotation(double rotateBy){
         this.obstacle.setRotate(this.obstacle.getRotate()+rotateBy);
         if(this.getAngleOfRotation()%360==0){
             this.rotationsCount+=1;
         }
     }
+
     @Override
     public void setyCoordinate(double val){
         this.obstacle.setLayoutY(this.obstacle.getLayoutY()+val);
@@ -391,9 +394,11 @@ class BowObstacle extends Obstacle{
     public int collides(Circle ball,int color) {
         return super.collides(ball,color);
     }
+
     public Group getObstacle(){
         return this.obstacle;
     }
+
     @Override
     public void create() {
         Group obstacle = new Group();

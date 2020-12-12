@@ -37,11 +37,11 @@ import java.util.TimerTask;
 
 public class GameState implements Serializable {
     private int difficulty, nextObsIndex, prevObsIndex, stars, newStarPosition, newColorChangerPosition;
-    ;
     private boolean over;
     private double velocity;
     private Obstacle nextObstacle,prevObstacle;
     private Star closestStar;
+    private Ball ball;
     private ColorChanger closestColorChanger;
     private ArrayList<Obstacle> circularObstacleArrayList;
     private ArrayList<Star> StarArrayList;
@@ -66,6 +66,11 @@ public class GameState implements Serializable {
         circularObstacleArrayList = new ArrayList<Obstacle>();
         StarArrayList = new ArrayList<Star>();
         ColorChangerArraylist = new ArrayList<ColorChanger>();
+    }
+
+    @Override
+    public String toString() {
+        return "    " + this.getStars() + "                         " + this.getDifficulty();
     }
 
     private void gameScreenSetup() {
@@ -170,12 +175,15 @@ public class GameState implements Serializable {
 
         Pane canvas = new Pane();
 
+        // Setting up Game Screen
         gameScreenSetup();
         canvas.getChildren().add(pauseButton);
         canvas.getChildren().add(scoreLabel);
 
-        Ball ball = new Ball(225,550,1);
+        // Creating ball
+        ball = new Ball(225,550,1);
 
+        // populating possible obstacles array
         for (int i=0;i<16;i++)  {
 
             if(i%6==0){
@@ -200,11 +208,14 @@ public class GameState implements Serializable {
             }
         }
 
+        // creating the obstacles to be used
         for(int i=0;i<circularObstacleArrayList.size();i++){
             circularObstacleArrayList.get(i).create();
             circularObstacleArrayList.get(i).obstacle.setOpacity(0);
             canvas.getChildren().add(circularObstacleArrayList.get(i).obstacle);
         }
+
+        // adding initial 3 stars ad colorchangers
         for(int i=0;i<3;i++){
             Star star = new Star(225,300-300*(i));
             StarArrayList.add(star);
@@ -219,6 +230,70 @@ public class GameState implements Serializable {
         closestStar = StarArrayList.get(0);
         closestColorChanger = ColorChangerArraylist.get(0);
         canvas.getChildren().add(ball.ballBody);
+
+        runGame(bgPane, canvas);
+    }
+
+    public void loadGame(AnchorPane bgPane) throws  Exception {
+
+        Pane canvas = new Pane();
+        GameState cur = Main.getCurrentPlayer().getCurrentState();
+
+        gameScreenSetup();
+        canvas.getChildren().add(pauseButton);
+        canvas.getChildren().add(scoreLabel);
+
+        ball = new Ball(225,cur.ball.getyCoordinate(),cur.ball.getColor());
+
+        /*for (int i=0;i<16;i++)  {
+
+            if(i%6==0){
+                circularObstacleArrayList.add(new BowObstacle(300-400*i,225,75,90,125));
+                //circularObstacleArrayList.add(new CrossObstacle(300-400*(i),275));
+            }
+            else if (i%6==1){
+                circularObstacleArrayList.add(new HalfBowObstacle(300-400*i,225,75,90,125));
+                //circularObstacleArrayList.add(new SquareObstacle(80,95,300-400*i,225));
+            }
+            else if (i%6==2){
+                circularObstacleArrayList.add(new ThornObstacle(50,300-400*i,225,1.5));
+            }
+            else if (i%6==3){
+
+            }
+            else if (i%6==4){
+
+            }
+            else{
+                circularObstacleArrayList.add(new CircularObstacle(80,95,300-400*(i),225));
+            }
+        }*/
+
+        // creating the possible obstacles
+        for(int i=0;i<circularObstacleArrayList.size();i++){
+            circularObstacleArrayList.get(i).create();
+            circularObstacleArrayList.get(i).obstacle.setOpacity(0);
+            canvas.getChildren().add(circularObstacleArrayList.get(i).obstacle);
+        }
+
+        // adding the present stars and colorchangers
+        for(int i=0;i<3;i++){
+            StarArrayList.get(i).create();
+            ColorChangerArraylist.get(i).create();
+            canvas.getChildren().add(ColorChangerArraylist.get(i).colorChangerBody);
+            canvas.getChildren().add(StarArrayList.get(i).starBody);
+        }
+
+        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
+        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
+        closestStar = StarArrayList.get(0);
+        closestColorChanger = ColorChangerArraylist.get(0);
+        canvas.getChildren().add(ball.ballBody);
+
+        runGame(bgPane, canvas);
+    }
+
+    private void runGame(AnchorPane bgPane, Pane canvas)  {
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16.67),
                 new EventHandler<ActionEvent>() {
 
@@ -439,9 +514,6 @@ public class GameState implements Serializable {
         pauseButton.addEventFilter(MouseEvent.MOUSE_CLICKED,pauseEventHandler);
     }
 
-    public void loadGame(AnchorPane bgPane) {
-    }
-
     public void moveCamera(Timeline gravityTimeline, Timeline moveCameraTimeline) {
         cameraMoving = true;
         moveCameraTimeline.play();
@@ -647,5 +719,13 @@ public class GameState implements Serializable {
 
             }
         });
+    }
+
+    public int getStars() {
+        return stars;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
     }
 }

@@ -25,7 +25,7 @@ public class ColorChanger extends GameElement {
     public ColorChanger(double xCoordinate, double yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        colorChangerBody = create();
+        this.create();
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ColorChanger extends GameElement {
         return this.colorChangerBody.getLayoutY();
     }
 
-    private Group create(){
+    public void create(){
         Group body = new Group();
         Path path = new Path();
         path.setFill(Color.web("#ff0181"));
@@ -104,7 +104,7 @@ public class ColorChanger extends GameElement {
         path4.setScaleX(-1);
         path4.setScaleY(-1);
         body.getChildren().add(path4);
-        return body;
+        colorChangerBody = body;
     }
 
     public boolean checkCollision(Circle b){

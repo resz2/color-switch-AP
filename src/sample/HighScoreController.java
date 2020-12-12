@@ -29,15 +29,23 @@ public class HighScoreController {
     @FXML
     public void initialize()    {
         // loads and displays the high scores
-        highScoreList.getItems().add("    10                        easy");
-        highScoreList.getItems().add("    9                         medium");
-        highScoreList.getItems().add("    8                         easy");
-        highScoreList.getItems().add("    7                         easy");
-        highScoreList.getItems().add("    6                         medium");
-        highScoreList.getItems().add("    5                         medium");
-        highScoreList.getItems().add("    4                         hard");
-        highScoreList.getItems().add("    3                         hard");
-        highScoreList.getItems().add("    2                         hard");
+//        highScoreList.getItems().add("    10                        easy");
+//        highScoreList.getItems().add("    9                         medium");
+//        highScoreList.getItems().add("    8                         easy");
+//        highScoreList.getItems().add("    7                         easy");
+//        highScoreList.getItems().add("    6                         medium");
+//        highScoreList.getItems().add("    5                         medium");
+//        highScoreList.getItems().add("    4                         hard");
+//        highScoreList.getItems().add("    3                         hard");
+//        highScoreList.getItems().add("    2                         hard");
+
+        if(Main.getCurrentPlayer().getHighScores().isEmpty())   {
+            System.out.println("empty high");
+        }
+        else    {
+            Main.getCurrentPlayer().getHighScores().forEach((k, v)->
+                    highScoreList.getItems().add("    " + k + "                         " + v));
+        }
 
         Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
                 new EventHandler<ActionEvent>() {

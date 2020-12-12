@@ -37,7 +37,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <ListView fx:id="loadsList" editable="true" fixedCellSize="50.0" layoutX="52.0" layoutY="132.0" onMouseClicked="#loadSave" prefHeight="367.0" prefWidth="345.0" style="-fx-border-color: white; -fx-background-color: black; -fx-border-radius: 40; -fx-border-width: 3;" styleClass="list-cell" stylesheets="@loads.css" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="53.0" AnchorPane.topAnchor="132.0">
+      <ListView fx:id="loadsList" editable="true" fixedCellSize="50.0" layoutX="52.0" layoutY="132.0" onMouseClicked="#loadSave" prefHeight="367.0" prefWidth="345.0" style="-fx-border-color: white; -fx-background-color: transparent; -fx-border-radius: 40; -fx-border-width: 3;" styleClass="list-cell" stylesheets="@loads.css" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="53.0" AnchorPane.topAnchor="132.0">
          <padding>
             <Insets bottom="40.0" left="20.0" right="20.0" top="60.0" />
          </padding></ListView>

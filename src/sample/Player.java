@@ -1,14 +1,12 @@
 package sample;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Player implements Serializable {
     private int totalStars;
     private final String playerName;
-    private final ArrayList<Integer> highScores;
+    private final Map<Integer, String> highScores;
     private GameState currentState;
     private final ArrayList<GameState> savedGames;
     private final Set<Integer> ballTypes;
@@ -16,7 +14,7 @@ public class Player implements Serializable {
     public Player(String name)  {
         totalStars = 0;
         playerName = name;
-        highScores = new ArrayList<Integer>();
+        highScores = new HashMap<Integer, String>();
         currentState = new GameState();
         savedGames = new ArrayList<GameState>();
         ballTypes = new HashSet<Integer>();
@@ -30,7 +28,7 @@ public class Player implements Serializable {
         return playerName;
     }
 
-    public ArrayList<Integer> getHighScores() { return highScores; }
+    public Map<Integer, String> getHighScores() { return highScores; }
 
     public Set<Integer> getBallTypes() { return ballTypes; }
 

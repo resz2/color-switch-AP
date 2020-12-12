@@ -49,6 +49,10 @@ public class Star extends GameElement {
         return starBody.getBoundsInParent().intersects(b.getBoundsInParent());
     }
 
+
+
+    // ANIMATION
+
     public void showAnimation(Pane canvas){
         Timeline fadeTimeline = new Timeline(new KeyFrame(Duration.millis(2),
                 new EventHandler<ActionEvent>() {

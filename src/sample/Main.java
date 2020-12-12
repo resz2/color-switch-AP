@@ -345,7 +345,6 @@ public class Main extends Application {
         }
 
     }
-
     public void exitPurple(){
         if(exitButton.getLayoutX()<=149){
             Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),

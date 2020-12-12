@@ -115,6 +115,7 @@ public class TitleController {
         Database db = Main.getDB();
         Player p = new Player("ur mom");
         db.getPlayers().add(p);
+        Main.setCurrentPlayer(p);
         db.setLastPlayer(0);
     }
 
