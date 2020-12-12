@@ -48,6 +48,7 @@ public class Ball {
         return this.ballBody.getLayoutY();
     }
     public void changeColor(int color){
+        this.color = color;
         switch(color){
             case 0:
                 ballColor = Color.web("32dbf0");
