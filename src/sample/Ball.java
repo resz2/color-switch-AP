@@ -40,9 +40,20 @@ public class Ball {
         this.ballBody.setLayoutX(xCoordinate);
         this.ballBody.setTranslateZ(0);
     }
-    public void setyCoordinate(double val) {
-        this.ballBody.setLayoutY(this.ballBody.getLayoutY()+val);
-        this.yCoordinate = this.ballBody.getLayoutY();
+    public double setyCoordinate(double val) {
+        if(this.ballBody.getLayoutY()+val<=300){
+            return val;
+        }
+        else{
+            this.ballBody.setLayoutY(this.ballBody.getLayoutY()+val);
+            this.yCoordinate = this.ballBody.getLayoutY();
+            return 0;
+        }
+
+    }
+    public void setxCoordinate(double val) {
+        this.ballBody.setLayoutX(this.ballBody.getLayoutX()+val);
+        this.xCoordinate = this.ballBody.getLayoutX();
     }
     public double getyCoordinate(){
         return this.ballBody.getLayoutY();
