@@ -92,18 +92,18 @@ public class Main extends Application {
     @FXML
             private Circle diffBackIconCircle;
     int nextObsIndex=0,prevObsIndex=0;
-    int newStarPosition=-600;
+    int newStarPosition=-300,newClockPosition=-300;
     int newObstaclePosititon=-1000;
     int difficulty;
-    int newColorChangerPosition=-2800;
+    int newColorChangerPosition=-1000;
     Animation.Status moveCamTimelineStatus;
     Obstacle nextObstacle,prevObstacle,newObs;
     Boolean over=false;
     Star closestStar;
+    Clock closestClock;
     ColorChanger closestColorChanger;
-    Label resumeButton=new Label(),saveButton= new Label(),homeButton = new Label(),pauseButton= new Label(),scoreLabel = new Label(),restartButton=new Label();
+    Label resumeButton=new Label(),saveButton= new Label(),homeButton = new Label(),pauseButton= new Label(),scoreLabel = new Label(),restartButton=new Label(),timeLabel = new Label();
     Rectangle overlay;
-    public boolean cameraMoving = false;
     double xVelocity = 0,yVelocity=0,xVelocityOffset=0.25,yVelocityOffset=0.35,dist=0;
     Pane canvas;
     int numStarsCollected=0;
@@ -117,7 +117,6 @@ public class Main extends Application {
 
         stage.setScene(this.scene);
         stage.show();
-
     }
 
     public void choosePlayer() {
@@ -311,22 +310,25 @@ public class Main extends Application {
         newGameBG.getChildren().setAll(pane);
 
     }
+    public void setModeToFrenzy() throws Exception {
+        newGame(1);
+    }
     public void setDifficultyToEasy() throws Exception {
         difficulty=0;
-        newGame();
+        newGame(1);
     }
     public void setDifficultyToMedium() throws Exception {
         difficulty=1;
-        newGame();
+        newGame(0);
     }
     public void setDifficultyToHard() throws Exception {
         difficulty=2;
-        newGame();
+        newGame(0);
     }
     public void newGameAuxiliary(){
         exitAnimation(3);
     }
-    public void newGame() throws  Exception {
+    public void newGame(int mode) throws  Exception {
         canvas = new Pane();
         //pause icon setup start
         InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\pause.png");
@@ -363,12 +365,26 @@ public class Main extends Application {
         scoreLabel.setFont(font);
         //Filling color to the label
         scoreLabel.setTextFill(Color.web("272727"));
+        if(mode==1){
+            timeLabel = new Label("15");
+            timeLabel.setContentDisplay(ContentDisplay.CENTER);
+            timeLabel.setTextAlignment(TextAlignment.CENTER);
+            timeLabel.setLayoutY(100);
+            timeLabel.setLayoutX(25);
+            Font font1 = Font.font("Roboto", FontWeight.BOLD,
+                    FontPosture.REGULAR, 25);
+            timeLabel.setFont(font1);
+            //Filling color to the label
+            timeLabel.setTextFill(Color.RED);
+            canvas.getChildren().add(timeLabel);
+        }
         canvas.getChildren().add(scoreLabel);
         //score setup end
         Ball ball = new Ball(225,550,1);
 
         ArrayList<Obstacle> circularObstacleArrayList = new ArrayList<Obstacle>();
         ArrayList<Star> StarArrayList = new ArrayList<>();
+        ArrayList<Clock> ClockArrayList = new ArrayList<>();
         ArrayList<ColorChanger> ColorChangerArraylist = new ArrayList<>();
         Random randGen = new Random();
         for (int i=0;i<5;i++){
@@ -394,44 +410,139 @@ public class Main extends Application {
             ColorChangerArraylist.add(c);
             canvas.getChildren().add(ColorChangerArraylist.get(i).colorChangerBody);
             canvas.getChildren().add(StarArrayList.get(i).starBody);
+            if(mode==1){
+
+                Clock clock = new Clock(randGen.nextInt(390)+30,400-300*(i));
+                ClockArrayList.add(clock);
+                canvas.getChildren().add(ClockArrayList.get(i).clockBody);
+            }
         }
         nextObstacle = circularObstacleArrayList.get(nextObsIndex);
         prevObstacle = circularObstacleArrayList.get(prevObsIndex);
         closestStar = StarArrayList.get(0);
         closestColorChanger = ColorChangerArraylist.get(0);
+        if(mode==1){
+            closestClock = ClockArrayList.get(0);
+        }
+
         canvas.getChildren().add(ball.ballBody);
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16.67),
                 new EventHandler<ActionEvent>() {
 
                     @Override
                     public void handle(ActionEvent t) {
-//                        if(ball.xCoordinate<10){
-//                            ball.setxCoordinate(450);
-//                            xVelocityOffset=-0.25;
-//                        }
-//                        else if(ball.xCoordinate>440){
-//                            ball.setxCoordinate(0);
-//                            xVelocityOffset=0.25;
-//                        }
-                        //xVelocity+=xVelocityOffset;
                         yVelocity+=yVelocityOffset;
                         double move = ball.setyCoordinate(yVelocity);
                         if(move!=0){
-                            for(int i=0;i<circularObstacleArrayList.size();i++) {
+                            for (Obstacle obstacle : circularObstacleArrayList) {
 
-                                circularObstacleArrayList.get(i).setyCoordinate(-move);
+                                obstacle.setyCoordinate(-move);
                             }
-                            for(int i=0;i<StarArrayList.size();i++){
-                                StarArrayList.get(i).setyCoordinate(-move);
+                            for (Star star : StarArrayList) {
+                                star.setyCoordinate(-move);
                             }
-                            for(int i=0;i<ColorChangerArraylist.size();i++){
-                                ColorChangerArraylist.get(i).setyCoordinate(-move);
-
+                            for (ColorChanger colorChanger : ColorChangerArraylist) {
+                                colorChanger.setyCoordinate(-move);
+                            }
+                            for(Clock clock: ClockArrayList){
+                                clock.setyCoordinate(-move);
                             }
                         }
                     }
                 }));
         timeline.setCycleCount(Timeline.INDEFINITE);
+        Timeline diagonalGravityLeftTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
+                new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent t) {
+                        if(ball.xCoordinate<10){
+                            ball.setxCoordinate(450);
+                            xVelocityOffset=-0.25;
+                        }
+                        else if(ball.xCoordinate>440){
+                            ball.setxCoordinate(0);
+                            xVelocityOffset=0.25;
+                        }
+                        xVelocity+=xVelocityOffset;
+                        yVelocity+=yVelocityOffset;
+                        double move = ball.setyCoordinate(yVelocity);
+                        ball.setxCoordinate(xVelocity);
+                        if(move!=0){
+                            for (Obstacle obstacle : circularObstacleArrayList) {
+
+                                obstacle.setyCoordinate(-move);
+                            }
+                            for (Star star : StarArrayList) {
+                                star.setyCoordinate(-move);
+                            }
+                            for (ColorChanger colorChanger : ColorChangerArraylist) {
+                                colorChanger.setyCoordinate(-move);
+                            }
+                            for (Clock clock : ClockArrayList) {
+                                clock.setyCoordinate(-move);
+                            }
+                        }
+                    }
+                }));
+        diagonalGravityLeftTimeline.setCycleCount(Timeline.INDEFINITE);
+        Timeline diagonalGravityRightTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
+                new EventHandler<ActionEvent>() {
+
+                    @Override
+                    public void handle(ActionEvent t) {
+                        if(ball.xCoordinate<10){
+                            ball.setxCoordinate(450);
+                            xVelocityOffset=-0.25;
+                        }
+                        else if(ball.xCoordinate>440){
+                            ball.setxCoordinate(0);
+                            xVelocityOffset=0.25;
+                        }
+                        xVelocity-=xVelocityOffset;
+                        yVelocity+=yVelocityOffset;
+                        double move = ball.setyCoordinate(yVelocity);
+                        ball.setxCoordinate(xVelocity);
+                        if(move!=0){
+                            for (Obstacle obstacle : circularObstacleArrayList) {
+
+                                obstacle.setyCoordinate(-move);
+                            }
+                            for (Star star : StarArrayList) {
+                                star.setyCoordinate(-move);
+                            }
+                            for (ColorChanger colorChanger : ColorChangerArraylist) {
+                                colorChanger.setyCoordinate(-move);
+
+                            }
+                            for (Clock clock : ClockArrayList) {
+                                clock.setyCoordinate(-move);
+                            }
+                        }
+                    }
+                }));
+        diagonalGravityRightTimeline.setCycleCount(Timeline.INDEFINITE);
+        if(mode==1){
+
+
+            Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000), new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    int timeLeft = Integer.parseInt(timeLabel.getText())-1;
+                    timeLabel.setText(String.valueOf(timeLeft));
+                    if(timeLeft==0){
+                        try {
+                            gameOver(ball,canvas,timeline);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }));
+            timer.setCycleCount(Timeline.INDEFINITE);
+            timer.play();
+        }
+
 
         Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
                 new EventHandler<ActionEvent>() {
@@ -448,16 +559,39 @@ public class Main extends Application {
         canvas.setFocusTraversable(true);
 
         canvas.addEventFilter(KeyEvent.KEY_PRESSED, event->{
-
-            if (event.getCode() == KeyCode.SPACE) {
-                if(!played){
+            if(mode==0){
+                if (event.getCode() == KeyCode.SPACE) {
                     timeline.play();
-                    played =true;
-                }
+                    yVelocity=-6;
 
-                yVelocity=-6;
-                //xVelocity=-4;
+                }
             }
+
+            if(mode==1){
+                if (event.getCode() == KeyCode.W) {
+                    diagonalGravityLeftTimeline.pause();
+                    diagonalGravityRightTimeline.pause();
+                    timeline.play();
+                    yVelocity=-6;
+
+                }
+                if (event.getCode() == KeyCode.A){
+                    diagonalGravityLeftTimeline.play();
+                    diagonalGravityRightTimeline.pause();
+                    timeline.pause();
+                    yVelocity=-6;
+                    xVelocity=-4;
+                }
+                else if (event.getCode() ==KeyCode.D){
+                    diagonalGravityLeftTimeline.pause();
+                    diagonalGravityRightTimeline.play();
+                    timeline.pause();
+                    yVelocity=-6;
+                    xVelocity=4;
+                }
+            }
+
+
         });
 
         Timer collisionTimer = new Timer();
@@ -507,52 +641,70 @@ public class Main extends Application {
 //                        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
 //                        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
 //                    }
-//
-//                if(closestStar.checkCollision(ball.ballBody)){
-//                    moveCameraTimeline.pause();
-//                    closestStar.showAnimation(canvas);
-//                    StarArrayList.remove(closestStar);
-//                    numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
-//
-//
-//                    try {
-//                        Star newStar = new Star(225,newStarPosition);
-//                        newStarPosition-=300;
-//                        StarArrayList.add(newStar);
-//                        Platform.runLater(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                canvas.getChildren().remove(closestStar);
-//                                canvas.getChildren().add(newStar.starBody);
-//                                scoreLabel.setText(String.valueOf(numStarsCollected));
-//                            }
-//                        });
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//                    closestStar = StarArrayList.get(0);
-////                    moveCameraTimeline.play();
-//                }
-//                if(closestColorChanger.checkCollision(ball.ballBody)){
-//                    moveCameraTimeline.pause();
-//                    int newColor = closestColorChanger.showAnimation(canvas);
-//                    System.out.println(newColor);
-//                    ball.changeColor(newColor);
-//                    ColorChangerArraylist.remove(closestColorChanger);
-//                    canvas.getChildren().remove(closestColorChanger);
-//                    ColorChanger c = new ColorChanger(225,newColorChangerPosition);
-//                    newColorChangerPosition-=300;
-//                    ColorChangerArraylist.add(c);
-//                    Platform.runLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            canvas.getChildren().add(c.colorChangerBody);
-//                        }
-//                    });
-//
-//                    closestColorChanger = ColorChangerArraylist.get(0);
-//                   moveCameraTimeline.play();
-//               }
+                if(mode==1){
+                    if(closestClock.checkCollision(ball.ballBody)){
+                        closestClock.showAnimation(canvas);
+                        ClockArrayList.remove(closestClock);
+                        try {
+                            Clock newClock = new Clock(225,newClockPosition);
+                            newStarPosition-=300;
+                            ClockArrayList.add(newClock);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    canvas.getChildren().remove(closestClock);
+                                    canvas.getChildren().add(newClock.clockBody);
+                                    timeLabel.setText(String.valueOf(10));
+                                }
+                            });
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        closestClock = ClockArrayList.get(0);
+                    }
+                }
+                if(closestStar.checkCollision(ball.ballBody)){
+
+                    closestStar.showAnimation(canvas);
+                    StarArrayList.remove(closestStar);
+                    numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
+
+
+                    try {
+                        Star newStar = new Star(225,newStarPosition);
+                        newStarPosition-=300;
+                        StarArrayList.add(newStar);
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                canvas.getChildren().remove(closestStar);
+                                canvas.getChildren().add(newStar.starBody);
+                                scoreLabel.setText(String.valueOf(numStarsCollected));
+                            }
+                        });
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    closestStar = StarArrayList.get(0);
+                }
+                if(closestColorChanger.checkCollision(ball.ballBody)){
+                    int newColor = closestColorChanger.showAnimation(canvas);
+                    System.out.println(newColor);
+                    ball.changeColor(newColor);
+                    ColorChangerArraylist.remove(closestColorChanger);
+                    canvas.getChildren().remove(closestColorChanger);
+                    ColorChanger c = new ColorChanger(225,newColorChangerPosition);
+                    newColorChangerPosition-=300;
+                    ColorChangerArraylist.add(c);
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            canvas.getChildren().add(c.colorChangerBody);
+                        }
+                    });
+
+                    closestColorChanger = ColorChangerArraylist.get(0);
+               }
             }
         };
         collisionTimer.scheduleAtFixedRate(task1,100,10);

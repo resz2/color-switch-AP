@@ -1,12 +1,8 @@
 package sample;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 public class Ball {
     protected double xCoordinate,yCoordinate;
@@ -16,22 +12,12 @@ public class Ball {
     public  Ball(double xCoordinate, double yCoordinate, int color){
 
         this.color = color;
-        switch(color){
-            case 1:
-                ballColor = Color.web("fae100");
-                break;
-            case 2:
-                ballColor = Color.web("ff0181");
-                break;
-            case 3:
-                ballColor = Color.web("32dbf0");
-                break;
-            case 4:
-                ballColor = Color.web("900dff");
-                break;
-            default:
-                ballColor = Color.WHITE;
-                break;
+        switch (color) {
+            case 1 -> ballColor = Color.web("fae100");
+            case 2 -> ballColor = Color.web("ff0181");
+            case 3 -> ballColor = Color.web("32dbf0");
+            case 4 -> ballColor = Color.web("900dff");
+            default -> ballColor = Color.WHITE;
         }
         ballBody = new Circle(10, ballColor);
         this.xCoordinate = xCoordinate;
@@ -60,19 +46,11 @@ public class Ball {
     }
     public void changeColor(int color){
         this.color = color;
-        switch(color){
-            case 0:
-                ballColor = Color.web("32dbf0");
-                break;
-            case 1:
-                ballColor = Color.web("fae100");
-                break;
-            case 2:
-                ballColor = Color.web("ff0181");
-                break;
-            case 3:
-                ballColor = Color.web("900dff");
-                break;
+        switch (color) {
+            case 0 -> ballColor = Color.web("32dbf0");
+            case 1 -> ballColor = Color.web("fae100");
+            case 2 -> ballColor = Color.web("ff0181");
+            case 3 -> ballColor = Color.web("900dff");
         }
         this.ballBody.setFill(ballColor);
     }
