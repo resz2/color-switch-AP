@@ -7,7 +7,7 @@ import javafx.scene.shape.*;
 
 abstract class Obstacle {
     protected Group obstacle;
-    protected int angleOfRotation;
+    protected boolean inside=false;
     protected Path pink,blue,purple,yellow;
     int rotationsCount=0;
     protected double distInner, distOuter, yCoordinate, xCoordinate;
@@ -21,40 +21,49 @@ abstract class Obstacle {
         this.xCoordinate = xCoordinate;
     }
     public int collides(Circle ball, int color){
-        switch(color){
-            case 1:
-                if (Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+        if(obstacle.getBoundsInParent().intersects(ball.getBoundsInParent())){
+            inside=true;
+        }
+        if(inside && !obstacle.getBoundsInParent().intersects(ball.getBoundsInParent())){
+            inside =false;
+            return 3;
+        }
+        switch (color) {
+            case 1 -> {
+                if (Shape.intersect(ball, pink).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, purple).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, blue).getBoundsInLocal().getWidth() != -1) {
                     return 0;
-                }
-                else if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1){
-                    return 1;
-                }
-                return 2;
-            case 2:
-                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
-                    return  0;
-                }
-                else if (Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1){
-                    return 1;
-                }
-                return 2;
-            case 3:
-                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1){
-                    return  0;
-                }
-                else if (Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
-                    return 1;
-                }
-                return 2;
-            case 4:
-                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
-                    return  0;
-                }
-                else if (Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1){
-                    return 1;
-                }
-                return 2;
+                } else if (Shape.intersect(ball, yellow).getBoundsInLocal().getWidth() != -1) {
 
+                    return 1;
+                }
+                return 2;
+            }
+            case 2 -> {
+                if (Shape.intersect(ball, yellow).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, purple).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, blue).getBoundsInLocal().getWidth() != -1) {
+                    return 0;
+                } else if (Shape.intersect(ball, pink).getBoundsInLocal().getWidth() != -1) {
+
+                    return 1;
+                }
+                return 2;
+            }
+            case 3 -> {
+                if (Shape.intersect(ball, yellow).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, purple).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, pink).getBoundsInLocal().getWidth() != -1) {
+                    return 0;
+                } else if (Shape.intersect(ball, blue).getBoundsInLocal().getWidth() != -1) {
+
+                    return 1;
+                }
+                return 2;
+            }
+            case 4 -> {
+                if (Shape.intersect(ball, yellow).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, pink).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, blue).getBoundsInLocal().getWidth() != -1) {
+                    return 0;
+                } else if (Shape.intersect(ball, purple).getBoundsInLocal().getWidth() != -1) {
+                    return 1;
+                }
+                return 2;
+            }
         }
         return 2;
     }

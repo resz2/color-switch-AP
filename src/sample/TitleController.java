@@ -12,9 +12,11 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.IOException;
 
 public class TitleController {
@@ -39,6 +41,12 @@ public class TitleController {
     private ImageView background;
     @FXML
     public void initialize(){
+        String path = "bgScore2.mp3";
+        AudioClip media = new AudioClip(new File(path).toURI().toString());
+        media.setVolume(0.25);
+        media.setCycleCount(AudioClip.INDEFINITE);
+//        media.play();
+        Main.setAudio(media);
         Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
                 new EventHandler<ActionEvent>() {
                     @Override
