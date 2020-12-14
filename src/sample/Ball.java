@@ -8,6 +8,7 @@ public class Ball {
     protected double xCoordinate,yCoordinate;
     protected Color ballColor;
     int color;
+    double distanceTravelled;
     protected Circle ballBody;
     public  Ball(double xCoordinate, double yCoordinate, int color){
 
@@ -28,6 +29,8 @@ public class Ball {
     }
     public double setyCoordinate(double val) {
         if(this.ballBody.getLayoutY()+val<=300){
+            distanceTravelled+=-1*val;
+            //System.out.println(distanceTravelled);
             return val;
         }
         else{

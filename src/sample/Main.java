@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.io.*;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
@@ -90,7 +91,7 @@ public class Main extends Application {
     int newStarPosition=-300,newClockPosition=-300;
     double newObstaclePosition=-500;
     int difficulty;
-    int newColorChangerPosition=-1000;
+    int newColorChangerPosition=-3300;
     Animation.Status moveCamTimelineStatus;
     Obstacle nextObstacle,prevObstacle,newObs;
     Boolean keyLock=false,over=false;
@@ -103,6 +104,7 @@ public class Main extends Application {
     Rectangle overlay;
     double xVelocity = 0,yVelocity=0,xVelocityOffset=0.25,yVelocityOffset=0.35,dist=0;
     Pane canvas;
+    Timeline collisionTimeline;
     int numStarsCollected=0;
     int numRetry = 0;
     @Override
@@ -131,13 +133,13 @@ public class Main extends Application {
         crashSound = new AudioClip(new File(path).toURI().toString());
         crashSound.setVolume(1);
         crashSound.setCycleCount(1);
-        path = "star.mp3";
-        starSound = new AudioClip(new File(path).toURI().toString());
-        starSound.setVolume(1);
-        starSound.setCycleCount(1);
         path = "color.mp3";
+        starSound = new AudioClip(new File(path).toURI().toString());
+        starSound.setVolume(0.75);
+        starSound.setCycleCount(1);
+        path = "star.mp3";
         colorSound = new AudioClip(new File(path).toURI().toString());
-        colorSound.setVolume(1);
+        colorSound.setVolume(0.75);
         colorSound.setCycleCount(1);
     }
     public void initialize(){
@@ -346,6 +348,47 @@ public class Main extends Application {
     public void newGameAuxiliary(){
         exitAnimation(3);
     }
+    public void addNewStar(ArrayList<Star> arr){
+        //collisionTimeline.pause();
+        try {
+            Star newStar = new Star(225,newObstaclePosition);
+            arr.add(newStar);
+            canvas.getChildren().add(newStar.starBody);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        //collisionTimeline.play();
+    }
+    public void addNewColorChanger(ArrayList<ColorChanger> arr){
+        //collisionTimeline.pause();
+        ColorChanger c = new ColorChanger(225,newColorChangerPosition);
+        canvas.getChildren().add(c.colorChangerBody);
+        arr.add(c);
+        //collisionTimeline.play();
+    }
+    public void addNewObstacle(Timeline collisionTimeline,ArrayList<Obstacle> arr,double distanceTravelled){
+        collisionTimeline.pause();
+        Random randGen = new Random();
+        int obsNumber = randGen.nextInt(6);
+        System.out.println(obsNumber);
+        Obstacle removeThis = arr.remove(0);
+        newObs = new CrossObstacle(newObstaclePosition, 275);;
+
+        //System.out.println(newObstaclePosition);
+        switch (obsNumber) {
+            case 0 -> newObs = new CrossObstacle(newObstaclePosition, 275);
+            case 1 -> newObs = new SquareObstacle(80, 95, newObstaclePosition, 225);
+            case 2 -> newObs = new ThornObstacle(50, newObstaclePosition, 225, 1.5);
+            case 3 -> newObs = new BowObstacle(newObstaclePosition, 225, 75, 90, 125);
+            case 4 -> newObs = new HalfBowObstacle(newObstaclePosition, 225, 75, 90, 125);
+            case 5 -> newObs = new CircularObstacle(80, 95, newObstaclePosition, 225);
+        }
+        newObs.create();
+        canvas.getChildren().add(newObs.obstacle);
+        canvas.getChildren().remove(removeThis.obstacle);
+        arr.add(newObs);
+        collisionTimeline.play();
+    }
     public void newGame(int mode) throws  Exception {
         canvas = new Pane();
         //pause icon setup start
@@ -405,7 +448,7 @@ public class Main extends Application {
         ArrayList<Clock> ClockArrayList = new ArrayList<>();
         ArrayList<ColorChanger> ColorChangerArraylist = new ArrayList<>();
         Random randGen = new Random();
-        for (int i=0;i<4;i++){
+        for (int i=0;i<3;i++){
             int obsNumber = randGen.nextInt(6);
             switch (obsNumber) {
                 case 0 -> circularObstacleArrayList.add(new CrossObstacle(300 - 500 * (i), 275));
@@ -422,7 +465,7 @@ public class Main extends Application {
             canvas.getChildren().add(obstacle.obstacle);
         }
         for(int i=0;i<3;i++){
-            Star star = new Star(225,300-300*(i));
+            Star star = new Star(225,300-500*(i));
             StarArrayList.add(star);
             ColorChanger c = new ColorChanger(225,100-1000*(i));
             ColorChangerArraylist.add(c);
@@ -523,11 +566,10 @@ public class Main extends Application {
                         ball.setxCoordinate(xVelocity);
                         if(move!=0){
                             for (Obstacle obstacle : circularObstacleArrayList) {
-
                                 obstacle.setyCoordinate(-move);
                             }
-                            for (Star star : StarArrayList) {
-                                star.setyCoordinate(-move);
+                            for (int i=0;i< StarArrayList.size();i++) {
+                                StarArrayList.get(i).setyCoordinate(-move);
                             }
                             for (ColorChanger colorChanger : ColorChangerArraylist) {
                                 colorChanger.setyCoordinate(-move);
@@ -621,186 +663,70 @@ public class Main extends Application {
         });
 
         Timer collisionTimer = new Timer();
-        Timeline collisionTimeline = new Timeline(new KeyFrame(Duration.millis(10),
+
+        collisionTimeline = new Timeline(new KeyFrame(Duration.millis(10),
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
-                        int val = nextObstacle.collides(ball.ballBody,ball.color);
-                        int val2 = prevObstacle.collides(ball.ballBody,ball.color);
-                        if((val==0 || val2==0) && !over){
-//                            try {
-//                                over = true;
-//                                crashSound.play();
-//                                gameOver(ball,canvas,timeline);
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-                        }
-                        else if (val==3){
-                                if(nextObsIndex!=prevObsIndex){
-                                    prevObsIndex++;
+                        for(int i=0;i<circularObstacleArrayList.size();i++){
+                             int val = circularObstacleArrayList.get(i).collides(ball.ballBody,ball.color);
+                            if(val==0 && !over){
+                                try {
+                                over = true;
+                                crashSound.play();
+                                gameOver(ball,canvas,timeline);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            nextObsIndex++;
-                            nextObstacle = circularObstacleArrayList.get(nextObsIndex);
-                            prevObstacle  = circularObstacleArrayList.get(prevObsIndex);
-                            System.out.println("Changing");
-                        }
-                        if(prevObsIndex==1 && nextObsIndex==2){
-
-                            nextObsIndex--;
-                            prevObsIndex--;
-                            int obsNumber = randGen.nextInt(6);
-                            System.out.println(obsNumber);
-                            Obstacle removeThis = circularObstacleArrayList.remove(0);
-                            newObs = new CrossObstacle(newObstaclePosition, 275);;
-
-                            //System.out.println(newObstaclePosition);
-                            switch (obsNumber) {
-                                case 0 -> newObs = new CrossObstacle(newObstaclePosition, 275);
-                                case 1 -> newObs = new SquareObstacle(80, 95, newObstaclePosition, 225);
-                                case 2 -> newObs = new ThornObstacle(50, newObstaclePosition, 225, 1.5);
-                                case 3 -> newObs = new BowObstacle(newObstaclePosition, 225, 75, 90, 125);
-                                case 4 -> newObs = new HalfBowObstacle(newObstaclePosition, 225, 75, 90, 125);
-                                case 5 -> newObs = new CircularObstacle(80, 95, newObstaclePosition, 225);
                             }
-                            newObs.create();
-                            canvas.getChildren().add(newObs.obstacle);
-                            canvas.getChildren().remove(removeThis.obstacle);
-//                                Platform.runLater(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//
-//                                    }
-//                                });
-                            //newObstaclePosition-=500;
-                            circularObstacleArrayList.add(newObs);
-
+                            else if(ball.distanceTravelled>=500){
+                                addNewObstacle(collisionTimeline,circularObstacleArrayList,ball.distanceTravelled);
+                                addNewStar(StarArrayList);
+                                addNewColorChanger(ColorChangerArraylist);
+                                ball.distanceTravelled=0;
+                            }
                         }
-
+                        if(mode==1){
+                            if(closestClock.checkCollision(ball.ballBody)){
+                                closestClock.showAnimation(canvas);
+                                ClockArrayList.remove(closestClock);
+                                try {
+                                    Clock newClock = new Clock(225,newClockPosition);
+                                    newStarPosition-=300;
+                                    ClockArrayList.add(newClock);
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            canvas.getChildren().remove(closestClock);
+                                            canvas.getChildren().add(newClock.clockBody);
+                                            timeLabel.setText(String.valueOf(10));
+                                        }
+                                    });
+                                } catch (FileNotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                                closestClock = ClockArrayList.get(0);
+                            }
+                        }
+                        if(closestStar.checkCollision(ball.ballBody)){
+                            closestStar.showAnimation(canvas);
+                            StarArrayList.remove(closestStar);
+                            numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
+                            canvas.getChildren().remove(closestStar);
+                            scoreLabel.setText(String.valueOf(numStarsCollected));
+                            closestStar = StarArrayList.get(0);
+                        }
+                        if(closestColorChanger.checkCollision(ball.ballBody)){
+                            int newColor = closestColorChanger.showAnimation(canvas);
+                            ball.changeColor(newColor);
+                            ColorChangerArraylist.remove(closestColorChanger);
+                            canvas.getChildren().remove(closestColorChanger);
+                            closestColorChanger = ColorChangerArraylist.get(0);
+                        }
                     }
                 }));
         collisionTimeline.setCycleCount(Timeline.INDEFINITE);
         collisionTimeline.play();
-        TimerTask task1 = new TimerTask() {
-            @Override
-            public void run() {
-//                        int val = nextObstacle.collides(ball.ballBody,ball.color);
-//                        int val2 = prevObstacle.collides(ball.ballBody,ball.color);
-//                        if((val==0 || val2==0) && !over){
-////                            try {
-////                                over = true;
-////                                crashSound.play();
-////                                gameOver(ball,canvas,timeline);
-////                            } catch (Exception e) {
-////                                e.printStackTrace();
-////                            }
-//                        }
-//                        else if (val==3){
-//                            if(prevObsIndex==1 && nextObsIndex==2){
-//                                System.out.println("Adding new");
-//                                nextObsIndex--;
-//                                prevObsIndex--;
-//                                int obsNumber = randGen.nextInt(6);
-//                                System.out.println(obsNumber);
-//                                Obstacle removeThis = circularObstacleArrayList.remove(0);
-//                                newObs = new CrossObstacle(newObstaclePosition, 275);;
-//                                switch (obsNumber) {
-//                                    case 0 -> newObs = new CrossObstacle(newObstaclePosition, 275);
-//                                    case 1 -> newObs = new SquareObstacle(80, 95, newObstaclePosition, 225);
-//                                    case 2 -> newObs = new ThornObstacle(50, newObstaclePosition, 225, 1.5);
-//                                    case 3 -> newObs = new BowObstacle(newObstaclePosition, 225, 75, 90, 125);
-//                                    case 4 -> newObs = new HalfBowObstacle(newObstaclePosition, 225, 75, 90, 125);
-//                                    case 5 -> newObs = new CircularObstacle(80, 95, newObstaclePosition, 225);
-//                                }
-//                                newObs.create();
-//                                canvas.getChildren().add(newObs.obstacle);
-//                                canvas.getChildren().remove(removeThis.obstacle);
-////                                Platform.runLater(new Runnable() {
-////                                    @Override
-////                                    public void run() {
-////
-////                                    }
-////                                });
-//                                newObstaclePosition-=500;
-//                                circularObstacleArrayList.add(newObs);
-//
-//                            }
-//                            if(nextObsIndex!=prevObsIndex){
-//                                prevObsIndex++;
-//                            }
-//                            nextObsIndex++;
-//                            nextObstacle = circularObstacleArrayList.get(nextObsIndex);
-//                            prevObstacle  = circularObstacleArrayList.get(prevObsIndex);
-//                            System.out.println("Changing");
-//                        }
-//                   if (nextObstacle.collides(ball.ballBody,ball.color)==3){
-//
-//                    }
-                if(mode==1){
-                    if(closestClock.checkCollision(ball.ballBody)){
-                        closestClock.showAnimation(canvas);
-                        ClockArrayList.remove(closestClock);
-                        try {
-                            Clock newClock = new Clock(225,newClockPosition);
-                            newStarPosition-=300;
-                            ClockArrayList.add(newClock);
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    canvas.getChildren().remove(closestClock);
-                                    canvas.getChildren().add(newClock.clockBody);
-                                    timeLabel.setText(String.valueOf(10));
-                                }
-                            });
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        closestClock = ClockArrayList.get(0);
-                    }
-                }
-//                if(closestStar.checkCollision(ball.ballBody)){
-//                    starSound.play();
-//                    closestStar.showAnimation(canvas);
-//                    StarArrayList.remove(closestStar);
-//                    numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
-//                    try {
-//                        Star newStar = new Star(225,newStarPosition);
-//                        newStarPosition-=300;
-//                        StarArrayList.add(newStar);
-//                        Platform.runLater(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                canvas.getChildren().remove(closestStar);
-//                                canvas.getChildren().add(newStar.starBody);
-//                                scoreLabel.setText(String.valueOf(numStarsCollected));
-//                            }
-//                        });
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
-//                    closestStar = StarArrayList.get(0);
-//                }
-//                if(closestColorChanger.checkCollision(ball.ballBody)){
-//                    int newColor = closestColorChanger.showAnimation(canvas);
-//                    colorSound.play();
-//                    ball.changeColor(newColor);
-//                    ColorChangerArraylist.remove(closestColorChanger);
-//                    canvas.getChildren().remove(closestColorChanger);
-//                    ColorChanger c = new ColorChanger(225,newColorChangerPosition);
-//                    newColorChangerPosition-=1000;
-//                    ColorChangerArraylist.add(c);
-//                    Platform.runLater(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            canvas.getChildren().remove(closestColorChanger);
-//                            canvas.getChildren().add(c.colorChangerBody);
-//                        }
-//                    });
-//                    closestColorChanger = ColorChangerArraylist.get(0);
-//               }
-            }
-        };
-        collisionTimer.scheduleAtFixedRate(task1,100,10);
         EventHandler<MouseEvent> homeHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
