@@ -1,66 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.shape.Circle?>
 <AnchorPane fx:id="menuBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #272727;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Main">
    <ImageView fx:id="backgroundImage" fitHeight="600.0" fitWidth="450.0" opacity="0" pickOnBounds="true">
       <image>
          <Image url="@../assets/stripes.jpg" />
       </image>
    </ImageView>
-   <Circle fill="#fae100" layoutX="170" layoutY="300"  radius="15.0"
-           stroke="#fae100" strokeType="INSIDE" fx:id="yellowBall1" opacity="0"/>
-   <Circle fill="#fae100" layoutX="281" layoutY="300"  radius="15.0"
-           stroke="#fae100" strokeType="INSIDE" fx:id="yellowBall2" opacity="0"/>
-   <Circle fill="#32dbf0" layoutX="170" layoutY="370"  radius="15.0"
-           stroke="#32dbf0" strokeType="INSIDE" fx:id="blueBall1" opacity="0"/>
-   <Circle fill="#32dbf0" layoutX="281" layoutY="370"  radius="15.0"
-           stroke="#32dbf0" strokeType="INSIDE" fx:id="blueBall2" opacity="0"/>
-   <Circle fill="#ff0181" layoutX="170" layoutY="442"  radius="15.0"
-           stroke="#ff0181" strokeType="INSIDE" fx:id="pinkBall1" opacity="0"/>
-   <Circle fill="#ff0181" layoutX="281" layoutY="442"  radius="15.0"
-           stroke="#ff0181" strokeType="INSIDE" fx:id="pinkBall2" opacity="0"/>
-   <Circle fill="#900dff" layoutX="170" layoutY="515"  radius="15.0"
-           stroke="#900dff" strokeType="INSIDE" fx:id="purpleBall1" opacity="0"/>
-   <Circle fill="#900dff" layoutX="281" layoutY="515"  radius="15.0"
-           stroke="#900dff" strokeType="INSIDE" fx:id="purpleBall2" opacity="0"/>
-   <Label  fx:id="newGameButton" alignment="CENTER" layoutX="-51" layoutY="277.0" onMouseClicked="#newGameAuxiliary" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color:#fae100 ; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="New Game" textFill="#fae100" onMouseEntered="#enterYellow" onMouseExited="#exitYellow">
+   <Circle fx:id="yellowBall1" fill="#fae100" layoutX="170" layoutY="300" opacity="0" radius="15.0" stroke="#fae100" strokeType="INSIDE" />
+   <Circle fx:id="yellowBall2" fill="#fae100" layoutX="281" layoutY="300" opacity="0" radius="15.0" stroke="#fae100" strokeType="INSIDE" />
+   <Circle fx:id="blueBall1" fill="#32dbf0" layoutX="170" layoutY="370" opacity="0" radius="15.0" stroke="#32dbf0" strokeType="INSIDE" />
+   <Circle fx:id="blueBall2" fill="#32dbf0" layoutX="281" layoutY="370" opacity="0" radius="15.0" stroke="#32dbf0" strokeType="INSIDE" />
+   <Circle fx:id="pinkBall1" fill="#ff0181" layoutX="170" layoutY="442" opacity="0" radius="15.0" stroke="#ff0181" strokeType="INSIDE" />
+   <Circle fx:id="pinkBall2" fill="#ff0181" layoutX="281" layoutY="442" opacity="0" radius="15.0" stroke="#ff0181" strokeType="INSIDE" />
+   <Circle fx:id="purpleBall1" fill="#900dff" layoutX="170" layoutY="515" opacity="0" radius="15.0" stroke="#900dff" strokeType="INSIDE" />
+   <Circle fx:id="purpleBall2" fill="#900dff" layoutX="281" layoutY="515" opacity="0" radius="15.0" stroke="#900dff" strokeType="INSIDE" />
+   <Label fx:id="newGameButton" alignment="CENTER" layoutX="-51" layoutY="277.0" onMouseClicked="#newGameAuxiliary" onMouseEntered="#enterYellow" onMouseExited="#exitYellow" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color:#fae100 ; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="New Game" textFill="#fae100">
       <font>
          <Font name="Lucida Sans Unicode" size="20.0" />
       </font>
    </Label>
-   <Label fx:id="loadGameButton"  alignment="CENTER" layoutX="349" layoutY="347.0" onMouseClicked="#loadGame" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color: #32dbf0; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="Load Game" textFill="32dbf0" onMouseEntered="#enterBlue" onMouseExited="#exitBlue">
+   <Label fx:id="loadGameButton" alignment="CENTER" layoutX="349" layoutY="347.0" onMouseClicked="#loadGame" onMouseEntered="#enterBlue" onMouseExited="#exitBlue" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color: #32dbf0; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="Load Game" textFill="32dbf0">
       <font>
          <Font name="Lucida Sans Unicode" size="20.0" />
       </font>
    </Label>
-   <Label fx:id="highScoreButton" alignment="CENTER" layoutX="-51" layoutY="421.0" onMouseClicked="#displayHighScores" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color: #ff0181; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="High Scores" textFill="#ff0181" onMouseEntered="#enterPink" onMouseExited="#exitPink">
+   <Label fx:id="highScoreButton" alignment="CENTER" layoutX="-51" layoutY="421.0" onMouseClicked="#displayHighScores" onMouseEntered="#enterPink" onMouseExited="#exitPink" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color: #ff0181; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="High Scores" textFill="#ff0181">
       <font>
          <Font name="Lucida Sans Unicode" size="20.0" />
       </font>
    </Label>
-   <Label fx:id="exitButton" alignment="CENTER" layoutX="349" layoutY="493.0" onMouseClicked="#exitGame" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color: #900DFF; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="Exit" textFill="#900DFF" onMouseEntered="#enterPurple" onMouseExited="#exitPurple">
+   <Label fx:id="exitButton" alignment="CENTER" layoutX="349" layoutY="493.0" onMouseClicked="#exitGame" onMouseEntered="#enterPurple" onMouseExited="#exitPurple" prefHeight="46.0" prefWidth="152.0" style="-fx-border-color: #900DFF; -fx-border-width: 5; -fx-border-radius: 3; -fx-background-color: #272727;" text="Exit" textFill="#900DFF">
       <font>
          <Font name="Lucida Sans Unicode" size="20.0" />
       </font>
    </Label>
-   <Label alignment="CENTER" layoutX="57.0" layoutY="-56" prefHeight="213.0" prefWidth="336.0"
-          text="C    L    R&#10;SWITCH" textAlignment="CENTER" textFill="WHITE" fx:id="heading">
+   <Label fx:id="heading" alignment="CENTER" layoutX="57.0" layoutY="-56" prefHeight="213.0" prefWidth="336.0" text="C    L    R&#10;SWITCH" textAlignment="CENTER" textFill="WHITE">
       <font>
-         <Font size="72.0"/>
+         <Font size="72.0" />
       </font>
    </Label>
-   <ImageView fx:id="tcircle1" fitHeight="60.0" fitWidth="60.0" layoutX="137.0" layoutY="-32" pickOnBounds="true"
-              preserveRatio="true" styleClass="o">
-      <Image url="@../assets/o2.png"/>
+   <ImageView fx:id="tcircle1" fitHeight="60.0" fitWidth="60.0" layoutX="137.0" layoutY="-32" pickOnBounds="true" preserveRatio="true" styleClass="o">
+      <Image url="@../assets/o2.png" />
    </ImageView>
-   <ImageView fx:id="tcircle2" fitHeight="60.0" fitWidth="60.0" layoutX="249.0" layoutY="-32" pickOnBounds="true"
-              preserveRatio="true" styleClass="o">
-      <Image url="@../assets/o2.png"/>
+   <ImageView fx:id="tcircle2" fitHeight="60.0" fitWidth="60.0" layoutX="249.0" layoutY="-32" pickOnBounds="true" preserveRatio="true" styleClass="o">
+      <Image url="@../assets/o2.png" />
+   </ImageView>
+   <Circle fill="WHITE" layoutX="57.0" layoutY="553.0" onMouseClicked="#goBack" radius="25.0" stroke="BLACK" strokeType="INSIDE">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+   </Circle>
+   <ImageView fitHeight="46.0" fitWidth="50.0" layoutX="34.0" layoutY="530.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+      <image>
+         <Image url="@../assets/back.png" />
+      </image>
+   </ImageView>
+   <Circle fill="WHITE" layoutX="400.0" layoutY="553.0" onMouseClicked="#openShop" radius="25.0" stroke="BLACK" strokeType="INSIDE">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+   </Circle>
+   <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="381.0" layoutY="537.0" onMouseClicked="#openShop" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../assets/shopcart.png" />
+      </image>
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
    </ImageView>
 </AnchorPane>

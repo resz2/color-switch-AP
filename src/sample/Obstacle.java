@@ -7,14 +7,14 @@ import javafx.scene.shape.*;
 
 abstract class Obstacle extends GameElement {
     protected transient Group obstacle;
-    protected int angleOfRotation;
     protected transient Path pink,blue,purple,yellow;
-    protected int rotationsCount=0;
-    protected double distInner, distOuter;
+    protected int rotationsCount;
+    protected double distInner, distOuter, angleOfRotation;
     public Obstacle(){
 
     }
     public Obstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
+        rotationsCount = 0;
         this.distInner = distInner;
         this.distOuter = distOuter;
         this.yCoordinate = yCoordinate;
@@ -66,12 +66,12 @@ abstract class Obstacle extends GameElement {
 
     public void setAngleOfRotation(double rotateBy){
         this.obstacle.setRotate(this.obstacle.getRotate()+rotateBy);
+        this.angleOfRotation = this.getAngleOfRotation();
         if(this.getAngleOfRotation()%360==0){
             this.rotationsCount+=1;
         }
     }
 
-    @Override
     public void setyCoordinate(double val){
         this.obstacle.setLayoutY(this.obstacle.getLayoutY()+val);
         this.yCoordinate = this.obstacle.getLayoutY();

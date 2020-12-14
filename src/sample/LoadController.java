@@ -88,7 +88,7 @@ public class LoadController {
         // loads the selected game
         // for now loads game 0
         if(!loadsList.getItems().isEmpty()) {
-            GameState state = (GameState)loadsList.getSelectionModel().getSelectedItem();
+            GameState state = loadsList.getSelectionModel().getSelectedItem();
             try {
                 Main.getCurrentPlayer().setCurrentState(state);
                 state.loadGame(loadBG);

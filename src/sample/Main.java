@@ -138,7 +138,7 @@ public class Main extends Application {
     }
 
     public void exitAnimation(int buttonClicked){
-        Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+        Timeline exitTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
@@ -167,10 +167,10 @@ public class Main extends Application {
                         exitButton.setLayoutX(exitButton.getLayoutX()+2);
                     }
                 }));
-        enterTimeline.setCycleCount(200);
-        enterTimeline.play();
+        exitTimeline.setCycleCount(200);
+        exitTimeline.play();
 
-        enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+        exitTimeline.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
                 AnchorPane pane = null;
@@ -219,19 +219,44 @@ public class Main extends Application {
         exitAnimation(2);
     }
 
+    public void goBack() {
+        AnchorPane pane=null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("titleScreen.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch(NullPointerException e){
+            System.out.println(e.getMessage());
+        }
+        menuBG.getChildren().setAll(pane);
+    }
+
+    public void openShop() {
+        AnchorPane pane=null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("shopScreen.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch(NullPointerException e){
+            System.out.println(e.getMessage());
+        }
+        menuBG.getChildren().setAll(pane);
+    }
+
     public void exitGame() throws Exception {
         AnchorPane pane = FXMLLoader.load(getClass().getResource("exitPopup.fxml"));
         menuBG.getChildren().setAll(pane);
     }
+
     public static void main(String[] args) throws InterruptedException {
         launch(args);
     }
 
 
 
-
     // ANIMATION
-
     public void enterYellow(){
         if(newGameButton.getLayoutX()<=149){
             Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),

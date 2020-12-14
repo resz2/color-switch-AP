@@ -68,10 +68,24 @@ public class NewGameController {
         newGameBG.getChildren().setAll(pane);
     }
 
-    public void setDifficultyToEasy() {
-        Main.getCurrentPlayer().setCurrentState(new GameState());
+    public void setModeToFrenzy() throws Exception {
+        Player p = Main.getCurrentPlayer();
+        p.setCurrentState(new GameState());
+        p.getCurrentState().setMode(1);
         try {
-            Main.getCurrentPlayer().getCurrentState().newGame(0, newGameBG);
+            p.getCurrentState().newGame(0, newGameBG);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setDifficultyToEasy() {
+        Player p = Main.getCurrentPlayer();
+        p.setCurrentState(new GameState());
+        p.getCurrentState().setMode(0);
+        try {
+            p.getCurrentState().newGame(0, newGameBG);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -79,9 +93,11 @@ public class NewGameController {
     }
 
     public void setDifficultyToMedium() {
-        Main.getCurrentPlayer().setCurrentState(new GameState());
+        Player p = Main.getCurrentPlayer();
+        p.setCurrentState(new GameState());
+        p.getCurrentState().setMode(0);
         try {
-            Main.getCurrentPlayer().getCurrentState().newGame(1, newGameBG);
+            p.getCurrentState().newGame(1, newGameBG);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -89,9 +105,11 @@ public class NewGameController {
     }
 
     public void setDifficultyToHard() {
-        Main.getCurrentPlayer().setCurrentState(new GameState());
+        Player p = Main.getCurrentPlayer();
+        p.setCurrentState(new GameState());
+        p.getCurrentState().setMode(0);
         try {
-            Main.getCurrentPlayer().getCurrentState().newGame(2, newGameBG);
+            p.getCurrentState().newGame(2, newGameBG);
         }
         catch (Exception e) {
             e.printStackTrace();

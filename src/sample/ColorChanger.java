@@ -28,13 +28,11 @@ public class ColorChanger extends GameElement {
         this.create();
     }
 
-    @Override
     public void setyCoordinate(double val) {
         this.colorChangerBody.setLayoutY(this.colorChangerBody.getLayoutY()+val);
         this.yCoordinate = this.colorChangerBody.getLayoutY();
     }
 
-    @Override
     public double getyCoordinate(){
         return this.colorChangerBody.getLayoutY();
     }

@@ -1,12 +1,13 @@
 package sample;
 
+import javafx.util.Pair;
 import java.io.Serializable;
 import java.util.*;
 
 public class Player implements Serializable {
     private int totalStars;
     private final String playerName;
-    private final Map<Integer, String> highScores;
+    private final ArrayList<int[]> highScores;
     private GameState currentState;
     private final ArrayList<GameState> savedGames;
     private final Set<Integer> ballTypes;
@@ -14,8 +15,8 @@ public class Player implements Serializable {
     public Player(String name)  {
         totalStars = 0;
         playerName = name;
-        highScores = new HashMap<Integer, String>();
         currentState = new GameState();
+        highScores = new ArrayList<int[]>();
         savedGames = new ArrayList<GameState>();
         ballTypes = new HashSet<Integer>();
     }
@@ -28,7 +29,7 @@ public class Player implements Serializable {
         return playerName;
     }
 
-    public Map<Integer, String> getHighScores() { return highScores; }
+    public ArrayList<int[]> getHighScores() { return highScores; }
 
     public Set<Integer> getBallTypes() { return ballTypes; }
 

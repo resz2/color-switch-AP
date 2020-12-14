@@ -119,6 +119,9 @@ public class TitleController {
         db.setLastPlayer(0);
     }
 
+    public void displayInfo(MouseEvent mouseEvent) {
+    }
+
 
 
     // ANIMATION
@@ -159,6 +162,5 @@ public class TitleController {
             exitTimeline.play();
         }
     }
-
 }
 //Icons made by <a href="https://www.flaticon.com/authors/nikita-golubev" title="Nikita Golubev">Nikita Golubev</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

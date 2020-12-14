@@ -9,8 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
@@ -19,54 +17,47 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Star extends GameElement {
-    protected transient ImageView starBody;
-
-    public Star(double xCoordinate, double yCoordinate) throws FileNotFoundException {
+public class Clock extends GameElement {
+    protected transient ImageView clockBody;
+    public Clock(double xCoordinate, double yCoordinate) throws FileNotFoundException {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.create();
     }
-
     public void create() throws FileNotFoundException {
-        InputStream stream = this.getClass().getResourceAsStream("/star.png");
+        InputStream stream = this.getClass().getResourceAsStream("/clock.png");
         Image image = new Image(stream);
-        starBody = new ImageView();
-        starBody.setImage(image);
-        starBody.setX(this.xCoordinate-20);
-        starBody.setY(this.yCoordinate-20);
-        starBody.setFitWidth(40);
-        starBody.setPreserveRatio(true);
+        clockBody = new ImageView();
+        clockBody.setImage(image);
+        clockBody.setX(this.xCoordinate-20);
+        clockBody.setY(this.yCoordinate-20);
+        clockBody.setFitWidth(40);
+        clockBody.setPreserveRatio(true);
     }
-
     public void setyCoordinate(double val){
-        this.starBody.setLayoutY(this.starBody.getLayoutY()+val);
-        this.yCoordinate = this.starBody.getLayoutY();
-    }
 
+        this.clockBody.setLayoutY(this.clockBody.getLayoutY()+val);
+        this.yCoordinate = this.clockBody.getLayoutY();
+
+    }
     public boolean checkCollision(Circle b){
-        return starBody.getBoundsInParent().intersects(b.getBoundsInParent());
+        return clockBody.getBoundsInParent().intersects(b.getBoundsInParent());
     }
-
-
-
-    // ANIMATION
-
     public void showAnimation(Pane canvas){
         Timeline fadeTimeline = new Timeline(new KeyFrame(Duration.millis(2),
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
-                        starBody.setOpacity(starBody.getOpacity()-0.01);
+                        clockBody.setOpacity(clockBody.getOpacity()-0.01);
                     }
                 }));
         fadeTimeline.setCycleCount(100);
         fadeTimeline.play();
-        ArrayList<ImageView> smallStars = new ArrayList<>();
+        ArrayList<ImageView> smallClocks = new ArrayList<>();
         InputStream stream = null;
         try {
-            stream = this.getClass().getResourceAsStream("/star.png");
-        } catch (Exception e) {
+            stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\clock.png");
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         Random randomGen = new Random();
@@ -89,18 +80,18 @@ public class Star extends GameElement {
                 offsetX = randomGen.nextInt(10);
                 offsetY = -1*randomGen.nextInt(10);
             }
-            ImageView starBody = new ImageView();
-            starBody.setImage(image);
-            starBody.setX(this.xCoordinate+offsetX*4);
-            starBody.setY(this.yCoordinate+offsetY*4-12.5);
-            starBody.setFitWidth(10);
-            starBody.setOpacity(0);
-            starBody.setPreserveRatio(true);
-            smallStars.add(starBody);
+            ImageView clockBody = new ImageView();
+            clockBody.setImage(image);
+            clockBody.setX(this.xCoordinate+offsetX*3);
+            clockBody.setY(this.yCoordinate+offsetY*4-12.5);
+            clockBody.setFitWidth(10);
+            clockBody.setOpacity(0);
+            clockBody.setPreserveRatio(true);
+            smallClocks.add(clockBody);
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    canvas.getChildren().add(starBody);
+                    canvas.getChildren().add(clockBody);
                 }
             });
 
@@ -110,9 +101,9 @@ public class Star extends GameElement {
                     @Override
                     public void handle(ActionEvent t) {
                         double opacityOffset=0.02;
-                        for(int i=0;i<smallStars.size();i++){
-                            smallStars.get(i).setOpacity(smallStars.get(i).getOpacity()+opacityOffset);
-                            smallStars.get(i).setY(smallStars.get(i).getY()-0.25);
+                        for(int i=0;i<smallClocks.size();i++){
+                            smallClocks.get(i).setOpacity(smallClocks.get(i).getOpacity()+opacityOffset);
+                            smallClocks.get(i).setY(smallClocks.get(i).getY()-0.25);
                         }
                     }
                 }));
@@ -122,12 +113,12 @@ public class Star extends GameElement {
             @Override
             public void handle(ActionEvent actionEvent) {
 
-                for(int i=0;i<smallStars.size();i++){
-                    ImageView starBody = smallStars.get(i);
+                for(int i=0;i<smallClocks.size();i++){
+                    ImageView clockBody = smallClocks.get(i);
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            canvas.getChildren().remove(starBody);
+                            canvas.getChildren().remove(clockBody);
                         }
                     });
                 }

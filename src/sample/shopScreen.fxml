@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane fx:id="shopBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #272727;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ShopScreenController">
+   <children>
+      <Circle centerX="422.0" centerY="540.0" fill="WHITE" layoutX="-197.0" layoutY="22.0" onMouseClicked="#goBack" radius="24.0" stroke="BLACK" strokeType="INSIDE">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Circle>
+      <ImageView fitHeight="47.0" fitWidth="53.0" layoutX="202.0" layoutY="538.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+         <image>
+            <Image url="@../assets/back.png" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbff1fcf" height="80.0" layoutY="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="450.0" />
+      <ImageView fitHeight="48.0" fitWidth="47.0" layoutX="389.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/shop.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="48.0" fitWidth="47.0" layoutX="14.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/shop.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="35.0" fitWidth="144.0" layoutX="159.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/shoptext.png" />
+         </image>
+      </ImageView>
+      <Label layoutX="30.0" layoutY="150.0" prefHeight="110.0" prefWidth="110.0" style="-fx-background-color: #272755; -fx-border-radius: 10; -fx-border-color: white; -fx-border-width: 4;" text="Label" />
+      <ImageView fitHeight="48.0" fitWidth="47.0" layoutX="62.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../assets/shutter_blue.png" />
+         </image>
+      </ImageView>
+      <Button layoutX="34.0" layoutY="223.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="102.0" style="-fx-background-color: #d55b09;" text="BUY" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="11.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+   </children>
+</AnchorPane>

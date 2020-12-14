@@ -6,6 +6,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
 
 public class GameOverController {
     @FXML
@@ -38,22 +41,52 @@ public class GameOverController {
     }
 
     public void exitToMainMenu() throws Exception {
+        ArrayList<int[]> hs = Main.getCurrentPlayer().getHighScores();
+        GameState state = Main.getCurrentPlayer().getCurrentState();
+        int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
+        hs.add(pair);
+        if(hs.size()!=1)    {
+            hsComparator comp = new hsComparator();
+            hs.sort(comp);
+        }
+        Database.serialize(Main.getDB());
         AnchorPane pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
         gameOverBG.getChildren().setAll(pane);
     }
 
     public void restartGame() throws IOException {
+        ArrayList<int[]> hs = Main.getCurrentPlayer().getHighScores();
+        GameState state = Main.getCurrentPlayer().getCurrentState();
+        int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
+        hs.add(pair);
+        if(hs.size()!=1)    {
+            hsComparator comp = new hsComparator();
+            hs.sort(comp);
+        }
+        Database.serialize(Main.getDB());
         AnchorPane pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
         gameOverBG.getChildren().setAll(pane);
     }
 
     public void continueGame() throws IOException {
         System.out.println("Reviving now :)");
+        // uncomment after revive implemented
+        //Main.getCurrentPlayer().getCurrentState().decreaseStars();
         revive();
     }
 
     public void revive() {
         // not sure how
         // newGameBG.getChildren().setAll(Main.getCurrentPlayer().getCurrentState().getGameOverCanvas());
+    }
+}
+
+class hsComparator implements Comparator<int[]> {
+    @Override
+    public int compare(int[] o1, int[] o2) {
+        if(o1[1]!=o2[1])    {
+            return o2[1] - o1[1];
+        }
+        return o2[0] - o1[0];
     }
 }

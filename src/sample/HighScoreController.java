@@ -43,8 +43,8 @@ public class HighScoreController {
             System.out.println("empty high");
         }
         else    {
-            Main.getCurrentPlayer().getHighScores().forEach((k, v)->
-                    highScoreList.getItems().add("    " + k + "                         " + v));
+            for(int[] pair: Main.getCurrentPlayer().getHighScores())
+                    highScoreList.getItems().add("    " + pair[0] + "                         " + diffPrinter(pair[1]));
         }
 
         Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
@@ -68,6 +68,19 @@ public class HighScoreController {
                 }));
         enterTimeline.setCycleCount(100);
         enterTimeline.play();
+    }
+
+    private String diffPrinter(int diff) {
+        String s = "-";
+        switch (diff)   {
+            case 0: s = "easy";
+                break;
+            case 1: s = "medium";
+                break;
+            case 2: s = "hard";
+                break;
+        }
+        return s;
     }
 
     public void goBack() throws Exception {
