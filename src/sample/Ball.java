@@ -1,18 +1,15 @@
 package sample;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
-import javafx.util.Duration;
+
 
 public class Ball extends GameElement {
-    protected transient Color ballColor;
     private int color;
-    protected transient Circle ballBody;
+    private double distanceTravelled;
+    private transient Color ballColor;
+    private transient Circle ballBody;
 
     public Ball(double xCoordinate, double yCoordinate, int color)  {
         this.color = color;
@@ -43,6 +40,7 @@ public class Ball extends GameElement {
 
     public double setyCoordinate(double val) {
         if(this.ballBody.getLayoutY()+val<=300){
+            distanceTravelled += -1*val;
             return val;
         }
         else{
@@ -62,6 +60,8 @@ public class Ball extends GameElement {
     }
 
     public int getColor()   { return this.color; }
+
+    public Circle getBallBody() { return this.ballBody; }
 
     public void changeColor(int color){
         this.color = color;

@@ -27,13 +27,8 @@ public class Database implements Serializable {
 
     public static void serialize(Database db) throws IOException  {
         ObjectOutputStream out = null;
-        try {
-            out = new ObjectOutputStream(new FileOutputStream("database.txt"));
-            out.writeObject(db);
-        }
-        finally {
-            out.close();
-        }
+        out = new ObjectOutputStream(new FileOutputStream("database.txt"));
+        out.writeObject(db);
     }
 
     public static Database deserialize() throws IOException, ClassNotFoundException {

@@ -12,10 +12,12 @@ import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
 import javax.xml.crypto.Data;
+import java.io.File;
 import java.io.IOException;
 
 public class TitleController {
@@ -40,6 +42,13 @@ public class TitleController {
     private ImageView background;
     @FXML
     public void initialize(){
+        // audio not working
+//        String path = "audio/bgScore2.mp3";
+//        AudioClip media = new AudioClip(new File(path).toURI().toString());
+//        media.setVolume(0.25);
+//        media.setCycleCount(AudioClip.INDEFINITE);
+//        media.play();
+//        Main.setAudio(media);
         Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
                 new EventHandler<ActionEvent>() {
                     @Override
@@ -105,8 +114,13 @@ public class TitleController {
         // displays player list and sets currentPlayer and lastPlayer
         // For now sets player 0 as current player
         Database db = Main.getDB();
-        Main.setCurrentPlayer(db.getPlayers().get(0));
-        db.setLastPlayer(0);
+        if(db.getPlayers().isEmpty())   {
+            System.out.println("no players");
+        }
+        else    {
+            Main.setCurrentPlayer(db.getPlayers().get(0));
+            db.setLastPlayer(0);
+        }
     }
 
     private void prompt()   {
@@ -119,7 +133,14 @@ public class TitleController {
         db.setLastPlayer(0);
     }
 
-    public void displayInfo(MouseEvent mouseEvent) {
+    public void displayInfo() {
+        AnchorPane pane = null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("infoScreen.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        titleBG.getChildren().setAll(pane);
     }
 
 

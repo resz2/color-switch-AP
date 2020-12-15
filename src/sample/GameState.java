@@ -20,6 +20,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -30,18 +31,15 @@ import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
 import javax.xml.crypto.Data;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GameState implements Serializable {
+public class GameState implements Serializable, Cloneable {
     private int mode, difficulty, nextObsIndex, prevObsIndex, newStarPosition, newClockPosition, newObstaclePosition, newColorChangerPosition, numStarsCollected, numRetry;;
-    private boolean over, played;
+    private boolean over, played, keyLock;
     private double xVelocity, yVelocity, xVelocityOffset, yVelocityOffset, dist;
     private Obstacle nextObstacle,prevObstacle, newObs;
     private Ball ball;
@@ -53,11 +51,13 @@ public class GameState implements Serializable {
     private ArrayList<ColorChanger> ColorChangerArraylist;
     private ArrayList<Clock> ClockArrayList;
     private transient Animation.Status moveCamTimelineStatus;
-    @FXML
+    private transient AudioClip crashSound,starSound,bounceSound,colorSound;
+    private transient static AudioClip audio;
     private transient Label resumeButton, saveButton, homeButton, pauseButton, scoreLabel, restartButton, timeLabel;
     private transient Rectangle overlay;
+    private transient Timeline collisionTimeline;
     private transient Pane gameOverCanvas;
-    public boolean cameraMoving;
+
 
     public GameState()  {
         mode = nextObsIndex = prevObsIndex = numStarsCollected = numRetry = 0;
@@ -66,9 +66,9 @@ public class GameState implements Serializable {
         yVelocityOffset = 0.35;
         newStarPosition = -300;
         newClockPosition = -300;
-        newObstaclePosition = -1000;
-        newColorChangerPosition = -1000;
-        over = cameraMoving = played = false;
+        newObstaclePosition = -500;
+        newColorChangerPosition = -3300;
+        over = played = keyLock = false;
         resumeButton = new Label();
         saveButton = new Label();
         homeButton = new Label();
@@ -98,6 +98,47 @@ public class GameState implements Serializable {
                     break;
         }
         return s;
+    }
+
+    public GameState deepClone()    {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream out = new ObjectOutputStream(baos);
+            out.writeObject(this);
+
+            GameState copy;
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            ObjectInputStream in = new ObjectInputStream(bais);
+            copy = (GameState)in.readObject();
+            return copy;
+        }
+        catch (IOException | ClassNotFoundException e)  {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void setAudio(AudioClip a){
+        GameState.audio = a;
+    }
+
+    public void createAudioClips(){
+        String path = "audio/bounce.mp3";
+        bounceSound = new AudioClip(new File(path).toURI().toString());
+        bounceSound.setVolume(1);
+        bounceSound.setCycleCount(1);
+        path = "audio/acid5.wav";
+        crashSound = new AudioClip(new File(path).toURI().toString());
+        crashSound.setVolume(1);
+        crashSound.setCycleCount(1);
+        path = "audio/color.mp3";
+        starSound = new AudioClip(new File(path).toURI().toString());
+        starSound.setVolume(0.75);
+        starSound.setCycleCount(1);
+        path = "audio/star.mp3";
+        colorSound = new AudioClip(new File(path).toURI().toString());
+        colorSound.setVolume(0.75);
+        colorSound.setCycleCount(1);
     }
 
     private void gameScreenSetup(int mode) {
@@ -276,7 +317,7 @@ public class GameState implements Serializable {
         closestColorChanger = ColorChangerArraylist.get(0);
         if(mode==1) { closestClock = ClockArrayList.get(0); }
 
-        canvas.getChildren().add(ball.ballBody);
+        canvas.getChildren().add(ball.getBallBody());
         runGame(bgPane, canvas);
     }
 
@@ -322,12 +363,14 @@ public class GameState implements Serializable {
         closestColorChanger = ColorChangerArraylist.get(0);
         if(mode==1) { closestClock = ClockArrayList.get(0); }
 
-        canvas.getChildren().add(ball.ballBody);
+        canvas.getChildren().add(ball.getBallBody());
 
         runGame(bgPane, canvas);
     }
 
     private void runGame(AnchorPane bgPane, Pane canvas)  {
+        // not working
+        //createAudioClips();
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16.67),
                 new EventHandler<ActionEvent>() {
 
@@ -497,7 +540,7 @@ public class GameState implements Serializable {
             @Override
             public void run() {
 
-                if( (nextObstacle.collides(ball.ballBody,ball.getColor())==0 || prevObstacle.collides(ball.ballBody,ball.getColor())==0) && !over){
+                if( (nextObstacle.collides(ball.getBallBody(),ball.getColor())==0 || prevObstacle.collides(ball.getBallBody(),ball.getColor())==0) && !over){
                         try {
                             over = true;
                             gameOver(ball,canvas,timeline, bgPane);
@@ -505,7 +548,7 @@ public class GameState implements Serializable {
                             e.printStackTrace();
                         }
                     }
-                    if (nextObstacle.collides(ball.ballBody,ball.getColor())==1){
+                    if (nextObstacle.collides(ball.getBallBody(),ball.getColor())==1){
                         if(prevObsIndex==2 && nextObsIndex==3){
                             System.out.println("Adding new");
                             circularObstacleArrayList.remove(0);
@@ -546,7 +589,7 @@ public class GameState implements Serializable {
                         prevObstacle = circularObstacleArrayList.get(prevObsIndex);
                     }
                 if(mode==1){
-                    if(closestClock.checkCollision(ball.ballBody)){
+                    if(closestClock.checkCollision(ball.getBallBody())){
                         closestClock.showAnimation(canvas);
                         ClockArrayList.remove(closestClock);
                         try {
@@ -567,7 +610,7 @@ public class GameState implements Serializable {
                         closestClock = ClockArrayList.get(0);
                     }
                 }
-                if(closestStar.checkCollision(ball.ballBody)){
+                if(closestStar.checkCollision(ball.getBallBody())){
 
                     closestStar.showAnimation(canvas);
                     StarArrayList.remove(closestStar);
@@ -591,7 +634,7 @@ public class GameState implements Serializable {
                     }
                     closestStar = StarArrayList.get(0);
                 }
-                if(closestColorChanger.checkCollision(ball.ballBody)){
+                if(closestColorChanger.checkCollision(ball.getBallBody())){
                     int newColor = closestColorChanger.showAnimation(canvas);
                     System.out.println(newColor);
                     ball.changeColor(newColor);
@@ -770,7 +813,8 @@ public class GameState implements Serializable {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 Player p = Main.getCurrentPlayer();
-                p.getSavedGames().add(p.getCurrentState());
+                GameState state = deepClone();
+                p.getSavedGames().add(state);
 
                 try {
                     Database.serialize(Main.getDB());
@@ -803,17 +847,6 @@ public class GameState implements Serializable {
         pausePane.getChildren().setAll(pane);
     }
 
-    public void moveCamera(Timeline gravityTimeline, Timeline moveCameraTimeline) {
-        cameraMoving = true;
-        moveCameraTimeline.play();
-        moveCameraTimeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                cameraMoving = false;
-            }
-        });
-    }
-
     public void gameOver(Ball ball,Pane canvas,Timeline gravityTimeline, AnchorPane bgPane) throws Exception{
 
         gravityTimeline.pause();
@@ -821,8 +854,8 @@ public class GameState implements Serializable {
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
-                        ball.ballBody.setScaleX(ball.ballBody.getScaleX()+0.015);
-                        ball.ballBody.setScaleY(ball.ballBody.getScaleY()+0.015);
+                        ball.getBallBody().setScaleX(ball.getBallBody().getScaleX()+0.015);
+                        ball.getBallBody().setScaleY(ball.getBallBody().getScaleY()+0.015);
                     }
                 }));
         enlargeTimeline.setCycleCount(100);
@@ -833,7 +866,7 @@ public class GameState implements Serializable {
 
             @Override
             public void handle(ActionEvent actionEvent) {
-                ball.ballBody.setOpacity(0);
+                ball.getBallBody().setOpacity(0);
                 System.out.println("hello");
 
                 ArrayList<Circle> smallBalls = new ArrayList<Circle>();

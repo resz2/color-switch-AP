@@ -8,19 +8,28 @@ import javafx.scene.shape.*;
 abstract class Obstacle extends GameElement {
     protected transient Group obstacle;
     protected transient Path pink,blue,purple,yellow;
+    protected boolean inside;
     protected int rotationsCount;
-    protected double distInner, distOuter, angleOfRotation;
+    protected double distInner, distOuter;
     public Obstacle(){
 
     }
     public Obstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
-        rotationsCount = 0;
+        this.inside = false;
+        this.rotationsCount = 0;
         this.distInner = distInner;
         this.distOuter = distOuter;
         this.yCoordinate = yCoordinate;
         this.xCoordinate = xCoordinate;
     }
     public int collides(Circle ball, int color){
+        if(obstacle.getBoundsInParent().intersects(ball.getBoundsInParent())){
+            inside=true;
+        }
+        if(inside && !obstacle.getBoundsInParent().intersects(ball.getBoundsInParent())){
+            inside =false;
+            return 3;
+        }
         switch(color){
             case 1:
                 if (Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
@@ -66,7 +75,6 @@ abstract class Obstacle extends GameElement {
 
     public void setAngleOfRotation(double rotateBy){
         this.obstacle.setRotate(this.obstacle.getRotate()+rotateBy);
-        this.angleOfRotation = this.getAngleOfRotation();
         if(this.getAngleOfRotation()%360==0){
             this.rotationsCount+=1;
         }
@@ -180,6 +188,7 @@ class CircularObstacle extends Obstacle{
         this.obstacle = obstacle;
     }
 }
+
 class SquareObstacle extends Obstacle{
     public SquareObstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
         super(distInner,distOuter,yCoordinate, xCoordinate);
@@ -384,6 +393,7 @@ class CrossObstacle extends Obstacle{
         this.obstacle = obstacle;
     }
 }
+
 class BowObstacle extends Obstacle{
     protected double height;
     public BowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height){
@@ -550,6 +560,7 @@ class BowObstacle extends Obstacle{
         this.obstacle = obstacle;
     }
 }
+
 class HalfBowObstacle extends Obstacle{
     protected double height;
     public HalfBowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height){
@@ -697,6 +708,7 @@ class HalfBowObstacle extends Obstacle{
         this.obstacle = obstacle;
     }
 }
+
 class ThornObstacle extends Obstacle{
     protected double thornLength;
     public ThornObstacle(double distInner ,double yCoordinate, double xCoordinate, double thornLength){

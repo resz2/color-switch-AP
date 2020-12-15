@@ -47,12 +47,12 @@ public class ColorChanger extends GameElement {
         moveTo.setY(this.yCoordinate);
 
         HLineTo line1 = new HLineTo();
-        line1.setX(this.xCoordinate + 25);
+        line1.setX(this.xCoordinate + 20);
 
 
         ArcTo arcToInner = new ArcTo();
         arcToInner.setX(this.xCoordinate);
-        arcToInner.setY(this.yCoordinate-25);
+        arcToInner.setY(this.yCoordinate-20);
         arcToInner.setRadiusX(25);
         arcToInner.setRadiusY(25);
 
@@ -69,7 +69,7 @@ public class ColorChanger extends GameElement {
         Path path2 = new Path();
         path2.setFill(Color.web("#900dff"));
         path2.setFillRule(FillRule.EVEN_ODD);
-        path2.setLayoutY(path.getLayoutY()+25);
+        path2.setLayoutY(path.getLayoutY()+20);
         path2.getElements().add(moveTo);
         path2.getElements().add(line1);
         path2.getElements().add(arcToInner);
@@ -81,7 +81,7 @@ public class ColorChanger extends GameElement {
         Path path3 = new Path();
         path3.setFill(Color.web("#fae100"));
         path3.setFillRule(FillRule.EVEN_ODD);
-        path3.setLayoutX(path.getLayoutY()-25);
+        path3.setLayoutX(path.getLayoutY()-20);
         path3.getElements().add(moveTo);
         path3.getElements().add(line1);
         path3.getElements().add(arcToInner);
@@ -93,8 +93,8 @@ public class ColorChanger extends GameElement {
         Path path4 = new Path();
         path4.setFill(Color.web("#32dbf0"));
         path4.setFillRule(FillRule.EVEN_ODD);
-        path4.setLayoutX(path.getLayoutX()-25);
-        path4.setLayoutY(path.getLayoutY()+25);
+        path4.setLayoutX(path.getLayoutX()-20);
+        path4.setLayoutY(path.getLayoutY()+20);
         path4.getElements().add(moveTo);
         path4.getElements().add(line1);
         path4.getElements().add(arcToInner);
@@ -102,7 +102,7 @@ public class ColorChanger extends GameElement {
         path4.setScaleX(-1);
         path4.setScaleY(-1);
         body.getChildren().add(path4);
-        colorChangerBody = body;
+        this.colorChangerBody = body;
     }
 
     public boolean checkCollision(Circle b){

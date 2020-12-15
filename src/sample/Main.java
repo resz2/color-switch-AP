@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Font;
@@ -37,6 +38,7 @@ import java.util.TimerTask;
 
 public class Main extends Application {
     Scene scene;
+    private static AudioClip audio;
     private static Database db;
     private static Player currentPlayer;
 
@@ -137,6 +139,10 @@ public class Main extends Application {
         return Main.db;
     }
 
+    public static void setAudio(AudioClip a) {
+        Main.audio = a;
+    }
+
     public void exitAnimation(int buttonClicked){
         Timeline exitTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
                 new EventHandler<ActionEvent>() {
@@ -207,6 +213,7 @@ public class Main extends Application {
             }
         });
     }
+
     public void newGameAuxiliary(){
         exitAnimation(3);
     }
