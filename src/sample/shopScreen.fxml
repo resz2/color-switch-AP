@@ -10,7 +10,6 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane fx:id="shopBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #272727;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.ShopScreenController">
    <children>
       <Circle centerX="422.0" centerY="540.0" fill="WHITE" layoutX="-197.0" layoutY="22.0" onMouseClicked="#goBack" radius="24.0" stroke="BLACK" strokeType="INSIDE">
@@ -26,7 +25,7 @@
             <Image url="@../assets/back.png" />
          </image>
       </ImageView>
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#cbff1fcf" height="80.0" layoutY="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="450.0" />
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9dc607cf" height="80.0" layoutY="20.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="450.0" />
       <ImageView fitHeight="48.0" fitWidth="47.0" layoutX="389.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../assets/shop.png" />

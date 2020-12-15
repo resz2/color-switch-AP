@@ -96,14 +96,14 @@ public class TitleController {
                 else    {
                     // sets the last playing player as the current one
                     Main.setCurrentPlayer(db.getPlayers().get(db.getLastPlayer()));
+                    AnchorPane pane = null;
+                    try {
+                        pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    titleBG.getChildren().setAll(pane);
                 }
-                AnchorPane pane = null;
-                try {
-                    pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                titleBG.getChildren().setAll(pane);
             }
         });
 
@@ -113,24 +113,24 @@ public class TitleController {
     public void choosePlayer()  {
         // displays player list and sets currentPlayer and lastPlayer
         // For now sets player 0 as current player
-        Database db = Main.getDB();
-        if(db.getPlayers().isEmpty())   {
-            System.out.println("no players");
+        AnchorPane pane = null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("playerListScreen.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        else    {
-            Main.setCurrentPlayer(db.getPlayers().get(0));
-            db.setLastPlayer(0);
-        }
+        titleBG.getChildren().setAll(pane);
     }
 
     private void prompt()   {
         // prompts player to enter name and create a new player
-        // default for now
-        Database db = Main.getDB();
-        Player p = new Player("ur mom");
-        db.getPlayers().add(p);
-        Main.setCurrentPlayer(p);
-        db.setLastPlayer(0);
+        AnchorPane pane = null;
+        try {
+            pane = FXMLLoader.load(getClass().getResource("newPlayer.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        titleBG.getChildren().setAll(pane);
     }
 
     public void displayInfo() {

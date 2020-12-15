@@ -21,6 +21,11 @@ public class Player implements Serializable {
         ballTypes = new HashSet<Integer>();
     }
 
+    @Override
+    public String toString() {
+        return "    " + this.playerName + "                         " + this.totalStars;
+    }
+
     public ArrayList<GameState> getSavedGames() {
         return savedGames;
     }
@@ -41,7 +46,7 @@ public class Player implements Serializable {
 
     public int getTotalStars() { return totalStars; }
 
-    public void setTotalStars(int totalStars) {
-        this.totalStars = totalStars;
+    public void increaseTotalStars(int totalStars) {
+        this.totalStars += totalStars;
     }
 }

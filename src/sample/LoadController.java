@@ -91,6 +91,7 @@ public class LoadController {
             GameState state = loadsList.getSelectionModel().getSelectedItem();
             try {
                 Main.getCurrentPlayer().setCurrentState(state);
+                //loadBG.getChildren().clear();
                 state.loadGame(loadBG);
             }
             catch (Exception e) {

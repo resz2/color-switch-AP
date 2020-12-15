@@ -43,6 +43,8 @@ public class GameOverController {
     public void exitToMainMenu() throws Exception {
         ArrayList<int[]> hs = Main.getCurrentPlayer().getHighScores();
         GameState state = Main.getCurrentPlayer().getCurrentState();
+        // storing total stars
+        Main.getCurrentPlayer().increaseTotalStars(state.getNumStarsCollected());
         int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
         hs.add(pair);
         if(hs.size()!=1)    {
@@ -57,6 +59,8 @@ public class GameOverController {
     public void restartGame() throws IOException {
         ArrayList<int[]> hs = Main.getCurrentPlayer().getHighScores();
         GameState state = Main.getCurrentPlayer().getCurrentState();
+        // storing total stars
+        Main.getCurrentPlayer().increaseTotalStars(state.getNumStarsCollected());
         int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
         hs.add(pair);
         if(hs.size()!=1)    {
@@ -79,14 +83,15 @@ public class GameOverController {
         // not sure how
         // newGameBG.getChildren().setAll(Main.getCurrentPlayer().getCurrentState().getGameOverCanvas());
     }
-}
 
-class hsComparator implements Comparator<int[]> {
-    @Override
-    public int compare(int[] o1, int[] o2) {
-        if(o1[1]!=o2[1])    {
-            return o2[1] - o1[1];
+    class hsComparator implements Comparator<int[]> {
+        @Override
+        public int compare(int[] o1, int[] o2) {
+            if(o1[1]!=o2[1])    {
+                return o2[1] - o1[1];
+            }
+            return o2[0] - o1[0];
         }
-        return o2[0] - o1[0];
     }
+
 }
