@@ -13,7 +13,7 @@
 <!--        Icons made by <a href="https://www.flaticon.com/authors/google" title="Google">Google</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>-->
 
 <AnchorPane fx:id="titleBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: black;" styleClass="titleScreen" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TitleController">
-   <ImageView fx:id="background" fitHeight="600.0" fitWidth="450.0" opacity="0.45" pickOnBounds="true" preserveRatio="true">
+   <ImageView fx:id="background" fitHeight="600.0" fitWidth="450.0" opacity="0.31" pickOnBounds="true">
       <image>
          <Image url="@../assets/titlebg.jpg" />
       </image>
