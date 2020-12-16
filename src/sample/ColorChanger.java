@@ -115,7 +115,7 @@ public class ColorChanger {
         fadeTimeline.setCycleCount(100);
         fadeTimeline.play();
         Random randomGen = new Random();
-        int newColor = randomGen.nextInt(4);
+        int newColor = 3;
         ArrayList<ImageView> smallStars = new ArrayList<>();
         InputStream stream = null;
         try {
