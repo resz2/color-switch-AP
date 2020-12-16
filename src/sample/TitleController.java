@@ -41,14 +41,13 @@ public class TitleController {
     @FXML
     private ImageView background;
     @FXML
-    public void initialize(){
-        // audio not working
-//        String path = "audio/bgScore2.mp3";
-//        AudioClip media = new AudioClip(new File(path).toURI().toString());
-//        media.setVolume(0.25);
-//        media.setCycleCount(AudioClip.INDEFINITE);
-//        media.play();
-//        Main.setAudio(media);
+    public void initialize()    {
+        String path = "audio/bgScore2.mp3";
+        AudioClip media = new AudioClip(new File(path).toURI().toString());
+        media.setVolume(0.25);
+        media.setCycleCount(AudioClip.INDEFINITE);
+        media.play();
+        Main.setAudio(media);
         Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
                 new EventHandler<ActionEvent>() {
                     @Override
@@ -141,6 +140,16 @@ public class TitleController {
             e.printStackTrace();
         }
         titleBG.getChildren().setAll(pane);
+    }
+
+    public void exitGame() {
+        try {
+            Database.serialize(Main.getDB());
+        }
+        catch (IOException e)   {
+            System.out.println("could not save progress");
+        }
+        System.exit(0);
     }
 
 

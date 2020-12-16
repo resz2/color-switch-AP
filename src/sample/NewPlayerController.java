@@ -17,7 +17,7 @@ public class NewPlayerController {
 
     public void confirmAdd() {
         String name = nameField.getText();
-        if(name!=null)  {
+        if(!name.isBlank())  {
             Player p = new Player(name);
             Main.getDB().getPlayers().add(p);
             Main.setCurrentPlayer(p);

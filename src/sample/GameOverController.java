@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,10 +13,13 @@ import java.util.Map;
 
 public class GameOverController {
     @FXML
+    private Text scoreText;
+    @FXML
     private AnchorPane gameOverBG;
 
     @FXML
     public void initialize() {
+        scoreText.setText(String.valueOf(Main.getCurrentPlayer().getCurrentState().getNumStarsCollected()));
 
 //        Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
 //                new EventHandler<ActionEvent>() {
@@ -51,7 +55,9 @@ public class GameOverController {
             hsComparator comp = new hsComparator();
             hs.sort(comp);
         }
-        Database.serialize(Main.getDB());
+        if(Main.getCurrentPlayer().getCurrentState().getMode()==0) {
+            Database.serialize(Main.getDB());
+        }
         AnchorPane pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
         gameOverBG.getChildren().setAll(pane);
     }
@@ -67,7 +73,9 @@ public class GameOverController {
             hsComparator comp = new hsComparator();
             hs.sort(comp);
         }
-        Database.serialize(Main.getDB());
+        if(Main.getCurrentPlayer().getCurrentState().getMode()==0)  {
+            Database.serialize(Main.getDB());
+        }
         AnchorPane pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
         gameOverBG.getChildren().setAll(pane);
     }

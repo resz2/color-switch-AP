@@ -40,28 +40,41 @@
          <Font size="60.0" />
       </font>
    </Label>
-   <Circle layoutX="162.0" layoutY="518.0" onMouseClicked="#choosePlayer" radius="25.0" stroke="BLACK" strokeType="INSIDE">
+   <Circle layoutX="125.0" layoutY="518.0" onMouseClicked="#choosePlayer" radius="25.0" stroke="BLACK" strokeType="INSIDE">
       <cursor>
          <Cursor fx:constant="HAND" />
       </cursor></Circle>
-   <ImageView fx:id="userLogo" fitHeight="44.0" fitWidth="40.0" layoutX="142.0" layoutY="498.0" onMouseClicked="#choosePlayer" pickOnBounds="true" preserveRatio="true">
+   <ImageView fx:id="userLogo" fitHeight="44.0" fitWidth="40.0" layoutX="105.0" layoutY="498.0" onMouseClicked="#choosePlayer" pickOnBounds="true" preserveRatio="true">
       <Image url="@../assets/userlogo.png" />
       <cursor>
          <Cursor fx:constant="HAND" />
       </cursor>
    </ImageView>
-   <Circle layoutX="287.0" layoutY="518.0" onMouseClicked="#displayInfo" radius="25.0" stroke="BLACK" strokeType="INSIDE">
+   <Circle layoutX="325.0" layoutY="518.0" onMouseClicked="#displayInfo" radius="25.0" stroke="BLACK" strokeType="INSIDE">
       <cursor>
          <Cursor fx:constant="HAND" />
       </cursor>
    </Circle>
-   <ImageView fx:id="infoLogo" fitHeight="44.0" fitWidth="40.0" layoutX="267.0" layoutY="498.0" onMouseClicked="#displayInfo" pickOnBounds="true" preserveRatio="true">
+   <ImageView fx:id="infoLogo" fitHeight="44.0" fitWidth="40.0" layoutX="305.0" layoutY="498.0" onMouseClicked="#displayInfo" pickOnBounds="true" preserveRatio="true">
       <image>
          <Image url="@../assets/infologo.png" />
       </image>
       <cursor>
          <Cursor fx:constant="HAND" />
       </cursor>
+   </ImageView>
+   <Circle layoutX="225.0" layoutY="518.0" onMouseClicked="#exitGame" radius="25.0" stroke="BLACK" strokeType="INSIDE">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+   </Circle>
+   <ImageView fitHeight="50.0" fitWidth="40.0" layoutX="205.0" layoutY="498.0" onMouseClicked="#exitGame" pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor>
+      <image>
+         <Image url="@../assets/cross.png" />
+      </image>
    </ImageView>
 <!--   <Circle fx:id="playbutton" layoutX="225.0" layoutY="341.0" onMouseClicked="#mainMenu" radius="55.0" stroke="RED"-->
 <!--           strokeType="INSIDE" strokeWidth="3.0" styleClass="playButton">-->

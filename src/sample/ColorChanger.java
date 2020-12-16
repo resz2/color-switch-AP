@@ -27,18 +27,15 @@ public class ColorChanger extends GameElement {
         this.yCoordinate = yCoordinate;
         this.create();
     }
-
     public void setyCoordinate(double val) {
         this.colorChangerBody.setLayoutY(this.colorChangerBody.getLayoutY()+val);
         this.yCoordinate = this.colorChangerBody.getLayoutY();
     }
-
     public double getyCoordinate(){
         return this.colorChangerBody.getLayoutY();
     }
-
     public void create(){
-        Group body = new Group();
+        colorChangerBody = new Group();
         Path path = new Path();
         path.setFill(Color.web("#ff0181"));
         path.setFillRule(FillRule.EVEN_ODD);
@@ -64,7 +61,7 @@ public class ColorChanger extends GameElement {
         path.getElements().add(arcToInner);
         path.getElements().add(line2);
 
-        body.getChildren().add(path);
+        colorChangerBody.getChildren().add(path);
 
         Path path2 = new Path();
         path2.setFill(Color.web("#900dff"));
@@ -76,7 +73,7 @@ public class ColorChanger extends GameElement {
         path2.getElements().add(line2);
         path2.setScaleX(1);
         path2.setScaleY(-1);
-        body.getChildren().add(path2);
+        colorChangerBody.getChildren().add(path2);
 
         Path path3 = new Path();
         path3.setFill(Color.web("#fae100"));
@@ -88,7 +85,7 @@ public class ColorChanger extends GameElement {
         path3.getElements().add(line2);
         path3.setScaleX(-1);
         path3.setScaleY(1);
-        body.getChildren().add(path3);
+        colorChangerBody.getChildren().add(path3);
 
         Path path4 = new Path();
         path4.setFill(Color.web("#32dbf0"));
@@ -101,10 +98,8 @@ public class ColorChanger extends GameElement {
         path4.getElements().add(line2);
         path4.setScaleX(-1);
         path4.setScaleY(-1);
-        body.getChildren().add(path4);
-        this.colorChangerBody = body;
+        colorChangerBody.getChildren().add(path4);
     }
-
     public boolean checkCollision(Circle b){
         return colorChangerBody.getBoundsInParent().intersects(b.getBoundsInParent());
     }
@@ -146,8 +141,8 @@ public class ColorChanger extends GameElement {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         Image image = new Image(stream);
+
         ImageView confettiBody = new ImageView();
         confettiBody.setImage(image);
         confettiBody.setPreserveRatio(true);

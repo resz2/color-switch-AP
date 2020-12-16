@@ -11,18 +11,23 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import java.io.IOException;
 
 public class NewGameController {
-
     @FXML
-    private Circle diffBackIconCircle;
+    private Line line;
+    @FXML
+    private Text frenzyText, gravityText, standardText;
+    @FXML
+    private Circle diffBackIconCircle, gravityCircle, frenzyCircle;
     @FXML
     private Label easyLabel, mediumLabel, hardLabel;
     @FXML
-    private ImageView diffBackgroundImage, diffBackIcon, chooseImage, easyImage, mediumImage, hardImage;
+    private ImageView diffBackgroundImage, diffBackIcon, easyImage, mediumImage, hardImage, gravityIcon, frenzyIcon;
     @FXML
     private AnchorPane newGameBG;
 
@@ -32,23 +37,23 @@ public class NewGameController {
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
-                        diffBackgroundImage.setOpacity(diffBackgroundImage.getOpacity()+0.004);
+                        diffBackgroundImage.setOpacity(diffBackgroundImage.getOpacity()+0.0015);
                         easyLabel.setOpacity(easyLabel.getOpacity()+0.01);
-                        easyLabel.setLayoutX(easyLabel.getLayoutX()+1.25);
                         easyImage.setOpacity(easyImage.getOpacity()+0.01);
-                        easyImage.setLayoutX(easyImage.getLayoutX()+1.77);
-                        mediumLabel.setLayoutX(mediumLabel.getLayoutX()-1.25);
                         mediumLabel.setOpacity(mediumLabel.getOpacity()+0.01);
                         mediumImage.setOpacity(mediumLabel.getOpacity()+0.01);
-                        mediumImage.setLayoutX(mediumImage.getLayoutX()-1.25);
-                        hardLabel.setLayoutX(hardLabel.getLayoutX()+1.25);
                         hardLabel.setOpacity(hardLabel.getOpacity()+0.01);
                         hardImage.setOpacity(hardImage.getOpacity()+0.01);
-                        hardImage.setLayoutX(hardImage.getLayoutX()+1.77);
                         diffBackIcon.setOpacity(diffBackIcon.getOpacity()+0.01);
                         diffBackIconCircle.setOpacity(diffBackIconCircle.getOpacity()+0.01);
-                        chooseImage.setLayoutY(chooseImage.getLayoutY()+0.7);
-                        chooseImage.setOpacity(chooseImage.getOpacity()+0.01);
+                        gravityCircle.setOpacity(gravityCircle.getOpacity()+0.01);
+                        gravityIcon.setOpacity(gravityIcon.getOpacity()+0.01);
+                        frenzyCircle.setOpacity(frenzyCircle.getOpacity()+0.01);
+                        frenzyIcon.setOpacity(frenzyIcon.getOpacity()+0.01);
+                        gravityText.setOpacity(gravityText.getOpacity()+0.01);
+                        frenzyText.setOpacity(frenzyText.getOpacity()+0.01);
+                        standardText.setOpacity(standardText.getOpacity()+0.01);
+                        line.setOpacity(line.getOpacity()+0.01);
                     }
                 }));
         enterTimeline.setCycleCount(100);
@@ -68,10 +73,22 @@ public class NewGameController {
         newGameBG.getChildren().setAll(pane);
     }
 
-    public void setModeToFrenzy() throws Exception {
+    public void setModeToFrenzy() {
         Player p = Main.getCurrentPlayer();
         p.setCurrentState(new GameState());
         p.getCurrentState().setMode(1);
+        try {
+            p.getCurrentState().newGame(0, newGameBG);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setModeToGravity() {
+        Player p = Main.getCurrentPlayer();
+        p.setCurrentState(new GameState());
+        p.getCurrentState().setMode(2);
         try {
             p.getCurrentState().newGame(0, newGameBG);
         }

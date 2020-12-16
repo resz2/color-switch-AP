@@ -36,7 +36,7 @@
               preserveRatio="true">
       <Image url="@../assets/score.png"/>
    </ImageView>
-   <Text fill="WHITE" layoutX="215.0" layoutY="280.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+   <Text fx:id="scoreText" fill="WHITE" layoutX="215.0" layoutY="280.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
       <font>
          <Font size="36.0"/>
       </font>

@@ -19,6 +19,7 @@ import java.util.Random;
 
 public class Clock extends GameElement {
     protected transient ImageView clockBody;
+
     public Clock(double xCoordinate, double yCoordinate) throws FileNotFoundException {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -56,8 +57,8 @@ public class Clock extends GameElement {
         ArrayList<ImageView> smallClocks = new ArrayList<>();
         InputStream stream = null;
         try {
-            stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\clock.png");
-        } catch (FileNotFoundException e) {
+            stream = this.getClass().getResourceAsStream("/clock.png");
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Random randomGen = new Random();

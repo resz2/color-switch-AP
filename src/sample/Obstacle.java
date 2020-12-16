@@ -6,17 +6,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
 abstract class Obstacle extends GameElement {
+    protected boolean inside;
+    protected int rotationsCount=0;
+    protected double distInner, distOuter;
     protected transient Group obstacle;
     protected transient Path pink,blue,purple,yellow;
-    protected boolean inside;
-    protected int rotationsCount;
-    protected double distInner, distOuter;
-    public Obstacle(){
 
+    public Obstacle(){
     }
     public Obstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
         this.inside = false;
-        this.rotationsCount = 0;
         this.distInner = distInner;
         this.distOuter = distOuter;
         this.yCoordinate = yCoordinate;
@@ -30,56 +29,55 @@ abstract class Obstacle extends GameElement {
             inside =false;
             return 3;
         }
-        switch(color){
-            case 1:
-                if (Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
+        switch (color) {
+            case 1: {
+                if (Shape.intersect(ball, pink).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, purple).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, blue).getBoundsInLocal().getWidth() != -1) {
                     return 0;
-                }
-                else if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1){
-                    return 1;
-                }
-                return 2;
-            case 2:
-                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
-                    return  0;
-                }
-                else if (Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1){
-                    return 1;
-                }
-                return 2;
-            case 3:
-                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1){
-                    return  0;
-                }
-                else if (Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
-                    return 1;
-                }
-                return 2;
-            case 4:
-                if (Shape.intersect(ball,yellow).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,pink).getBoundsInLocal().getWidth()!=-1 || Shape.intersect(ball,blue).getBoundsInLocal().getWidth()!=-1){
-                    return  0;
-                }
-                else if (Shape.intersect(ball,purple).getBoundsInLocal().getWidth()!=-1){
-                    return 1;
-                }
-                return 2;
+                } else if (Shape.intersect(ball, yellow).getBoundsInLocal().getWidth() != -1) {
 
+                    return 1;
+                }
+                return 2;
+            }
+            case 2: {
+                if (Shape.intersect(ball, yellow).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, purple).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, blue).getBoundsInLocal().getWidth() != -1) {
+                    return 0;
+                } else if (Shape.intersect(ball, pink).getBoundsInLocal().getWidth() != -1) {
+
+                    return 1;
+                }
+                return 2;
+            }
+            case 0: {
+                if (Shape.intersect(ball, yellow).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, purple).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, pink).getBoundsInLocal().getWidth() != -1) {
+                    return 0;
+                } else if (Shape.intersect(ball, blue).getBoundsInLocal().getWidth() != -1) {
+
+                    return 1;
+                }
+                return 2;
+            }
+            case 3: {
+                if (Shape.intersect(ball, yellow).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, pink).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, blue).getBoundsInLocal().getWidth() != -1) {
+                    return 0;
+                } else if (Shape.intersect(ball, purple).getBoundsInLocal().getWidth() != -1) {
+                    return 1;
+                }
+                return 2;
+            }
         }
         return 2;
     }
     public abstract void create();
-
     public double getAngleOfRotation(){
         return this.obstacle.getRotate();
     }
-
     public void setAngleOfRotation(double rotateBy){
         this.obstacle.setRotate(this.obstacle.getRotate()+rotateBy);
         if(this.getAngleOfRotation()%360==0){
             this.rotationsCount+=1;
         }
     }
-
     public void setyCoordinate(double val){
         this.obstacle.setLayoutY(this.obstacle.getLayoutY()+val);
         this.yCoordinate = this.obstacle.getLayoutY();
@@ -93,7 +91,7 @@ class CircularObstacle extends Obstacle{
     }
     @Override
     public int collides(Circle ball,int color) {
-       return super.collides(ball,color);
+        return super.collides(ball,color);
     }
 
     public Group getObstacle(){
@@ -188,7 +186,6 @@ class CircularObstacle extends Obstacle{
         this.obstacle = obstacle;
     }
 }
-
 class SquareObstacle extends Obstacle{
     public SquareObstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
         super(distInner,distOuter,yCoordinate, xCoordinate);
@@ -292,7 +289,6 @@ class SquareObstacle extends Obstacle{
         this.obstacle = obstacle;
     }
 }
-
 class CrossObstacle extends Obstacle{
     public CrossObstacle(double yCoordinate, double xCoordinate){
         this.xCoordinate = xCoordinate;
@@ -393,7 +389,6 @@ class CrossObstacle extends Obstacle{
         this.obstacle = obstacle;
     }
 }
-
 class BowObstacle extends Obstacle{
     protected double height;
     public BowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height){
@@ -404,11 +399,9 @@ class BowObstacle extends Obstacle{
     public int collides(Circle ball,int color) {
         return super.collides(ball,color);
     }
-
     public Group getObstacle(){
         return this.obstacle;
     }
-
     @Override
     public void create() {
         Group obstacle = new Group();
@@ -560,7 +553,6 @@ class BowObstacle extends Obstacle{
         this.obstacle = obstacle;
     }
 }
-
 class HalfBowObstacle extends Obstacle{
     protected double height;
     public HalfBowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height){
@@ -606,10 +598,11 @@ class HalfBowObstacle extends Obstacle{
         path.getElements().add(line2);
         path.getElements().add(line3);
         path.getElements().add(line4);
-
+        path.setStroke(Color.WHITE);
 
         obstacle.getChildren().add(path);
         Path path2 = new Path();
+        path.setStroke(Color.RED);
         path2.setFill(Color.web("#900dff"));
         path2.setFillRule(FillRule.EVEN_ODD);
         moveTo = new MoveTo();
@@ -638,7 +631,6 @@ class HalfBowObstacle extends Obstacle{
         path2.getElements().add(line3);
         path2.getElements().add(line4);
 
-
         obstacle.getChildren().add(path2);
 
         Path path3 = new Path();
@@ -661,7 +653,7 @@ class HalfBowObstacle extends Obstacle{
         line3.setY(this.yCoordinate);
 
         line4 = new LineTo();
-        line4.setX(this.xCoordinate+this.distOuter);
+        line4.setX(this.xCoordinate-this.distOuter);
         line4.setY(this.yCoordinate);
 
 
@@ -674,6 +666,7 @@ class HalfBowObstacle extends Obstacle{
 
         Path path4 = new Path();
         path4.setFill(Color.web("#32dbf0"));
+        path.setStroke(Color.RED);
         path4.setFillRule(FillRule.EVEN_ODD);
         moveTo = new MoveTo();
         moveTo.setX(this.xCoordinate-this.distInner);
@@ -708,7 +701,6 @@ class HalfBowObstacle extends Obstacle{
         this.obstacle = obstacle;
     }
 }
-
 class ThornObstacle extends Obstacle{
     protected double thornLength;
     public ThornObstacle(double distInner ,double yCoordinate, double xCoordinate, double thornLength){

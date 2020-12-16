@@ -9,8 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Path;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
@@ -64,13 +62,9 @@ public class Star extends GameElement {
         fadeTimeline.play();
         ArrayList<ImageView> smallStars = new ArrayList<>();
         InputStream stream = null;
-        try {
-            stream = this.getClass().getResourceAsStream("/star.png");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
         Random randomGen = new Random();
-        Image image = new Image(stream);
+        Image image = new Image("assets/star.png");
         int offsetX,offsetY;
         for(int i=0;i<10;i++){
             if(i%4==0){
@@ -92,7 +86,7 @@ public class Star extends GameElement {
             ImageView starBody = new ImageView();
             starBody.setImage(image);
             starBody.setX(this.xCoordinate+offsetX*4);
-            starBody.setY(this.yCoordinate+offsetY*4-12.5);
+            starBody.setY(300+offsetY*4-12.5);
             starBody.setFitWidth(10);
             starBody.setOpacity(0);
             starBody.setPreserveRatio(true);
