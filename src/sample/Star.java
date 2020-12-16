@@ -36,7 +36,7 @@ public class Star extends GameElement {
 
     public void setyCoordinate(double val){
         this.starBody.setLayoutY(this.starBody.getLayoutY()+val);
-        this.yCoordinate = this.starBody.getLayoutY();
+        this.yCoordinate +=val;
     }
 
     public boolean checkCollision(Circle b){

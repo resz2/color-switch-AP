@@ -26,7 +26,7 @@ public class ColorChanger extends GameElement {
     }
     public void setyCoordinate(double val) {
         this.colorChangerBody.setLayoutY(this.colorChangerBody.getLayoutY()+val);
-        this.yCoordinate = this.colorChangerBody.getLayoutY();
+        this.yCoordinate += val;
     }
     public double getyCoordinate(){
         return this.colorChangerBody.getLayoutY();

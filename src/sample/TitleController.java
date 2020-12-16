@@ -37,12 +37,6 @@ public class TitleController {
     private ImageView background;
     @FXML
     public void initialize()    {
-        String path = "audio/bgScore2.mp3";
-        AudioClip media = new AudioClip(new File(path).toURI().toString());
-        media.setVolume(0.25);
-        media.setCycleCount(AudioClip.INDEFINITE);
-        media.play();
-        Main.setAudio(media);
         Timeline rotateTimeline = new Timeline(new KeyFrame(Duration.millis(50),
                 new EventHandler<ActionEvent>() {
                     @Override

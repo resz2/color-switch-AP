@@ -79,7 +79,7 @@ abstract class Obstacle extends GameElement {
     }
     public void setyCoordinate(double val){
         this.obstacle.setLayoutY(this.obstacle.getLayoutY()+val);
-        this.yCoordinate = this.obstacle.getLayoutY();
+        this.yCoordinate +=val;
     }
 }
 

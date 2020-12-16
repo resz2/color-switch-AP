@@ -151,7 +151,7 @@ public class GameState implements Serializable, Cloneable {
 
         //score setup start
 
-        scoreLabel = new Label("0");
+        scoreLabel = new Label(String.valueOf(getNumStarsCollected()));
         scoreLabel.setContentDisplay(ContentDisplay.CENTER);
         scoreLabel.setTextAlignment(TextAlignment.CENTER);
         scoreLabel.setLayoutY(30);
@@ -617,18 +617,25 @@ public class GameState implements Serializable, Cloneable {
                 new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent t) {
+                        if(ball.getyCoordinate()>600){
+                            try {
+                                gameOver(ball,canvas,gravityTimeline, bgPane);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
                         for(int i=0;i<circularObstacleArrayList.size();i++){
                             int val = circularObstacleArrayList.get(i).collides(ball.getBallBody(),ball.getColor());
-                            if(val==0 && !over){
-                                try {
-                                    over = true;
-                                    crashSound.play();
-                                    gameOver(ball,canvas,gravityTimeline, bgPane);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                            else if(ball.getDistanceTravelled()>=500){
+//                            if(val==0 && !over){
+//                                try {
+//                                    over = true;
+//                                    crashSound.play();
+//                                    gameOver(ball,canvas,gravityTimeline, bgPane);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+                            if(ball.getDistanceTravelled()>=500){
                                 ball.setNumRoundsTravelled(ball.getNumRoundsTravelled()+1);
                                 addNewObstacle(circularObstacleArrayList,ball.getDistanceTravelled());
                                 addNewStar(StarArrayList);
@@ -701,6 +708,51 @@ public class GameState implements Serializable, Cloneable {
                 gravityTimeline.pause();
                 rotateTimeline.pause();
 
+                canvas.removeEventFilter(KeyEvent.KEY_RELEASED,event->{
+                    if(mode==0){
+                        if (event.getCode() == KeyCode.SPACE) {
+                            keyLock=false;
+                        }
+                    }
+                });
+
+                canvas.removeEventFilter(KeyEvent.KEY_PRESSED, event->{
+                    if(mode==0){
+                        if (event.getCode() == KeyCode.SPACE && !keyLock) {
+                            bounceSound.play();
+                            keyLock=true;
+                            gravityTimeline.play();
+                            yVelocity=-6;
+
+                        }
+                    }
+
+                    if(mode==1){
+                        if (event.getCode() == KeyCode.W) {
+                            diagonalGravityLeftTimeline.pause();
+                            diagonalGravityRightTimeline.pause();
+                            gravityTimeline.play();
+                            yVelocity=-6;
+
+                        }
+                        if (event.getCode() == KeyCode.A){
+                            diagonalGravityLeftTimeline.play();
+                            diagonalGravityRightTimeline.pause();
+                            gravityTimeline.pause();
+                            yVelocity=-6;
+                            xVelocity=-4;
+                        }
+                        else if (event.getCode() ==KeyCode.D){
+                            diagonalGravityLeftTimeline.pause();
+                            diagonalGravityRightTimeline.play();
+                            gravityTimeline.pause();
+                            yVelocity=-6;
+                            xVelocity=4;
+                        }
+                    }
+
+
+                });
                 pauseSetup();
 
                 Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),
@@ -708,7 +760,6 @@ public class GameState implements Serializable, Cloneable {
                             @Override
                             public void handle(ActionEvent t) {
                                 overlay.setOpacity(overlay.getOpacity()+0.009);
-
                                 resumeButton.setOpacity(resumeButton.getOpacity()+0.01);
                                 resumeButton.setLayoutY(resumeButton.getLayoutY()-2);
                                 restartButton.setOpacity(restartButton.getOpacity()+0.01);
@@ -742,6 +793,48 @@ public class GameState implements Serializable, Cloneable {
         EventHandler<MouseEvent> resumeHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
+                canvas.addEventFilter(KeyEvent.KEY_RELEASED,event->{
+                    if(mode==0){
+                        if (event.getCode() == KeyCode.SPACE) {
+                            keyLock=false;
+                        }
+                    }
+                });
+
+                canvas.addEventFilter(KeyEvent.KEY_PRESSED, event-> {
+                            if (mode == 0) {
+                                if (event.getCode() == KeyCode.SPACE && !keyLock) {
+                                    bounceSound.play();
+                                    keyLock = true;
+                                    gravityTimeline.play();
+                                    yVelocity = -6;
+
+                                }
+                            }
+
+                            if (mode == 1) {
+                                if (event.getCode() == KeyCode.W) {
+                                    diagonalGravityLeftTimeline.pause();
+                                    diagonalGravityRightTimeline.pause();
+                                    gravityTimeline.play();
+                                    yVelocity = -6;
+
+                                }
+                                if (event.getCode() == KeyCode.A) {
+                                    diagonalGravityLeftTimeline.play();
+                                    diagonalGravityRightTimeline.pause();
+                                    gravityTimeline.pause();
+                                    yVelocity = -6;
+                                    xVelocity = -4;
+                                } else if (event.getCode() == KeyCode.D) {
+                                    diagonalGravityLeftTimeline.pause();
+                                    diagonalGravityRightTimeline.play();
+                                    gravityTimeline.pause();
+                                    yVelocity = -6;
+                                    xVelocity = 4;
+                                }
+                            }
+                        });
                 Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),
                         new EventHandler<ActionEvent>() {
                             @Override
@@ -825,6 +918,7 @@ public class GameState implements Serializable, Cloneable {
 
     public void gameOver(Ball ball,Pane canvas,Timeline gravityTimeline, AnchorPane bgPane) throws Exception{
         gravityTimeline.pause();
+        collisionTimeline.stop();
         Timeline enlargeTimeline = new Timeline(new KeyFrame(Duration.millis(1),
                 new EventHandler<ActionEvent>() {
                     @Override
