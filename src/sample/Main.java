@@ -90,7 +90,6 @@ public class Main extends Application {
     int nextObsIndex=0,prevObsIndex=0;
     int newStarPosition=-200,newClockPosition=-300;
     double newObstaclePosition=-300,difficultyOffset=0;
-    int difficulty=0;
     int newColorChangerPosition=-3550;
     Animation.Status moveCamTimelineStatus;
     Obstacle nextObstacle,prevObstacle,newObs;
@@ -335,15 +334,15 @@ public class Main extends Application {
         newGame(1);
     }
     public void setDifficultyToEasy() throws Exception {
-        difficulty=0;
+        difficultyOffset=0;
         newGame(1);
     }
     public void setDifficultyToMedium() throws Exception {
-        difficulty=1;
+        difficultyOffset=0.5;
         newGame(0);
     }
     public void setDifficultyToHard() throws Exception {
-        difficulty=2;
+        difficultyOffset=1;
         newGame(0);
     }
     public void newGameAuxiliary(){
