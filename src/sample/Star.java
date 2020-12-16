@@ -10,9 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,13 +17,13 @@ import java.util.Random;
 public class Star extends GameElement {
     protected transient ImageView starBody;
 
-    public Star(double xCoordinate, double yCoordinate) throws FileNotFoundException {
+    public Star(double xCoordinate, double yCoordinate) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.create();
     }
 
-    public void create() throws FileNotFoundException {
+    public void create() {
         InputStream stream = this.getClass().getResourceAsStream("/star.png");
         Image image = new Image(stream);
         starBody = new ImageView();
@@ -61,10 +58,10 @@ public class Star extends GameElement {
         fadeTimeline.setCycleCount(100);
         fadeTimeline.play();
         ArrayList<ImageView> smallStars = new ArrayList<>();
-        InputStream stream = null;
+        InputStream stream = this.getClass().getResourceAsStream("/star.png");
 
         Random randomGen = new Random();
-        Image image = new Image("assets/star.png");
+        Image image = new Image(stream);
         int offsetX,offsetY;
         for(int i=0;i<10;i++){
             if(i%4==0){

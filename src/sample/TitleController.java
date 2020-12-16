@@ -8,15 +8,10 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-
-import javax.xml.crypto.Data;
 import java.io.File;
 import java.io.IOException;
 

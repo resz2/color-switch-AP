@@ -2,14 +2,12 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Map;
 
 public class GameOverController {
     @FXML
@@ -80,7 +78,7 @@ public class GameOverController {
         gameOverBG.getChildren().setAll(pane);
     }
 
-    public void continueGame() throws IOException {
+    public void continueGame() {
         System.out.println("Reviving now :)");
         // uncomment after revive implemented
         //Main.getCurrentPlayer().getCurrentState().decreaseStars();
@@ -92,7 +90,7 @@ public class GameOverController {
         // newGameBG.getChildren().setAll(Main.getCurrentPlayer().getCurrentState().getGameOverCanvas());
     }
 
-    class hsComparator implements Comparator<int[]> {
+    static class hsComparator implements Comparator<int[]> {
         @Override
         public int compare(int[] o1, int[] o2) {
             if(o1[1]!=o2[1])    {

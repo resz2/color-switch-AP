@@ -14,9 +14,7 @@
 
 <AnchorPane fx:id="titleBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: black;" styleClass="titleScreen" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.TitleController">
    <ImageView fx:id="background" fitHeight="600.0" fitWidth="450.0" opacity="0.31" pickOnBounds="true">
-      <image>
-         <Image url="@../assets/titlebg.jpg" />
-      </image>
+      <Image url="@../assets/titlebg.jpg"/>
    </ImageView>
 <!--   <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#272727" height="600.0" layoutY="1.0" stroke="BLACK"-->
 <!--              strokeType="INSIDE" width="450.0"/>-->
@@ -55,26 +53,24 @@
          <Cursor fx:constant="HAND" />
       </cursor>
    </Circle>
-   <ImageView fx:id="infoLogo" fitHeight="44.0" fitWidth="40.0" layoutX="305.0" layoutY="498.0" onMouseClicked="#displayInfo" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../assets/infologo.png" />
-      </image>
+   <ImageView fx:id="infoLogo" fitHeight="44.0" fitWidth="40.0" layoutX="305.0" layoutY="498.0"
+              onMouseClicked="#displayInfo" pickOnBounds="true" preserveRatio="true">
       <cursor>
-         <Cursor fx:constant="HAND" />
+         <Cursor fx:constant="HAND"/>
       </cursor>
+      <Image url="@../assets/infologo.png"/>
    </ImageView>
    <Circle layoutX="225.0" layoutY="518.0" onMouseClicked="#exitGame" radius="25.0" stroke="BLACK" strokeType="INSIDE">
       <cursor>
          <Cursor fx:constant="HAND" />
       </cursor>
    </Circle>
-   <ImageView fitHeight="50.0" fitWidth="40.0" layoutX="205.0" layoutY="498.0" onMouseClicked="#exitGame" pickOnBounds="true" preserveRatio="true">
+   <ImageView fitHeight="50.0" fitWidth="40.0" layoutX="205.0" layoutY="498.0" onMouseClicked="#exitGame"
+              pickOnBounds="true" preserveRatio="true">
       <cursor>
-         <Cursor fx:constant="HAND" />
+         <Cursor fx:constant="HAND"/>
       </cursor>
-      <image>
-         <Image url="@../assets/cross.png" />
-      </image>
+      <Image url="@../assets/cross.png"/>
    </ImageView>
 <!--   <Circle fx:id="playbutton" layoutX="225.0" layoutY="341.0" onMouseClicked="#mainMenu" radius="55.0" stroke="RED"-->
 <!--           strokeType="INSIDE" strokeWidth="3.0" styleClass="playButton">-->

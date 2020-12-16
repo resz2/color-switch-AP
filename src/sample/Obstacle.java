@@ -1,6 +1,5 @@
 package sample;
 
-import javafx.geometry.BoundingBox;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;

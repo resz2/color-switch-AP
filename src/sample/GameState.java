@@ -2,12 +2,10 @@ package sample;
 
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
-import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Bounds;
 import javafx.scene.Cursor;
@@ -29,17 +27,13 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
-
-import javax.xml.crypto.Data;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class GameState implements Serializable, Cloneable {
     private int mode, difficulty, nextObsIndex, prevObsIndex, newStarPosition, newClockPosition,
-            newObstaclePosition, newColorChangerPosition, numStarsCollected, numRetry;;
+            newObstaclePosition, newColorChangerPosition, numStarsCollected, numRetry;
     private boolean over, played, keyLock, firstObstacle;
     private double xVelocity, yVelocity, xVelocityOffset, yVelocityOffset, dist, difficultyOffset;
     private Obstacle nextObstacle,prevObstacle, newObs;
@@ -264,7 +258,7 @@ public class GameState implements Serializable, Cloneable {
             Star newStar = new Star(225,newObstaclePosition+25*difficultyOffset);
             arr.add(newStar);
             canvas.getChildren().add(newStar.starBody);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //collisionTimeline.play();
@@ -287,7 +281,7 @@ public class GameState implements Serializable, Cloneable {
         Obstacle removeThis = arr.remove(0);
         int offset=0;
 
-        newObs = new CrossObstacle(newObstaclePosition, 275);;
+        newObs = new CrossObstacle(newObstaclePosition, 275);
 
         //System.out.println(newObstaclePosition);
         switch (obsNumber) {
@@ -639,7 +633,6 @@ public class GameState implements Serializable, Cloneable {
         });
 
         Random randGen = new Random();
-        Timer collisionTimer = new Timer();
 
         collisionTimeline = new Timeline(new KeyFrame(Duration.millis(10),
                 new EventHandler<ActionEvent>() {
@@ -686,7 +679,7 @@ public class GameState implements Serializable, Cloneable {
                                             timeLabel.setText(String.valueOf(10));
                                         }
                                     });
-                                } catch (FileNotFoundException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 closestClock = ClockArrayList.get(0);

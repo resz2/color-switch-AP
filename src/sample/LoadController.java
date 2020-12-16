@@ -1,20 +1,12 @@
 package sample;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ListView;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Circle;
-import javafx.util.Duration;
-
 import java.io.IOException;
-import java.util.ArrayList;
 
 public class LoadController {
     @FXML
@@ -69,26 +61,12 @@ public class LoadController {
 //        enterTimeline.play();
     }
 
-    private String diffPrinter(int difficulty) {
-        String ret;
-        switch(difficulty)  {
-            case 1: ret = "easy";
-                    break;
-            case 2: ret = "medium";
-                    break;
-            case 3: ret = "hard";
-                    break;
-            default:ret = "-";
-        }
-        return ret;
-    }
-
     @FXML
-    public void loadSave(MouseEvent mouseEvent) {
+    public void loadSave() {
         // loads the selected game
         // for now loads game 0
         if(!loadsList.getItems().isEmpty()) {
-            GameState state = loadsList.getSelectionModel().getSelectedItem();
+            GameState state = loadsList.getSelectionModel().getSelectedItem().deepClone();
             try {
                 Main.getCurrentPlayer().setCurrentState(state);
                 //loadBG.getChildren().clear();
@@ -100,7 +78,7 @@ public class LoadController {
         }
     }
 
-    public void goBack() throws Exception {
+    public void goBack() {
                 AnchorPane pane = null;
                 try {
                     pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));

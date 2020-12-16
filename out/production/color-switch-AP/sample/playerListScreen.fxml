@@ -8,63 +8,56 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Circle?>
 
-<AnchorPane fx:id="playerListBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.PlayerListController">
-   <children>
-      <ImageView fitHeight="93.0" fitWidth="440.0" layoutX="5.0" layoutY="20.0" pickOnBounds="true">
-         <image>
-            <Image url="@../assets/ybanner2.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="600.0" fitWidth="450.0" opacity="0.11" pickOnBounds="true">
-         <image>
-            <Image url="@../assets/titlebg.jpg" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="23.0" fitWidth="220.0" layoutX="140.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/players.png" />
-         </image>
-      </ImageView>
-      <Circle centerX="212.0" centerY="530.0" fill="WHITE" layoutX="-73.0" layoutY="17.0" onMouseClicked="#goBack" radius="24.0" stroke="BLACK" strokeType="INSIDE">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Circle>
-      <ImageView fitHeight="47.0" fitWidth="53.0" layoutX="115.0" layoutY="523.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/back.png" />
-         </image>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ImageView>
-      <ListView fx:id="playerList" editable="true" fixedCellSize="50.0" layoutX="52.0" layoutY="132.0" onMouseClicked="#selectPlayer" prefHeight="367.0" prefWidth="345.0" style="-fx-border-color: white; -fx-background-color: transparent; -fx-border-radius: 40; -fx-border-width: 3;" styleClass="list-cell" stylesheets="@loads.css">
-         <padding>
-            <Insets bottom="40.0" left="20.0" right="20.0" top="60.0" />
-         </padding>
-      </ListView>
-      <ImageView fitHeight="35.0" fitWidth="29.0" layoutX="310.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/star.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="23.0" fitWidth="83.0" layoutX="100.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/name.png" />
-         </image>
-      </ImageView>
-      <Circle centerX="212.0" centerY="530.0" fill="WHITE" layoutX="97.0" layoutY="16.0" onMouseClicked="#addPlayer" radius="24.0" stroke="BLACK" strokeType="INSIDE">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </Circle>
-      <ImageView fitHeight="38.0" fitWidth="39.0" layoutX="290.0" layoutY="527.0" onMouseClicked="#addPlayer" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../assets/plus.png" />
-         </image>
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor>
-      </ImageView>
-   </children>
+<AnchorPane fx:id="playerListBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: black;"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="sample.PlayerListController">
+   <ImageView fitHeight="93.0" fitWidth="440.0" layoutX="5.0" layoutY="20.0" pickOnBounds="true">
+      <Image url="@../assets/ybanner2.jpg"/>
+   </ImageView>
+   <ImageView fitHeight="600.0" fitWidth="450.0" opacity="0.11" pickOnBounds="true">
+      <Image url="@../assets/titlebg.jpg"/>
+   </ImageView>
+   <ImageView fitHeight="23.0" fitWidth="220.0" layoutX="140.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../assets/players.png"/>
+   </ImageView>
+   <Circle centerX="212.0" centerY="530.0" fill="WHITE" layoutX="-73.0" layoutY="17.0" onMouseClicked="#goBack"
+           radius="24.0" stroke="BLACK" strokeType="INSIDE">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+   </Circle>
+   <ImageView fitHeight="47.0" fitWidth="53.0" layoutX="115.0" layoutY="523.0" onMouseClicked="#goBack"
+              pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+      <Image url="@../assets/back.png"/>
+   </ImageView>
+   <ListView fx:id="playerList" editable="true" fixedCellSize="50.0" layoutX="52.0" layoutY="132.0"
+             onMouseClicked="#selectPlayer" prefHeight="367.0" prefWidth="345.0"
+             style="-fx-border-color: white; -fx-background-color: transparent; -fx-border-radius: 40; -fx-border-width: 3;"
+             styleClass="list-cell" stylesheets="@loads.css">
+      <padding>
+         <Insets bottom="40.0" left="20.0" right="20.0" top="60.0"/>
+      </padding>
+   </ListView>
+   <ImageView fitHeight="35.0" fitWidth="29.0" layoutX="310.0" layoutY="150.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../assets/star.png"/>
+   </ImageView>
+   <ImageView fitHeight="23.0" fitWidth="83.0" layoutX="100.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true">
+      <Image url="@../assets/name.png"/>
+   </ImageView>
+   <Circle centerX="212.0" centerY="530.0" fill="WHITE" layoutX="97.0" layoutY="16.0" onMouseClicked="#addPlayer"
+           radius="24.0" stroke="BLACK" strokeType="INSIDE">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+   </Circle>
+   <ImageView fitHeight="38.0" fitWidth="39.0" layoutX="290.0" layoutY="527.0" onMouseClicked="#addPlayer"
+              pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+      <Image url="@../assets/plus.png"/>
+   </ImageView>
 </AnchorPane>

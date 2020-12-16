@@ -10,9 +10,7 @@
 
 <AnchorPane fx:id="menuBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #272727;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Main">
    <ImageView fx:id="backgroundImage" fitHeight="600.0" fitWidth="450.0" opacity="0" pickOnBounds="true">
-      <image>
-         <Image url="@../assets/stripes.jpg" />
-      </image>
+      <Image url="@../assets/stripes.jpg"/>
    </ImageView>
    <Circle fx:id="yellowBall1" fill="#fae100" layoutX="170" layoutY="300" opacity="0" radius="15.0" stroke="#fae100" strokeType="INSIDE" />
    <Circle fx:id="yellowBall2" fill="#fae100" layoutX="281" layoutY="300" opacity="0" radius="15.0" stroke="#fae100" strokeType="INSIDE" />
@@ -58,25 +56,23 @@
          <Cursor fx:constant="HAND" />
       </cursor>
    </Circle>
-   <ImageView fitHeight="46.0" fitWidth="50.0" layoutX="34.0" layoutY="530.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
+   <ImageView fitHeight="46.0" fitWidth="50.0" layoutX="34.0" layoutY="530.0" onMouseClicked="#goBack"
+              pickOnBounds="true" preserveRatio="true">
       <cursor>
-         <Cursor fx:constant="HAND" />
+         <Cursor fx:constant="HAND"/>
       </cursor>
-      <image>
-         <Image url="@../assets/back.png" />
-      </image>
+      <Image url="@../assets/back.png"/>
    </ImageView>
    <Circle fill="WHITE" layoutX="400.0" layoutY="553.0" onMouseClicked="#openShop" radius="25.0" stroke="BLACK" strokeType="INSIDE">
       <cursor>
          <Cursor fx:constant="HAND" />
       </cursor>
    </Circle>
-   <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="381.0" layoutY="537.0" onMouseClicked="#openShop" pickOnBounds="true" preserveRatio="true">
-      <image>
-         <Image url="@../assets/shopcart.png" />
-      </image>
+   <ImageView fitHeight="35.0" fitWidth="35.0" layoutX="381.0" layoutY="537.0" onMouseClicked="#openShop"
+              pickOnBounds="true" preserveRatio="true">
       <cursor>
-         <Cursor fx:constant="HAND" />
+         <Cursor fx:constant="HAND"/>
       </cursor>
+      <Image url="@../assets/shopcart.png"/>
    </ImageView>
 </AnchorPane>

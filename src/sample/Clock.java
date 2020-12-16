@@ -10,9 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Random;
@@ -20,12 +17,12 @@ import java.util.Random;
 public class Clock extends GameElement {
     protected transient ImageView clockBody;
 
-    public Clock(double xCoordinate, double yCoordinate) throws FileNotFoundException {
+    public Clock(double xCoordinate, double yCoordinate) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.create();
     }
-    public void create() throws FileNotFoundException {
+    public void create() {
         InputStream stream = this.getClass().getResourceAsStream("/clock.png");
         Image image = new Image(stream);
         clockBody = new ImageView();
