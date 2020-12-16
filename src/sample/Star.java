@@ -28,8 +28,7 @@ public class Star {
         this.create();
     }
     public void create() throws FileNotFoundException {
-        InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\star.png");
-        Image image = new Image(stream);
+        Image image = new Image("assets/star.png");
         starBody = new ImageView();
         starBody.setImage(image);
         starBody.setX(this.xCoordinate-20);
@@ -58,13 +57,9 @@ public class Star {
         fadeTimeline.play();
         ArrayList<ImageView> smallStars = new ArrayList<>();
         InputStream stream = null;
-        try {
-            stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\star.png");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
         Random randomGen = new Random();
-        Image image = new Image(stream);
+        Image image = new Image("assets/star.png");
         int offsetX,offsetY;
         for(int i=0;i<10;i++){
             if(i%4==0){
@@ -86,7 +81,7 @@ public class Star {
             ImageView starBody = new ImageView();
             starBody.setImage(image);
             starBody.setX(this.xCoordinate+offsetX*4);
-            starBody.setY(this.yCoordinate+offsetY*4-12.5);
+            starBody.setY(this.starBody.getLayoutY()+offsetY*4-12.5);
             starBody.setFitWidth(10);
             starBody.setOpacity(0);
             starBody.setPreserveRatio(true);

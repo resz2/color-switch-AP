@@ -88,10 +88,10 @@ public class Main extends Application {
     @FXML
             private Circle diffBackIconCircle;
     int nextObsIndex=0,prevObsIndex=0;
-    int newStarPosition=-300,newClockPosition=-300;
-    double newObstaclePosition=-500;
+    int newStarPosition=-200,newClockPosition=-300;
+    double newObstaclePosition=-300;
     int difficulty;
-    int newColorChangerPosition=-3300;
+    int newColorChangerPosition=-3550;
     Animation.Status moveCamTimelineStatus;
     Obstacle nextObstacle,prevObstacle,newObs;
     Boolean keyLock=false,over=false;
@@ -105,6 +105,7 @@ public class Main extends Application {
     double xVelocity = 0,yVelocity=0,xVelocityOffset=0.25,yVelocityOffset=0.35,dist=0;
     Pane canvas;
     Timeline collisionTimeline;
+    boolean firstObstacle=true;
     int numStarsCollected=0;
     int numRetry = 0;
     @Override
@@ -372,16 +373,21 @@ public class Main extends Application {
         int obsNumber = randGen.nextInt(6);
         System.out.println(obsNumber);
         Obstacle removeThis = arr.remove(0);
+        int offset=0;
+        if(firstObstacle){
+            offset=100;
+            firstObstacle=false;
+        }
         newObs = new CrossObstacle(newObstaclePosition, 275);;
 
         //System.out.println(newObstaclePosition);
         switch (obsNumber) {
-            case 0 -> newObs = new CrossObstacle(newObstaclePosition, 275);
-            case 1 -> newObs = new SquareObstacle(80, 95, newObstaclePosition, 225);
-            case 2 -> newObs = new ThornObstacle(50, newObstaclePosition, 225, 1.5);
-            case 3 -> newObs = new BowObstacle(newObstaclePosition, 225, 75, 90, 125);
-            case 4 -> newObs = new HalfBowObstacle(newObstaclePosition, 225, 75, 90, 125);
-            case 5 -> newObs = new CircularObstacle(80, 95, newObstaclePosition, 225);
+            case 0 -> newObs = new CrossObstacle(newObstaclePosition-offset, 275);
+            case 1 -> newObs = new SquareObstacle(80, 95, newObstaclePosition-offset, 225);
+            case 2 -> newObs = new ThornObstacle(75, newObstaclePosition-offset, 225, 1.2);
+            case 3 -> newObs = new BowObstacle(newObstaclePosition-offset, 225, 50, 65, 100);
+            case 4 -> newObs = new HalfBowObstacle(newObstaclePosition-offset, 225, 50, 65, 100);
+            case 5 -> newObs = new CircularObstacle(80, 95, newObstaclePosition-offset, 225);
         }
         newObs.create();
         canvas.getChildren().add(newObs.obstacle);
@@ -392,8 +398,8 @@ public class Main extends Application {
     public void newGame(int mode) throws  Exception {
         canvas = new Pane();
         //pause icon setup start
-        InputStream stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\pause.png");
-        Image image = new Image(stream);
+//        InputStream stream = new FileInputStream(new File("assets/pause.png"));
+        Image image = new Image("assets/pause.png");
         pauseButton = new Label();
         ImageView pauseIcon = new ImageView(image);
         pauseButton.setGraphic(pauseIcon);
@@ -406,39 +412,30 @@ public class Main extends Application {
         //pause icon setup end
 
         //score setup start
-        try {
-            stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\silverStar.png");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        Image image2 = new Image(stream);
-        ImageView scoreIcon = new ImageView(image2);
+
         scoreLabel = new Label("0");
         scoreLabel.setContentDisplay(ContentDisplay.CENTER);
         scoreLabel.setTextAlignment(TextAlignment.CENTER);
-        scoreIcon.setFitHeight(75);
-        scoreIcon.setPreserveRatio(true);
-        scoreLabel.setGraphic(scoreIcon);
         scoreLabel.setLayoutY(30);
         scoreLabel.setLayoutX(25);
         Font font = Font.font("Roboto", FontWeight.BOLD,
-                FontPosture.REGULAR, 25);
+                FontPosture.REGULAR, 40);
         scoreLabel.setFont(font);
         //Filling color to the label
-        scoreLabel.setTextFill(Color.web("272727"));
-        if(mode==1){
-            timeLabel = new Label("15");
-            timeLabel.setContentDisplay(ContentDisplay.CENTER);
-            timeLabel.setTextAlignment(TextAlignment.CENTER);
-            timeLabel.setLayoutY(100);
-            timeLabel.setLayoutX(25);
-            Font font1 = Font.font("Roboto", FontWeight.BOLD,
-                    FontPosture.REGULAR, 25);
-            timeLabel.setFont(font1);
-            //Filling color to the label
-            timeLabel.setTextFill(Color.RED);
-            canvas.getChildren().add(timeLabel);
-        }
+        scoreLabel.setTextFill(Color.WHITE);
+//        if(mode==1){
+//            timeLabel = new Label("15");
+//            timeLabel.setContentDisplay(ContentDisplay.CENTER);
+//            timeLabel.setTextAlignment(TextAlignment.CENTER);
+//            timeLabel.setLayoutY(100);
+//            timeLabel.setLayoutX(25);
+//            Font font1 = Font.font("Roboto", FontWeight.BOLD,
+//                    FontPosture.REGULAR, 25);
+//            timeLabel.setFont(font1);
+//            //Filling color to the label
+//            timeLabel.setTextFill(Color.RED);
+//            canvas.getChildren().add(timeLabel);
+//        }
         canvas.getChildren().add(scoreLabel);
         //score setup end
         Ball ball = new Ball(225,550,1);
@@ -451,12 +448,12 @@ public class Main extends Application {
         for (int i=0;i<3;i++){
             int obsNumber = randGen.nextInt(6);
             switch (obsNumber) {
-                case 0 -> circularObstacleArrayList.add(new CrossObstacle(300 - 500 * (i), 275));
-                case 1 -> circularObstacleArrayList.add(new SquareObstacle(80, 95, 300 - 500 * i, 225));
-                case 2 -> circularObstacleArrayList.add(new ThornObstacle(100, 300 - 500 * i, 225, 1.3));
-                case 3 -> circularObstacleArrayList.add(new BowObstacle(300 - 500 * i, 225, 75, 90, 125));
-                case 4 -> circularObstacleArrayList.add(new HalfBowObstacle(300 - 500 * i, 225, 75, 90, 125));
-                case 5 -> circularObstacleArrayList.add(new CircularObstacle(80, 95, 300 - 500 * (i), 225));
+                case 0 -> circularObstacleArrayList.add(new CrossObstacle(300 - 400 * (i), 275));
+                case 1 -> circularObstacleArrayList.add(new SquareObstacle(80, 95, 300 - 400 * i, 225));
+                case 2 -> circularObstacleArrayList.add(new ThornObstacle(75, 300 - 400 * i, 225, 1.2));
+                case 3 -> circularObstacleArrayList.add(new BowObstacle(300 - 400 * i, 225, 50, 65, 100));
+                case 4 -> circularObstacleArrayList.add(new HalfBowObstacle(300 - 400 * i, 225, 50, 60, 100));
+                case 5 -> circularObstacleArrayList.add(new CircularObstacle(80, 95, 300 - 400 * (i), 225));
             }
         }
         for (Obstacle obstacle : circularObstacleArrayList) {
@@ -465,14 +462,16 @@ public class Main extends Application {
             canvas.getChildren().add(obstacle.obstacle);
         }
         for(int i=0;i<3;i++){
-            Star star = new Star(225,300-500*(i));
+            Star star = new Star(225,300-400*(i));
             StarArrayList.add(star);
-            ColorChanger c = new ColorChanger(225,100-1000*(i));
-            ColorChangerArraylist.add(c);
-            canvas.getChildren().add(ColorChangerArraylist.get(i).colorChangerBody);
+            if(i<2){
+                ColorChanger c = new ColorChanger(225,100-1000*(i));
+                ColorChangerArraylist.add(c);
+                canvas.getChildren().add(ColorChangerArraylist.get(i).colorChangerBody);
+            }
+
             canvas.getChildren().add(StarArrayList.get(i).starBody);
             if(mode==1){
-
                 Clock clock = new Clock(randGen.nextInt(390)+30,400-300*(i));
                 ClockArrayList.add(clock);
                 canvas.getChildren().add(ClockArrayList.get(i).clockBody);
@@ -487,7 +486,7 @@ public class Main extends Application {
         }
 
         canvas.getChildren().add(ball.ballBody);
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(16.67),
+        Timeline gravityTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
                 new EventHandler<ActionEvent>() {
 
                     @Override
@@ -499,9 +498,12 @@ public class Main extends Application {
 
                                 obstacle.setyCoordinate(-move);
                             }
-                            for (Star star : StarArrayList) {
-                                star.setyCoordinate(-move);
+                            for(int i=0;i<StarArrayList.size();i++){
+                                StarArrayList.get(i).setyCoordinate(-move);
                             }
+//                            for (Star star: StarArrayList) {
+//                                star.setyCoordinate(-move);
+//                            }
                             for (ColorChanger colorChanger : ColorChangerArraylist) {
                                 colorChanger.setyCoordinate(-move);
                             }
@@ -511,7 +513,7 @@ public class Main extends Application {
                         }
                     }
                 }));
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        gravityTimeline.setCycleCount(Timeline.INDEFINITE);
         Timeline diagonalGravityLeftTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
                 new EventHandler<ActionEvent>() {
 
@@ -629,7 +631,7 @@ public class Main extends Application {
                 if (event.getCode() == KeyCode.SPACE && !keyLock) {
                     bounceSound.play();
                     keyLock=true;
-                    timeline.play();
+                    gravityTimeline.play();
                     yVelocity=-6;
 
                 }
@@ -639,21 +641,21 @@ public class Main extends Application {
                 if (event.getCode() == KeyCode.W) {
                     diagonalGravityLeftTimeline.pause();
                     diagonalGravityRightTimeline.pause();
-                    timeline.play();
+                    gravityTimeline.play();
                     yVelocity=-6;
 
                 }
                 if (event.getCode() == KeyCode.A){
                     diagonalGravityLeftTimeline.play();
                     diagonalGravityRightTimeline.pause();
-                    timeline.pause();
+                    gravityTimeline.pause();
                     yVelocity=-6;
                     xVelocity=-4;
                 }
                 else if (event.getCode() ==KeyCode.D){
                     diagonalGravityLeftTimeline.pause();
                     diagonalGravityRightTimeline.play();
-                    timeline.pause();
+                    gravityTimeline.pause();
                     yVelocity=-6;
                     xVelocity=4;
                 }
@@ -671,18 +673,21 @@ public class Main extends Application {
                         for(int i=0;i<circularObstacleArrayList.size();i++){
                              int val = circularObstacleArrayList.get(i).collides(ball.ballBody,ball.color);
                             if(val==0 && !over){
-                                try {
-                                over = true;
-                                crashSound.play();
-                                gameOver(ball,canvas,timeline);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
+//                                try {
+//                                over = true;
+//                                crashSound.play();
+//                                gameOver(ball,canvas,timeline);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
                             }
                             else if(ball.distanceTravelled>=500){
+                                ball.numRoundsTravelled+=1;
                                 addNewObstacle(collisionTimeline,circularObstacleArrayList,ball.distanceTravelled);
                                 addNewStar(StarArrayList);
-                                addNewColorChanger(ColorChangerArraylist);
+                                if(ball.numRoundsTravelled%2==0){
+                                    addNewColorChanger(ColorChangerArraylist);
+                                }
                                 ball.distanceTravelled=0;
                             }
                         }
@@ -709,7 +714,10 @@ public class Main extends Application {
                             }
                         }
                         if(closestStar.checkCollision(ball.ballBody)){
+
                             closestStar.showAnimation(canvas);
+                            System.out.println(closestStar.yCoordinate);
+                            starSound.play();
                             StarArrayList.remove(closestStar);
                             numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
                             canvas.getChildren().remove(closestStar);
@@ -717,6 +725,7 @@ public class Main extends Application {
                             closestStar = StarArrayList.get(0);
                         }
                         if(closestColorChanger.checkCollision(ball.ballBody)){
+                            crashSound.play();
                             int newColor = closestColorChanger.showAnimation(canvas);
                             ball.changeColor(newColor);
                             ColorChangerArraylist.remove(closestColorChanger);
@@ -736,19 +745,14 @@ public class Main extends Application {
         EventHandler<MouseEvent> pauseEventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                timeline.pause();
+                gravityTimeline.pause();
                 rotateTimeline.pause();
                 overlay = new Rectangle(0,0,450,600);
                 overlay.setFill(Color.BLACK);
                 overlay.setOpacity(0);
                 canvas.getChildren().add(overlay);
-                InputStream stream = null;
-                try {
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\resume.png");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Image image = new Image(stream);
+
+                Image image = new Image("assets/resume.png");
                 ImageView resumeIcon = new ImageView(image);
                 resumeIcon.setFitHeight(60);
                 resumeIcon.setPreserveRatio(true);
@@ -756,12 +760,8 @@ public class Main extends Application {
                 resumeButton.setLayoutY(375);
                 resumeButton.setLayoutX(195);
                 resumeButton.setCursor(Cursor.HAND);
-                try {
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\save.png");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Image image1 = new Image(stream);
+
+                Image image1 = new Image("assets/save.png");
                 ImageView saveIcon = new ImageView(image1);
                 saveIcon.setFitHeight(60);
                 saveIcon.setPreserveRatio(true);
@@ -769,12 +769,8 @@ public class Main extends Application {
                 saveButton.setLayoutY(475);
                 saveButton.setLayoutX(195);
                 saveButton.setCursor(Cursor.HAND);
-                try {
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\restart.png");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Image image3 = new Image(stream);
+
+                Image image3 = new Image("assets/restart.png");
                 ImageView restartIcon = new ImageView(image3);
                 restartIcon.setFitHeight(60);
                 restartIcon.setPreserveRatio(true);
@@ -782,12 +778,8 @@ public class Main extends Application {
                 restartButton.setLayoutY(575);
                 restartButton.setLayoutX(195);
                 restartButton.setCursor(Cursor.HAND);
-                try {
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\home.png");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                Image image4 = new Image(stream);
+
+                Image image4 = new Image("assets/home.png");
                 ImageView homeIcon = new ImageView(image4);
                 homeIcon.setFitHeight(75);
                 homeIcon.setPreserveRatio(true);
@@ -864,7 +856,7 @@ public class Main extends Application {
                         canvas.getChildren().remove(saveButton);
                         canvas.getChildren().remove(restartButton);
                         canvas.getChildren().remove(overlay);
-                        timeline.play();
+                        gravityTimeline.play();
                         rotateTimeline.play();
                         if(moveCamTimelineStatus== Animation.Status.RUNNING){
                             //moveCameraTimeline.play();
