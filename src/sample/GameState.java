@@ -200,19 +200,21 @@ public class GameState implements Serializable, Cloneable {
         resumeButton.setLayoutX(195);
         resumeButton.setCursor(Cursor.HAND);
 
-        try {
-            stream = this.getClass().getResourceAsStream("/save.png");
-        } catch (Exception e) {
-            e.printStackTrace();
+        if(this.mode==0)    {
+            try {
+                stream = this.getClass().getResourceAsStream("/save.png");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Image image1 = new Image(stream);
+            ImageView saveIcon = new ImageView(image1);
+            saveIcon.setFitHeight(60);
+            saveIcon.setPreserveRatio(true);
+            saveButton.setGraphic(saveIcon);
+            saveButton.setLayoutY(475);
+            saveButton.setLayoutX(195);
+            saveButton.setCursor(Cursor.HAND);
         }
-        Image image1 = new Image(stream);
-        ImageView saveIcon = new ImageView(image1);
-        saveIcon.setFitHeight(60);
-        saveIcon.setPreserveRatio(true);
-        saveButton.setGraphic(saveIcon);
-        saveButton.setLayoutY(475);
-        saveButton.setLayoutX(195);
-        saveButton.setCursor(Cursor.HAND);
 
         try {
             stream = this.getClass().getResourceAsStream("/restart.png");
@@ -243,17 +245,21 @@ public class GameState implements Serializable, Cloneable {
         homeButton.setCursor(Cursor.HAND);
 
         resumeButton.setOpacity(0);
-        saveButton.setOpacity(0);
+        if(mode==0) {
+            saveButton.setOpacity(0);
+        }
         homeButton.setOpacity(0);
         restartButton.setOpacity(0);
         canvas.getChildren().add(resumeButton);
-        canvas.getChildren().add(saveButton);
+        if(mode==0) {
+            canvas.getChildren().add(saveButton);
+        }
         canvas.getChildren().add(homeButton);
         canvas.getChildren().add(restartButton);
     }
 
     public void addNewStar(ArrayList<Star> arr){
-        //collisionTimeline.pause();
+        collisionTimeline.pause();
         try {
             Star newStar = new Star(225,newObstaclePosition+25*difficultyOffset);
             arr.add(newStar);
@@ -261,16 +267,16 @@ public class GameState implements Serializable, Cloneable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //collisionTimeline.play();
+        collisionTimeline.play();
     }
     public void addNewColorChanger(ArrayList<ColorChanger> arr){
-        //collisionTimeline.pause();
+        collisionTimeline.pause();
         ColorChanger c = new ColorChanger(225,newColorChangerPosition+25*difficultyOffset);
-        canvas.getChildren().add(c.colorChangerBody);
         arr.add(c);
-        //collisionTimeline.play();
+        canvas.getChildren().add(c.colorChangerBody);
+        collisionTimeline.play();
     }
-    public void addNewObstacle(Timeline collisionTimeline,ArrayList<Obstacle> arr,double distanceTravelled){
+    public void addNewObstacle(ArrayList<Obstacle> arr,double distanceTravelled){
         if(firstObstacle){
             firstObstacle=false;
             return;
@@ -352,7 +358,6 @@ public class GameState implements Serializable, Cloneable {
         // creating the obstacles to be used
         for (Obstacle obstacle : circularObstacleArrayList) {
             obstacle.create();
-            //circularObstacleArrayList.get(i).obstacle.setOpacity(0);
             canvas.getChildren().add(obstacle.obstacle);
         }
 
@@ -404,7 +409,6 @@ public class GameState implements Serializable, Cloneable {
         // creating the obstacles to be used
         for (Obstacle obstacle : circularObstacleArrayList) {
             obstacle.create();
-            //circularObstacleArrayList.get(i).obstacle.setOpacity(0);
             canvas.getChildren().add(obstacle.obstacle);
         }
 
@@ -415,7 +419,7 @@ public class GameState implements Serializable, Cloneable {
         }
         for(ColorChanger c: ColorChangerArraylist)  {
             c.create();
-            canvas .getChildren().add(c.colorChangerBody);
+            canvas.getChildren().add(c.colorChangerBody);
         }
         if(mode==1) {
             for(Clock cl: ClockArrayList)   {
@@ -424,36 +428,11 @@ public class GameState implements Serializable, Cloneable {
             }
         }
 
-        nextObstacle.create();
-        prevObstacle.create();
-        closestStar.create();
-        closestColorChanger.create();
-        if(newObs!=null)    {
-            newObs.create();
-        }
-
-        if(!canvas.getChildren().contains(nextObstacle.obstacle))
-            canvas.getChildren().add(nextObstacle.obstacle);
-        if(!canvas.getChildren().contains(prevObstacle.obstacle))
-            canvas.getChildren().add(prevObstacle.obstacle);
-        if(!canvas.getChildren().contains(closestStar.starBody))
-            canvas.getChildren().add(closestStar.starBody);
-        if(!canvas.getChildren().contains(closestColorChanger.colorChangerBody))
-            canvas.getChildren().add(closestColorChanger.colorChangerBody);
-        if(newObs!=null && !canvas.getChildren().contains(newObs.obstacle))
-            canvas.getChildren().add(newObs.obstacle);
-
-        if(mode==1){
-            closestClock.create();
-            if(!canvas.getChildren().contains(closestClock.clockBody))
-                canvas.getChildren().add(closestClock.clockBody);
-        }
         canvas.getChildren().add(ball.getBallBody());
         runGame(bgPane, canvas);
     }
 
     private void runGame(AnchorPane bgPane, Pane canvas)  {
-        // not working
         createAudioClips();
         Timeline gravityTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
                 new EventHandler<ActionEvent>() {
@@ -651,9 +630,9 @@ public class GameState implements Serializable, Cloneable {
                             }
                             else if(ball.getDistanceTravelled()>=500){
                                 ball.setNumRoundsTravelled(ball.getNumRoundsTravelled()+1);
-                                addNewObstacle(collisionTimeline,circularObstacleArrayList,ball.getDistanceTravelled());
+                                addNewObstacle(circularObstacleArrayList,ball.getDistanceTravelled());
                                 addNewStar(StarArrayList);
-                                if(ball.getNumRoundsTravelled()%2==0){
+                                if(ball.getNumRoundsTravelled()%2==0 || ColorChangerArraylist.size()==1){
                                     if(ball.getNumRoundsTravelled()%4==0 &&  difficultyOffset<2.5){
                                         System.out.println("Changing gears");
                                         difficultyOffset+=0.5;
@@ -734,8 +713,10 @@ public class GameState implements Serializable, Cloneable {
                                 resumeButton.setLayoutY(resumeButton.getLayoutY()-2);
                                 restartButton.setOpacity(restartButton.getOpacity()+0.01);
                                 restartButton.setLayoutY(restartButton.getLayoutY()-2);
-                                saveButton.setOpacity(saveButton.getOpacity()+0.01);
-                                saveButton.setLayoutY(saveButton.getLayoutY()-2);
+                                if(mode==0) {
+                                    saveButton.setOpacity(saveButton.getOpacity()+0.01);
+                                    saveButton.setLayoutY(saveButton.getLayoutY()-2);
+                                }
                                 homeButton.setOpacity(homeButton.getOpacity()+0.01);
                                 homeButton.setLayoutY(homeButton.getLayoutY()+2);
                             }
@@ -768,8 +749,10 @@ public class GameState implements Serializable, Cloneable {
                                 overlay.setOpacity(overlay.getOpacity()-0.009);
                                 resumeButton.setOpacity(resumeButton.getOpacity()-0.01);
                                 resumeButton.setLayoutY(resumeButton.getLayoutY()+2);
-                                saveButton.setOpacity(saveButton.getOpacity()-0.01);
-                                saveButton.setLayoutY(saveButton.getLayoutY()+2);
+                                if(mode==0) {
+                                    saveButton.setOpacity(saveButton.getOpacity()-0.01);
+                                    saveButton.setLayoutY(saveButton.getLayoutY()+2);
+                                }
                                 restartButton.setOpacity(restartButton.getOpacity()-0.01);
                                 restartButton.setLayoutY(restartButton.getLayoutY()+2);
                                 homeButton.setOpacity(homeButton.getOpacity()-0.01);
@@ -784,7 +767,9 @@ public class GameState implements Serializable, Cloneable {
                     public void handle(ActionEvent actionEvent) {
                         canvas.getChildren().remove(resumeButton);
                         canvas.getChildren().remove(homeButton);
-                        canvas.getChildren().remove(saveButton);
+                        if(mode==0) {
+                            canvas.getChildren().remove(saveButton);
+                        }
                         canvas.getChildren().remove(restartButton);
                         canvas.getChildren().remove(overlay);
                         gravityTimeline.play();
@@ -817,7 +802,9 @@ public class GameState implements Serializable, Cloneable {
 
         resumeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,resumeHandler);
         restartButton.addEventFilter(MouseEvent.MOUSE_CLICKED,restartHandler);
-        saveButton.addEventFilter(MouseEvent.MOUSE_CLICKED,saveHandler);
+        if(mode==0) {
+            saveButton.addEventFilter(MouseEvent.MOUSE_CLICKED,saveHandler);
+        }
         pauseButton.addEventFilter(MouseEvent.MOUSE_CLICKED,pauseEventHandler);
         homeButton.addEventFilter(MouseEvent.MOUSE_CLICKED,homeHandler);
         bgPane.getChildren().setAll(canvas);

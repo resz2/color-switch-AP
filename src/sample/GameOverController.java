@@ -47,16 +47,17 @@ public class GameOverController {
         GameState state = Main.getCurrentPlayer().getCurrentState();
         // storing total stars
         Main.getCurrentPlayer().increaseTotalStars(state.getNumStarsCollected());
-        int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
-        hs.add(pair);
-        if(hs.size()!=1)    {
-            hsComparator comp = new hsComparator();
-            hs.sort(comp);
-        }
         if(Main.getCurrentPlayer().getCurrentState().getMode()==0) {
-            Database.serialize(Main.getDB());
+            int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
+            hs.add(pair);
+            if(hs.size()!=1)    {
+                hsComparator comp = new hsComparator();
+                hs.sort(comp);
+            }
         }
+        Database.serialize(Main.getDB());
         AnchorPane pane = FXMLLoader.load(getClass().getResource("mainMenu.fxml"));
+        gameOverBG.getChildren().clear();
         gameOverBG.getChildren().setAll(pane);
     }
 
@@ -65,16 +66,17 @@ public class GameOverController {
         GameState state = Main.getCurrentPlayer().getCurrentState();
         // storing total stars
         Main.getCurrentPlayer().increaseTotalStars(state.getNumStarsCollected());
-        int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
-        hs.add(pair);
-        if(hs.size()!=1)    {
-            hsComparator comp = new hsComparator();
-            hs.sort(comp);
+        if(Main.getCurrentPlayer().getCurrentState().getMode()==0){
+            int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
+            hs.add(pair);
+            if(hs.size()!=1)    {
+                hsComparator comp = new hsComparator();
+                hs.sort(comp);
+            }
         }
-        if(Main.getCurrentPlayer().getCurrentState().getMode()==0)  {
-            Database.serialize(Main.getDB());
-        }
+        Database.serialize(Main.getDB());
         AnchorPane pane = FXMLLoader.load(getClass().getResource("newGameScreen.fxml"));
+        gameOverBG.getChildren().clear();
         gameOverBG.getChildren().setAll(pane);
     }
 

@@ -64,12 +64,11 @@ public class LoadController {
     @FXML
     public void loadSave() {
         // loads the selected game
-        // for now loads game 0
         if(!loadsList.getItems().isEmpty()) {
             GameState state = loadsList.getSelectionModel().getSelectedItem().deepClone();
             try {
                 Main.getCurrentPlayer().setCurrentState(state);
-                //loadBG.getChildren().clear();
+                loadBG.getChildren().clear();
                 state.loadGame(loadBG);
             }
             catch (Exception e) {
