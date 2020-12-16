@@ -5,9 +5,11 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.Rectangle;
@@ -81,7 +83,7 @@ public class Star {
             ImageView starBody = new ImageView();
             starBody.setImage(image);
             starBody.setX(this.xCoordinate+offsetX*4);
-            starBody.setY(this.starBody.getLayoutY()+offsetY*4-12.5);
+            starBody.setY(300+offsetY*4-12.5);
             starBody.setFitWidth(10);
             starBody.setOpacity(0);
             starBody.setPreserveRatio(true);
@@ -123,4 +125,6 @@ public class Star {
             }
         });
     }
-}
+
+    }
+

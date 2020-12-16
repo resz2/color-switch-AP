@@ -89,8 +89,8 @@ public class Main extends Application {
             private Circle diffBackIconCircle;
     int nextObsIndex=0,prevObsIndex=0;
     int newStarPosition=-200,newClockPosition=-300;
-    double newObstaclePosition=-300;
-    int difficulty;
+    double newObstaclePosition=-300,difficultyOffset=0;
+    int difficulty=0;
     int newColorChangerPosition=-3550;
     Animation.Status moveCamTimelineStatus;
     Obstacle nextObstacle,prevObstacle,newObs;
@@ -352,7 +352,7 @@ public class Main extends Application {
     public void addNewStar(ArrayList<Star> arr){
         //collisionTimeline.pause();
         try {
-            Star newStar = new Star(225,newObstaclePosition);
+            Star newStar = new Star(225,newObstaclePosition+25*difficultyOffset);
             arr.add(newStar);
             canvas.getChildren().add(newStar.starBody);
         } catch (FileNotFoundException e) {
@@ -362,32 +362,32 @@ public class Main extends Application {
     }
     public void addNewColorChanger(ArrayList<ColorChanger> arr){
         //collisionTimeline.pause();
-        ColorChanger c = new ColorChanger(225,newColorChangerPosition);
+        ColorChanger c = new ColorChanger(225,newColorChangerPosition+25*difficultyOffset);
         canvas.getChildren().add(c.colorChangerBody);
         arr.add(c);
         //collisionTimeline.play();
     }
     public void addNewObstacle(Timeline collisionTimeline,ArrayList<Obstacle> arr,double distanceTravelled){
+        if(firstObstacle){
+            firstObstacle=false;
+            return;
+        }
         collisionTimeline.pause();
         Random randGen = new Random();
         int obsNumber = randGen.nextInt(6);
-        System.out.println(obsNumber);
         Obstacle removeThis = arr.remove(0);
         int offset=0;
-        if(firstObstacle){
-            offset=100;
-            firstObstacle=false;
-        }
+
         newObs = new CrossObstacle(newObstaclePosition, 275);;
 
         //System.out.println(newObstaclePosition);
         switch (obsNumber) {
             case 0 -> newObs = new CrossObstacle(newObstaclePosition-offset, 275);
-            case 1 -> newObs = new SquareObstacle(80, 95, newObstaclePosition-offset, 225);
-            case 2 -> newObs = new ThornObstacle(75, newObstaclePosition-offset, 225, 1.2);
-            case 3 -> newObs = new BowObstacle(newObstaclePosition-offset, 225, 50, 65, 100);
-            case 4 -> newObs = new HalfBowObstacle(newObstaclePosition-offset, 225, 50, 65, 100);
-            case 5 -> newObs = new CircularObstacle(80, 95, newObstaclePosition-offset, 225);
+            case 1 -> newObs = new SquareObstacle(90-10*difficultyOffset, 110-10*difficultyOffset, newObstaclePosition-offset+25*difficultyOffset, 225);
+            case 2 -> newObs = new ThornObstacle(80-10*difficultyOffset, newObstaclePosition-offset+25*difficultyOffset, 225, 1.2);
+            case 3 -> newObs = new BowObstacle(newObstaclePosition-offset+25*difficultyOffset, 225, 70-10*difficultyOffset, 90-10*difficultyOffset, 115);
+            case 4 -> newObs = new HalfBowObstacle(newObstaclePosition-offset+25*difficultyOffset, 225, 70-10*difficultyOffset, 90-10*difficultyOffset , 115);
+            case 5 -> newObs = new CircularObstacle(100-10*difficultyOffset, 120-10*difficultyOffset, newObstaclePosition-offset+25*difficultyOffset, 225);
         }
         newObs.create();
         canvas.getChildren().add(newObs.obstacle);
@@ -446,14 +446,14 @@ public class Main extends Application {
         ArrayList<ColorChanger> ColorChangerArraylist = new ArrayList<>();
         Random randGen = new Random();
         for (int i=0;i<3;i++){
-            int obsNumber = randGen.nextInt(6);
+            int obsNumber = 4;
             switch (obsNumber) {
-                case 0 -> circularObstacleArrayList.add(new CrossObstacle(300 - 400 * (i), 275));
-                case 1 -> circularObstacleArrayList.add(new SquareObstacle(80, 95, 300 - 400 * i, 225));
-                case 2 -> circularObstacleArrayList.add(new ThornObstacle(75, 300 - 400 * i, 225, 1.2));
-                case 3 -> circularObstacleArrayList.add(new BowObstacle(300 - 400 * i, 225, 50, 65, 100));
-                case 4 -> circularObstacleArrayList.add(new HalfBowObstacle(300 - 400 * i, 225, 50, 60, 100));
-                case 5 -> circularObstacleArrayList.add(new CircularObstacle(80, 95, 300 - 400 * (i), 225));
+                case 0 -> circularObstacleArrayList.add(new CrossObstacle(300 - 500 * (i), 275));
+                case 1 -> circularObstacleArrayList.add(new SquareObstacle(90-10*difficultyOffset, 110-10*difficultyOffset, 300 - 500 * i, 225));
+                case 2 -> circularObstacleArrayList.add(new ThornObstacle(80-10*difficultyOffset, 300 - 500 * i, 225, 1.2));
+                case 3 -> circularObstacleArrayList.add(new BowObstacle(300 - 500 * i, 225, 70-10*difficultyOffset, 90-10*difficultyOffset, 115));
+                case 4 -> circularObstacleArrayList.add(new HalfBowObstacle(300 - 500 * i, 225, 70-10*difficultyOffset, 90-10*difficultyOffset, 115));
+                case 5 -> circularObstacleArrayList.add(new CircularObstacle(100-10*difficultyOffset, 120-10*difficultyOffset, 300 - 500 * (i), 225));
             }
         }
         for (Obstacle obstacle : circularObstacleArrayList) {
@@ -462,10 +462,10 @@ public class Main extends Application {
             canvas.getChildren().add(obstacle.obstacle);
         }
         for(int i=0;i<3;i++){
-            Star star = new Star(225,300-400*(i));
+            Star star = new Star(225,300-500*(i));
             StarArrayList.add(star);
             if(i<2){
-                ColorChanger c = new ColorChanger(225,100-1000*(i));
+                ColorChanger c = new ColorChanger(225,100-1200*(i));
                 ColorChangerArraylist.add(c);
                 canvas.getChildren().add(ColorChangerArraylist.get(i).colorChangerBody);
             }
@@ -484,7 +484,6 @@ public class Main extends Application {
         if(mode==1){
             closestClock = ClockArrayList.get(0);
         }
-
         canvas.getChildren().add(ball.ballBody);
         Timeline gravityTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
                 new EventHandler<ActionEvent>() {
@@ -498,12 +497,9 @@ public class Main extends Application {
 
                                 obstacle.setyCoordinate(-move);
                             }
-                            for(int i=0;i<StarArrayList.size();i++){
-                                StarArrayList.get(i).setyCoordinate(-move);
+                            for (Star star: StarArrayList) {
+                                star.setyCoordinate(-move);
                             }
-//                            for (Star star: StarArrayList) {
-//                                star.setyCoordinate(-move);
-//                            }
                             for (ColorChanger colorChanger : ColorChangerArraylist) {
                                 colorChanger.setyCoordinate(-move);
                             }
@@ -611,7 +607,7 @@ public class Main extends Application {
                     @Override
                     public void handle(ActionEvent t) {
                         for(int i=0;i<circularObstacleArrayList.size();i++){
-                            circularObstacleArrayList.get(i).setAngleOfRotation(2.5);
+                            circularObstacleArrayList.get(i).setAngleOfRotation(2.5+difficultyOffset);
                         }
 
                     }
@@ -673,19 +669,23 @@ public class Main extends Application {
                         for(int i=0;i<circularObstacleArrayList.size();i++){
                              int val = circularObstacleArrayList.get(i).collides(ball.ballBody,ball.color);
                             if(val==0 && !over){
-//                                try {
-//                                over = true;
-//                                crashSound.play();
-//                                gameOver(ball,canvas,timeline);
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
+                                try {
+                                over = true;
+                                crashSound.play();
+                                gameOver(ball,canvas,gravityTimeline);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                             else if(ball.distanceTravelled>=500){
                                 ball.numRoundsTravelled+=1;
                                 addNewObstacle(collisionTimeline,circularObstacleArrayList,ball.distanceTravelled);
                                 addNewStar(StarArrayList);
                                 if(ball.numRoundsTravelled%2==0){
+                                    if(ball.numRoundsTravelled%4==0 &&  difficultyOffset<2.5){
+                                        System.out.println("Changing gears");
+                                        difficultyOffset+=0.5;
+                                    }
                                     addNewColorChanger(ColorChangerArraylist);
                                 }
                                 ball.distanceTravelled=0;
@@ -716,7 +716,6 @@ public class Main extends Application {
                         if(closestStar.checkCollision(ball.ballBody)){
 
                             closestStar.showAnimation(canvas);
-                            System.out.println(closestStar.yCoordinate);
                             starSound.play();
                             StarArrayList.remove(closestStar);
                             numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
@@ -725,7 +724,7 @@ public class Main extends Application {
                             closestStar = StarArrayList.get(0);
                         }
                         if(closestColorChanger.checkCollision(ball.ballBody)){
-                            crashSound.play();
+                            colorSound.play();
                             int newColor = closestColorChanger.showAnimation(canvas);
                             ball.changeColor(newColor);
                             ColorChangerArraylist.remove(closestColorChanger);
@@ -919,19 +918,19 @@ public class Main extends Application {
                 @Override
                 public void handle(ActionEvent actionEvent) {
                     ball.ballBody.setOpacity(0);
-                    System.out.println("hello");
 
                     ArrayList<Circle> smallBalls = new ArrayList<Circle>();
-                    ArrayList<PathTransition> paths = new ArrayList<>();
+
                     Random randomGen = new Random();
                     for(int i=0;i<24;i++){
+
                         if(i%4==0){
                             Circle newCircle = new Circle();
                             newCircle.setRadius(2+randomGen.nextInt(8));
                             newCircle.setLayoutX(225);
                             newCircle.setLayoutY(ball.yCoordinate);
                             newCircle.setFill(Color.web("fae100"));
-                            smallBalls.add(newCircle);
+
                             int offset = (i/4)*2;
                             canvas.getChildren().add(newCircle);
                             Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(5),
@@ -1087,7 +1086,7 @@ public class Main extends Application {
                                         e.printStackTrace();
                                     }
                                     if(menuBG !=null){
-                                        System.out.println("Menu fucker");
+
                                         menuBG.getChildren().setAll(pane);
                                     }
                                     else{
