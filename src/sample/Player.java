@@ -22,7 +22,14 @@ public class Player implements Serializable {
 
     @Override
     public String toString() {
-        return "    " + this.playerName + "                         " + this.totalStars;
+        String s = "  " + this.playerName;
+        for(int i=0;i<20;i++)   {
+            if(i>this.playerName.length())  {
+                s += " ";
+            }
+        }
+        s += this.totalStars;
+        return s;
     }
 
     public ArrayList<GameState> getSavedGames() {

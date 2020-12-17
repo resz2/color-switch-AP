@@ -19,10 +19,14 @@ public class Ball extends GameElement {
 
     public void create() {
         switch (color) {
-            case 1-> ballColor = Color.web("fae100");
-            case 2-> ballColor = Color.web("ff0181");
-            case 3-> ballColor = Color.web("32dbf0");
-            case 4-> ballColor = Color.web("900dff");
+            case 1: ballColor = Color.web("fae100");
+            break;
+            case 2: ballColor = Color.web("ff0181");
+            break;
+            case 3: ballColor = Color.web("32dbf0");
+            break;
+            case 4: ballColor = Color.web("900dff");
+            break;
         }
         ballBody = new Circle(10, ballColor);
         this.ballBody.setLayoutY(yCoordinate);
