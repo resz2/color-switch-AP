@@ -22,7 +22,7 @@ abstract class Obstacle extends GameElement {
         this.xCoordinate = xCoordinate;
         this.angle = angle;
     }
-    public int collides(Circle ball, int color){
+    public int collides(SVGPath ball, int color){
         if(obstacle.getBoundsInParent().intersects(ball.getBoundsInParent())){
             inside=true;
         }
@@ -92,7 +92,7 @@ class CircularObstacle extends Obstacle{
         super(distInner,distOuter,yCoordinate, xCoordinate,angle);
     }
     @Override
-    public int collides(Circle ball,int color) {
+    public int collides(SVGPath ball,int color) {
         return super.collides(ball,color);
     }
 
@@ -194,7 +194,7 @@ class SquareObstacle extends Obstacle{
         super(distInner,distOuter,yCoordinate, xCoordinate,angle);
     }
     @Override
-    public int  collides(Circle ball,int color) {
+    public int  collides(SVGPath ball,int color) {
         return super.collides(ball,color);
     }
 
@@ -300,7 +300,7 @@ class CrossObstacle extends Obstacle{
         this.angle= angle;
     }
     @Override
-    public int collides(Circle ball,int color) {
+    public int collides(SVGPath ball,int color) {
         return super.collides(ball,color);
     }
     public Group getObstacle(){
@@ -402,7 +402,7 @@ class BowObstacle extends Obstacle{
         this.height = height;
     }
     @Override
-    public int collides(Circle ball,int color) {
+    public int collides(SVGPath ball,int color) {
         return super.collides(ball,color);
     }
     public Group getObstacle(){
@@ -567,7 +567,7 @@ class HalfBowObstacle extends Obstacle{
         this.height = height;
     }
     @Override
-    public int collides(Circle ball,int color) {
+    public int collides(SVGPath ball,int color) {
         return super.collides(ball,color);
     }
     public Group getObstacle(){
@@ -719,7 +719,7 @@ class ThornObstacle extends Obstacle{
         this.angle = angle;
     }
     @Override
-    public int collides(Circle ball,int color) {
+    public int collides(SVGPath ball,int color) {
         return super.collides(ball,color);
     }
 

@@ -382,7 +382,7 @@ public class GameState implements Serializable, Cloneable {
         gameScreenSetup();
 
         // Creating ball
-        ball = new Ball(225,550,1);
+        ball = new Ball(225,550,1,4);
         circularObstacleArrayList = new ArrayList<Obstacle>();
         StarArrayList = new ArrayList<>();
         ClockArrayList = new ArrayList<>();
