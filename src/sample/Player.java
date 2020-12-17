@@ -5,19 +5,21 @@ import java.util.*;
 
 public class Player implements Serializable {
     private int totalStars;
+    private final Set<Integer> gameStateIDs;
     private final String playerName;
     private final ArrayList<int[]> highScores;
-    private GameState currentState;
     private final ArrayList<GameState> savedGames;
     private final Set<Integer> ballTypes;
+    private GameState currentState;
 
     public Player(String name)  {
         totalStars = 0;
         playerName = name;
-        currentState = new GameState();
+        gameStateIDs = new HashSet<Integer>();
         highScores = new ArrayList<int[]>();
         savedGames = new ArrayList<GameState>();
         ballTypes = new HashSet<Integer>();
+        currentState = new GameState();
     }
 
     @Override
@@ -54,5 +56,9 @@ public class Player implements Serializable {
 
     public void increaseTotalStars(int totalStars) {
         this.totalStars += totalStars;
+    }
+
+    public Set<Integer> getGameStateIDs() {
+        return gameStateIDs;
     }
 }

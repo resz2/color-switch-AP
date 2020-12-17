@@ -63,16 +63,33 @@ public class GameOverController {
     }
 
     public void exitToMainMenu() throws Exception {
-        ArrayList<int[]> hs = Main.getCurrentPlayer().getHighScores();
-        GameState state = Main.getCurrentPlayer().getCurrentState();
+        Player p = Main.getCurrentPlayer();
+        ArrayList<int[]> hs = p.getHighScores();
+        GameState state = p.getCurrentState();
         // storing total stars
-        Main.getCurrentPlayer().increaseTotalStars(state.getNumStarsCollected());
-        if(state.getMode()==0 && state.getNumStarsCollected()>0) {
-            int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
-            hs.add(pair);
-            if(hs.size()!=1)    {
-                hsComparator comp = new hsComparator();
-                hs.sort(comp);
+        p.increaseTotalStars(state.getNumStarsCollected());
+        //storing highscore
+        if(state.getMode()==0 && state.getNumStarsCollected()>0){
+            if(state.getStateID()==0  || !p.getGameStateIDs().contains(state.getStateID())) {
+                if(state.getStateID()!=0)   {
+                    p.getGameStateIDs().add(state.getStateID());
+                }
+                int[] triplet = {state.getStateID(),  state.getNumStarsCollected(), state.getDifficulty()};
+                hs.add(triplet);
+                if(hs.size()!=1)    {
+                    hsComparator comp = new hsComparator();
+                    hs.sort(comp);
+                }
+            }
+            else    {
+                for(int[] triplet: p.getHighScores())   {
+                    if(state.getStateID()==triplet[0])  {
+                        if(state.getNumStarsCollected()>triplet[1]) {
+                            triplet[1] = state.getNumStarsCollected();
+                        }
+                        break;
+                    }
+                }
             }
         }
         Database.serialize(Main.getDB());
@@ -82,16 +99,33 @@ public class GameOverController {
     }
 
     public void restartGame() throws IOException {
-        ArrayList<int[]> hs = Main.getCurrentPlayer().getHighScores();
-        GameState state = Main.getCurrentPlayer().getCurrentState();
+        Player p = Main.getCurrentPlayer();
+        ArrayList<int[]> hs = p.getHighScores();
+        GameState state = p.getCurrentState();
         // storing total stars
-        Main.getCurrentPlayer().increaseTotalStars(state.getNumStarsCollected());
+        p.increaseTotalStars(state.getNumStarsCollected());
+        // storing highscore
         if(state.getMode()==0 && state.getNumStarsCollected()>0){
-            int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
-            hs.add(pair);
-            if(hs.size()!=1)    {
-                hsComparator comp = new hsComparator();
-                hs.sort(comp);
+            if(state.getStateID()==0  || !p.getGameStateIDs().contains(state.getStateID())) {
+                if(state.getStateID()!=0)   {
+                    p.getGameStateIDs().add(state.getStateID());
+                }
+                int[] triplet = {state.getStateID(),  state.getNumStarsCollected(), state.getDifficulty()};
+                hs.add(triplet);
+                if(hs.size()!=1)    {
+                    hsComparator comp = new hsComparator();
+                    hs.sort(comp);
+                }
+            }
+            else    {
+                for(int[] triplet: p.getHighScores())   {
+                    if(state.getStateID()==triplet[0])  {
+                        if(state.getNumStarsCollected()>triplet[1]) {
+                            triplet[1] = state.getNumStarsCollected();
+                        }
+                        break;
+                    }
+                }
             }
         }
         Database.serialize(Main.getDB());

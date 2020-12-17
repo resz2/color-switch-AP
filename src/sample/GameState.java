@@ -33,7 +33,7 @@ import java.util.Random;
 
 public class GameState implements Serializable, Cloneable {
     private int mode, difficulty, newClockPosition=0, newObstaclePosition, newColorChangerPosition,
-            numStarsCollected, numRetry, timeLeft;
+            numStarsCollected, numRetry, timeLeft, stateID;
     private boolean over, keyLock, firstObstacle;
     private double xVelocity, yVelocity, xVelocityOffset, yVelocityOffset, difficultyOffset;
     private Obstacle newObs;
@@ -54,7 +54,7 @@ public class GameState implements Serializable, Cloneable {
 
 
     public GameState()  {
-        mode = numStarsCollected = numRetry = difficulty = 0;
+        mode = numStarsCollected = numRetry = difficulty = stateID = 0;
         xVelocity = yVelocity = difficultyOffset = 0;
         xVelocityOffset = 0.25;
         yVelocityOffset = 0.35;
@@ -876,6 +876,12 @@ public class GameState implements Serializable, Cloneable {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 Player p = Main.getCurrentPlayer();
+                if(stateID==0)  {
+                    do {
+                        stateID = randGen.nextInt(1000000) + 1;
+                    }
+                    while (p.getGameStateIDs().contains(stateID));
+                }
                 GameState state = deepClone();
                 p.getSavedGames().add(state);
 
@@ -1115,19 +1121,9 @@ public class GameState implements Serializable, Cloneable {
 
     public int getDifficulty() { return difficulty; }
     public int getNumStarsCollected()   { return numStarsCollected; }
-    public void decreaseStars() {
-        this.numStarsCollected -= 4*numRetry;
-    }
-
-    public int getNumRetry() {
-        return numRetry;
-    }
-
-    public void incrementNumRetry() {
-        this.numRetry += 1;
-    }
-
-    public GameState getGameOverState() {
-        return gameOverState;
-    }
+    public void decreaseStars() { this.numStarsCollected -= 4*numRetry; }
+    public int getNumRetry() { return numRetry; }
+    public int getStateID() { return stateID; }
+    public void incrementNumRetry() { this.numRetry += 1; }
+    public GameState getGameOverState() { return gameOverState; }
 }

@@ -43,7 +43,7 @@ public class HighScoreController {
         }
         else    {
             for(int[] pair: Main.getCurrentPlayer().getHighScores())
-                    highScoreList.getItems().add("    " + pair[0] + "                         " + diffPrinter(pair[1]));
+                    highScoreList.getItems().add("    " + pair[1] + "                         " + diffPrinter(pair[2]));
         }
 
         Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
