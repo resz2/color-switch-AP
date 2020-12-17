@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.SVGPath;
 import javafx.util.Duration;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ public class Star extends GameElement {
         this.yCoordinate +=val;
     }
 
-    public boolean checkCollision(Circle b){
+    public boolean checkCollision(SVGPath b){
         return starBody.getBoundsInParent().intersects(b.getBoundsInParent());
     }
 

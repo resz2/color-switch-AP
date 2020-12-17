@@ -35,7 +35,7 @@
    </ImageView>
    <Label layoutX="92.0" layoutY="190.0" prefHeight="110.0" prefWidth="110.0" style="-fx-background-color: #272755; -fx-border-radius: 10; -fx-border-color: white; -fx-border-width: 4;" text="Label" />
    <ImageView fitHeight="48.0" fitWidth="47.0" layoutX="107.0" layoutY="205.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../assets/shutter_blue.png" />
+      <Image url="@../assets/square.png" />
    </ImageView>
    <ImageView fitHeight="18.0" fitWidth="20.0" layoutX="167.0" layoutY="211.0" pickOnBounds="true" preserveRatio="true">
       <Image url="@../assets/star.png" />
@@ -63,7 +63,7 @@
    </Button>
    <Label layoutX="248.0" layoutY="190.0" prefHeight="110.0" prefWidth="110.0" style="-fx-background-color: #272755; -fx-border-radius: 10; -fx-border-color: white; -fx-border-width: 4;" text="Label" />
    <ImageView fitHeight="48.0" fitWidth="47.0" layoutX="263.0" layoutY="205.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../assets/shutter_blue.png" />
+      <Image url="@../assets/hexagon.png" />
    </ImageView>
    <ImageView fitHeight="18.0" fitWidth="20.0" layoutX="323.0" layoutY="211.0" pickOnBounds="true" preserveRatio="true">
       <image>
@@ -93,7 +93,7 @@
    </Button>
    <Label layoutX="92.0" layoutY="357.0" prefHeight="110.0" prefWidth="110.0" style="-fx-background-color: #272755; -fx-border-radius: 10; -fx-border-color: white; -fx-border-width: 4;" text="Label" />
    <ImageView fitHeight="48.0" fitWidth="47.0" layoutX="107.0" layoutY="372.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../assets/shutter_blue.png" />
+      <Image url="@../assets/shuriken.png" />
    </ImageView>
    <ImageView fitHeight="18.0" fitWidth="20.0" layoutX="167.0" layoutY="378.0" pickOnBounds="true" preserveRatio="true">
       <image>
@@ -123,7 +123,7 @@
    </Button>
    <Label layoutX="248.0" layoutY="355.0" prefHeight="110.0" prefWidth="110.0" style="-fx-background-color: #272755; -fx-border-radius: 10; -fx-border-color: white; -fx-border-width: 4;" text="Label" />
    <ImageView fitHeight="48.0" fitWidth="47.0" layoutX="263.0" layoutY="370.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../assets/shutter_blue.png" />
+      <Image url="@../assets/star_2.png" />
    </ImageView>
    <ImageView fitHeight="18.0" fitWidth="20.0" layoutX="323.0" layoutY="376.0" pickOnBounds="true" preserveRatio="true">
       <image>

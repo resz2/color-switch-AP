@@ -79,14 +79,14 @@
             <Cursor fx:constant="HAND" />
         </cursor>
     </ImageView>
-   <Circle fx:id="frenzyCircle" centerX="222.0" centerY="540.0" fill="#272727" layoutX="6.0" layoutY="-399.0" onMouseClicked="#setModeToFrenzy" opacity="0.0" radius="24.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="3.0" />
-    <ImageView fx:id="frenzyIcon" fitHeight="47.0" fitWidth="53.0" layoutX="205.0" layoutY="117.0" onMouseClicked="#setModeToFrenzy" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+   <Circle fx:id="frenzyCircle" centerX="222.0" centerY="540.0" fill="#272727" layoutX="6.0" layoutY="-422.0" onMouseClicked="#setModeToFrenzy" opacity="0.0" radius="24.0" stroke="WHITE" strokeType="OUTSIDE" strokeWidth="3.0" />
+    <ImageView fx:id="frenzyIcon" fitHeight="47.0" fitWidth="53.0" layoutX="205.0" layoutY="94.0" onMouseClicked="#setModeToFrenzy" opacity="0.0" pickOnBounds="true" preserveRatio="true">
         <cursor>
             <Cursor fx:constant="HAND" />
         </cursor>
         <Image url="@../assets/fireclock.png" />
     </ImageView>
-   <Text fx:id="frenzyText" fill="WHITE" layoutX="174.0" layoutY="93.0" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Frenzy" textAlignment="CENTER" wrappingWidth="109.47003173828125">
+   <Text fx:id="frenzyText" fill="WHITE" layoutX="174.0" layoutY="70.0" opacity="0.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Frenzy" textAlignment="CENTER" wrappingWidth="109.47003173828125">
       <font>
          <Font name="System Bold Italic" size="18.0" />
       </font>

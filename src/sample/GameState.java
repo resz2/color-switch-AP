@@ -384,7 +384,7 @@ public class GameState implements Serializable, Cloneable {
         gameScreenSetup();
 
         // Creating ball
-        ball = new Ball(225,550,1);
+        ball = new Ball(225,550,1, Main.getCurrentPlayer().getCurrentBall());
         circularObstacleArrayList = new ArrayList<Obstacle>();
         StarArrayList = new ArrayList<>();
         ClockArrayList = new ArrayList<>();
@@ -1252,6 +1252,7 @@ public class GameState implements Serializable, Cloneable {
     public void setMode(int mode)   { this.mode = mode; }
     public int getMode()    { return this.mode; }
 
+    public Ball getBall()   { return ball; }
     public int getDifficulty() { return difficulty; }
     public int getNumStarsCollected()   { return numStarsCollected; }
     public void decreaseStars() { this.numStarsCollected -= 4*numRetry; }

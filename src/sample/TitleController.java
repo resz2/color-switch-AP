@@ -1,3 +1,4 @@
+
 package sample;
 
 import javafx.animation.Animation;
@@ -25,6 +26,8 @@ public class TitleController {
     private ImageView tcircle2;
     @FXML
     private ImageView tcircle1;
+    @FXML
+    private ImageView exitLogo;
     @FXML
     private ImageView playButton;
     @FXML
@@ -66,6 +69,8 @@ public class TitleController {
                         userLogo.setLayoutY(userLogo.getLayoutY()+2);
                         infoLogo.setOpacity(infoLogo.getOpacity()-0.01);
                         infoLogo.setLayoutY(infoLogo.getLayoutY()+2);
+                        exitLogo.setOpacity(exitLogo.getOpacity()-0.01);
+                        exitLogo.setLayoutY(exitLogo.getLayoutY()+2);
                         tcircle1.setOpacity(heading.getOpacity()-0.01);
                         tcircle1.setLayoutY(tcircle1.getLayoutY()-2.5);
                         tcircle2.setOpacity(heading.getOpacity()-0.01);
@@ -174,7 +179,7 @@ public class TitleController {
                             if(playButton.getLayoutX()<=175)
                                 playButton.setLayoutX(playButton.getLayoutX()+1);
 //                            playLabel.setLayoutY(playLabel.getLayoutY()+0.6);
-                           playLabel.setOpacity(playLabel.getOpacity()-0.01);
+                            playLabel.setOpacity(playLabel.getOpacity()-0.01);
                         }
                     }));
             exitTimeline.setCycleCount(100);

@@ -97,7 +97,7 @@ public class ColorChanger extends GameElement {
         path4.setScaleY(-1);
         colorChangerBody.getChildren().add(path4);
     }
-    public boolean checkCollision(Circle b){
+    public boolean checkCollision(SVGPath b){
         return colorChangerBody.getBoundsInParent().intersects(b.getBoundsInParent());
     }
 
