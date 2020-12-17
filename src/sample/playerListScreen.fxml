@@ -36,7 +36,7 @@
    <ListView fx:id="playerList" editable="true" fixedCellSize="50.0" layoutX="52.0" layoutY="132.0"
              onMouseClicked="#selectPlayer" prefHeight="367.0" prefWidth="345.0"
              style="-fx-border-color: white; -fx-background-color: transparent; -fx-border-radius: 40; -fx-border-width: 3;"
-             styleClass="list-cell" stylesheets="@loads.css">
+             styleClass="list-cell" stylesheets="@players.css">
       <padding>
          <Insets bottom="40.0" left="20.0" right="20.0" top="60.0"/>
       </padding>
