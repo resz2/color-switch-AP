@@ -47,8 +47,10 @@ public class GameState implements Serializable, Cloneable {
     private transient Animation.Status moveCamTimelineStatus;
     private transient AudioClip crashSound,starSound,bounceSound,colorSound;
     private transient static AudioClip audio;
-    private transient Label resumeButton, saveButton, homeButton, pauseButton, scoreLabel, restartButton, timeLabel;
+    private transient Label resumeButton, saveButton, homeButton, pauseButton, scoreLabel, restartButton, timeLabel,savedLabel;
+    private transient ImageView savedIcon;
     private transient Rectangle overlay;
+    private transient Rectangle overlayLoad;
     private transient Timeline collisionTimeline;
     private transient Pane canvas;
     private transient Timeline diagonalGravityLeftTimeline,diagonalGravityRightTimeline;
@@ -258,9 +260,30 @@ public class GameState implements Serializable, Cloneable {
         canvas.getChildren().add(resumeButton);
         if(mode==0) {
             canvas.getChildren().add(saveButton);
+            Image i= new Image("assets/tick.png");
+            savedIcon = new ImageView(i);
+            savedIcon.setFitHeight(50);
+            savedIcon.setFitWidth(50);
+            savedIcon.setPreserveRatio(true);
+            savedIcon.setOpacity(0);
+            savedIcon.setLayoutY(475);
+            savedIcon.setLayoutX(125);
+            savedLabel = new Label();
+            savedLabel.setText("Saved");
+            savedLabel.setOpacity(0);
+            savedLabel.setLayoutX(200);
+            savedLabel.setLayoutY(475);
+            Font font = Font.font("Roboto", FontWeight.BOLD,
+                    FontPosture.REGULAR, 40);
+            savedLabel.setFont(font);
+            savedLabel.setTextFill(Color.YELLOW);
+            canvas.getChildren().add(savedIcon);
+            canvas.getChildren().add(savedLabel);
+
         }
         canvas.getChildren().add(homeButton);
         canvas.getChildren().add(restartButton);
+
     }
 
     public void addNewStar(ArrayList<Star> arr){
@@ -436,6 +459,7 @@ public class GameState implements Serializable, Cloneable {
     public void loadGame(AnchorPane bgPane) throws  Exception {
 
         canvas = new Pane();
+        overlay= new Rectangle();
         resumeButton = new Label();
         saveButton = new Label();
         homeButton = new Label();
@@ -446,7 +470,75 @@ public class GameState implements Serializable, Cloneable {
 
         // Setting up Game Screen
         gameScreenSetup();
+        overlayLoad = new Rectangle(0,0,450,600);
+        overlayLoad.setFill(Color.BLACK);
+        overlayLoad.setOpacity(0);
 
+        Label countDown = new Label("3");
+        Font f1 = Font.font("Roboto", FontWeight.BOLD,
+                FontPosture.REGULAR, 120);
+        countDown.setFont(f1);
+        countDown.setTextFill(Color.web("fae100"));
+        countDown.setLayoutY(200);
+        countDown.setLayoutX(200);
+        countDown.setTranslateZ(-100);
+        countDown.setOpacity(1);
+
+        bgPane.getChildren().add(overlayLoad);
+        bgPane.getChildren().add(countDown);
+        Timeline fadeTimeline = new Timeline(new KeyFrame(Duration.millis(3),
+                new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent t) {
+                        overlayLoad.setOpacity(overlayLoad.getOpacity()+0.008);
+                        if(overlayLoad.getOpacity()>=0.75){
+                            countDown.setOpacity(1);
+                        }
+                    }
+                }));
+        fadeTimeline.setCycleCount(100);
+        fadeTimeline.play();
+        fadeTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+            int countDownTime=3;
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                Timeline reviveTimeline = new Timeline(new KeyFrame(Duration.millis(1000),
+                        new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent t) {
+                                countDownTime-=1;
+                                countDown.setText(String.valueOf(countDownTime));
+                            }
+                        }));
+                reviveTimeline.setCycleCount(3);
+                reviveTimeline.play();
+                reviveTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Timeline fadeTimeline = new Timeline(new KeyFrame(Duration.millis(3),
+                                new EventHandler<ActionEvent>() {
+                                    @Override
+                                    public void handle(ActionEvent t) {
+                                       overlayLoad.setOpacity(overlayLoad.getOpacity()-0.008);
+                                       countDown.setOpacity(countDown.getOpacity()-0.01);
+                                    }
+                                }));
+                        fadeTimeline.setCycleCount(100);
+                        fadeTimeline.play();
+                        fadeTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent actionEvent) {
+                                bgPane.getChildren().remove(overlayLoad);
+                                bgPane.getChildren().remove(countDown);
+                                runGame(bgPane, canvas);
+                            }
+                        });
+
+                    }
+                });
+
+            }
+        });
         // Creating ball
         ball.create();
 
@@ -474,9 +566,10 @@ public class GameState implements Serializable, Cloneable {
                 canvas.getChildren().add(cl.clockBody);
             }
         }
-
         canvas.getChildren().add(ball.getBallBody());
-        runGame(bgPane, canvas);
+
+
+
     }
 
     private void runGame(AnchorPane bgPane, Pane canvas)  {
@@ -881,9 +974,43 @@ public class GameState implements Serializable, Cloneable {
                 Player p = Main.getCurrentPlayer();
                 GameState state = deepClone();
                 p.getSavedGames().add(state);
-
+                Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(2),
+                        new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent t) {
+                                savedIcon.setOpacity(savedIcon.getOpacity()+0.01);
+                                savedLabel.setOpacity(savedLabel.getOpacity()+0.01);
+                            }
+                        }));
+                enterTimeline.setCycleCount(100);
+                enterTimeline.play();
+                enterTimeline.setOnFinished(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent actionEvent) {
+                        Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
+                                new EventHandler<ActionEvent>() {
+                                    double scaleOffset=0.002;
+                                    @Override
+                                    public void handle(ActionEvent t) {
+                                        if(savedIcon.getScaleX()>=1.2){
+                                            scaleOffset=-0.002;
+                                        }
+                                        else if(savedIcon.getScaleX()<=1){
+                                            scaleOffset=0.002;
+                                        }
+                                        savedIcon.setScaleX(savedIcon.getScaleX()+scaleOffset);
+                                        savedLabel.setScaleX(savedLabel.getScaleX()+scaleOffset);
+                                        savedIcon.setScaleY(savedIcon.getScaleX()+scaleOffset);
+                                        savedLabel.setScaleY(savedLabel.getScaleX()+scaleOffset);
+                                    }
+                                }));
+                        enterTimeline.setCycleCount(Timeline.INDEFINITE);
+                        enterTimeline.play();
+                    }
+                });
                 try {
                     Database.serialize(Main.getDB());
+
                     System.out.println("Game saved");
                 }
                 catch (IOException e)   {
