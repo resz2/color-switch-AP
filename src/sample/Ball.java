@@ -10,7 +10,6 @@ public class Ball extends GameElement {
     private transient Color ballColor;
     private transient Circle ballBody;
     public Ball(double xCoordinate, double yCoordinate, int color){
-
         this.color = color;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -18,11 +17,12 @@ public class Ball extends GameElement {
     }
 
     public void create() {
+        System.out.println(color);
         switch (color) {
+            case 0-> ballColor = Color.web("32dbf0");
             case 1-> ballColor = Color.web("fae100");
             case 2-> ballColor = Color.web("ff0181");
-            case 3-> ballColor = Color.web("32dbf0");
-            case 4-> ballColor = Color.web("900dff");
+            case 3-> ballColor = Color.web("900dff");
         }
         ballBody = new Circle(10, ballColor);
         this.ballBody.setLayoutY(yCoordinate);
