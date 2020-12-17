@@ -65,7 +65,7 @@
          <Cursor fx:constant="HAND" />
       </cursor>
    </Circle>
-   <ImageView fitHeight="50.0" fitWidth="40.0" layoutX="205.0" layoutY="498.0" onMouseClicked="#exitGame"
+   <ImageView fx:id="exitLogo" fitHeight="50.0" fitWidth="40.0" layoutX="205.0" layoutY="498.0" onMouseClicked="#exitGame"
               pickOnBounds="true" preserveRatio="true">
       <cursor>
          <Cursor fx:constant="HAND"/>

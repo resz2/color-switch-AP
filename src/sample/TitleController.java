@@ -26,6 +26,8 @@ public class TitleController {
     @FXML
     private ImageView tcircle1;
     @FXML
+    private ImageView exitLogo;
+    @FXML
     private ImageView playButton;
     @FXML
     private AnchorPane titleBG;
@@ -66,6 +68,8 @@ public class TitleController {
                         userLogo.setLayoutY(userLogo.getLayoutY()+2);
                         infoLogo.setOpacity(infoLogo.getOpacity()-0.01);
                         infoLogo.setLayoutY(infoLogo.getLayoutY()+2);
+                        exitLogo.setOpacity(exitLogo.getOpacity()-0.01);
+                        exitLogo.setLayoutY(exitLogo.getLayoutY()+2);
                         tcircle1.setOpacity(heading.getOpacity()-0.01);
                         tcircle1.setLayoutY(tcircle1.getLayoutY()-2.5);
                         tcircle2.setOpacity(heading.getOpacity()-0.01);

@@ -44,6 +44,12 @@ public class Main extends Application {
     @FXML
     private Circle purpleBall2;
     @FXML
+    private Circle backLogoCircle,shopLogoCircle;
+    @FXML
+    private ImageView shopLogo;
+    @FXML
+    private ImageView backLogo;
+    @FXML
     private ImageView backgroundImage;
     @FXML
     private AnchorPane menuBG;
@@ -102,6 +108,10 @@ public class Main extends Application {
                         highScoreButton.setLayoutX(highScoreButton.getLayoutX()+2);
                         exitButton.setOpacity(exitButton.getOpacity()+0.01);
                         exitButton.setLayoutX(exitButton.getLayoutX()-2);
+                        shopLogo.setOpacity(shopLogo.getOpacity()+0.01);
+                        shopLogoCircle.setOpacity(shopLogoCircle.getOpacity()+0.01);
+                        backLogo.setOpacity(shopLogo.getOpacity()+0.01);
+                        backLogoCircle.setOpacity(shopLogoCircle.getOpacity()+0.01);
                     }
                 }));
         enterTimeline.setCycleCount(100);
@@ -152,6 +162,10 @@ public class Main extends Application {
                         highScoreButton.setLayoutX(highScoreButton.getLayoutX()-2);
                         exitButton.setOpacity(exitButton.getOpacity()-0.01);
                         exitButton.setLayoutX(exitButton.getLayoutX()+2);
+                        shopLogo.setOpacity(shopLogo.getOpacity()-0.01);
+                        shopLogoCircle.setOpacity(shopLogoCircle.getOpacity()-0.01);
+                        backLogo.setOpacity(shopLogo.getOpacity()-0.01);
+                        backLogoCircle.setOpacity(shopLogoCircle.getOpacity()-0.01);
                     }
                 }));
         exitTimeline.setCycleCount(200);
