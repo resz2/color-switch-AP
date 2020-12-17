@@ -61,9 +61,10 @@ public class GameState implements Serializable, Cloneable {
         yVelocityOffset = 0.35;
         newStarPosition = -200;
         newClockPosition = -300;
-        newObstaclePosition = -500;
+        newObstaclePosition = -300;
         newColorChangerPosition = -3550;
-        over = played = keyLock = firstObstacle = false;
+        over = played = keyLock =  false;
+        firstObstacle =true;
         resumeButton = new Label();
         saveButton = new Label();
         homeButton = new Label();
@@ -287,21 +288,21 @@ public class GameState implements Serializable, Cloneable {
         Obstacle removeThis = arr.remove(0);
         int offset=0;
 
-        newObs = new CrossObstacle(newObstaclePosition, 275);
+        newObs = new CrossObstacle(newObstaclePosition, 275,0);
 
         //System.out.println(newObstaclePosition);
         switch (obsNumber) {
-            case 0: newObs = new CrossObstacle(newObstaclePosition-offset, 275);
+            case 0: newObs = new CrossObstacle(newObstaclePosition-offset, 275,0);
                     break;
-            case 1: newObs = new SquareObstacle(90-10*difficultyOffset, 110-10*difficultyOffset, newObstaclePosition-offset+25*difficultyOffset, 225);
+            case 1: newObs = new SquareObstacle(90-10*difficultyOffset, 110-10*difficultyOffset, newObstaclePosition-offset+25*difficultyOffset, 225,0);
                     break;
-            case 2: newObs = new ThornObstacle(80-10*difficultyOffset, newObstaclePosition-offset+25*difficultyOffset, 225, 1.2);
+            case 2: newObs = new ThornObstacle(80-10*difficultyOffset, newObstaclePosition-offset+25*difficultyOffset, 225, 1.2,0);
                     break;
-            case 3: newObs = new BowObstacle(newObstaclePosition-offset+25*difficultyOffset, 225, 70-10*difficultyOffset, 90-10*difficultyOffset, 115);
+            case 3: newObs = new BowObstacle(newObstaclePosition-offset+25*difficultyOffset, 225, 70-10*difficultyOffset, 90-10*difficultyOffset, 115,0);
                     break;
-            case 4: newObs = new HalfBowObstacle(newObstaclePosition-offset+25*difficultyOffset, 225, 70-10*difficultyOffset, 90-10*difficultyOffset , 115);
+            case 4: newObs = new HalfBowObstacle(newObstaclePosition-offset+25*difficultyOffset, 225, 70-10*difficultyOffset, 90-10*difficultyOffset , 115,0);
                     break;
-            case 5: newObs = new CircularObstacle(100-10*difficultyOffset, 120-10*difficultyOffset, newObstaclePosition-offset+25*difficultyOffset, 225);
+            case 5: newObs = new CircularObstacle(100-10*difficultyOffset, 120-10*difficultyOffset, newObstaclePosition-offset+25*difficultyOffset, 225,0);
                     break;
         }
         newObs.create();
@@ -338,19 +339,19 @@ public class GameState implements Serializable, Cloneable {
 
         Random randGen = new Random();
         for (int i=0;i<3;i++){
-            int obsNumber = 4;
+            int obsNumber = randGen.nextInt(6);
             switch (obsNumber) {
-                case 0: circularObstacleArrayList.add(new CrossObstacle(300 - 500 * (i), 275));
+                case 0: circularObstacleArrayList.add(new CrossObstacle(300 - 500 * (i), 275,0));
                         break;
-                case 1: circularObstacleArrayList.add(new SquareObstacle(90-10*difficultyOffset, 110-10*difficultyOffset, 300 - 500 * i, 225));
+                case 1: circularObstacleArrayList.add(new SquareObstacle(90-10*difficultyOffset, 110-10*difficultyOffset, 300 - 500 * i, 225,0));
                         break;
-                case 2: circularObstacleArrayList.add(new ThornObstacle(80-10*difficultyOffset, 300 - 500 * i, 225, 1.2));
+                case 2: circularObstacleArrayList.add(new ThornObstacle(80-10*difficultyOffset, 300 - 500 * i, 225, 1.2,0));
                         break;
-                case 3: circularObstacleArrayList.add(new BowObstacle(300 - 500 * i, 225, 70-10*difficultyOffset, 90-10*difficultyOffset, 115));
+                case 3: circularObstacleArrayList.add(new BowObstacle(300 - 500 * i, 225, 70-10*difficultyOffset, 90-10*difficultyOffset, 115,0));
                         break;
-                case 4: circularObstacleArrayList.add(new HalfBowObstacle(300 - 500 * i, 225, 70-10*difficultyOffset, 90-10*difficultyOffset, 115));
+                case 4: circularObstacleArrayList.add(new HalfBowObstacle(300 - 500 * i, 225, 70-10*difficultyOffset, 90-10*difficultyOffset, 115,0));
                         break;
-                case 5: circularObstacleArrayList.add(new CircularObstacle(100-10*difficultyOffset, 120-10*difficultyOffset, 300 - 500 * (i), 225));
+                case 5: circularObstacleArrayList.add(new CircularObstacle(100-10*difficultyOffset, 120-10*difficultyOffset, 300 - 500 * (i), 225,04));
                         break;
             }
         }
@@ -565,51 +566,58 @@ public class GameState implements Serializable, Cloneable {
         rotateTimeline.setCycleCount(Timeline.INDEFINITE);
         rotateTimeline.play();
         canvas.setFocusTraversable(true);
-        canvas.addEventFilter(KeyEvent.KEY_RELEASED,event->{
-            if(mode==0){
-                if (event.getCode() == KeyCode.SPACE) {
-                    keyLock=false;
+        EventHandler<KeyEvent> keyReleased = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+
+                    if(mode==0){
+                        if (keyEvent.getCode() == KeyCode.SPACE) {
+                            keyLock=false;
+                        }
+                    }
+            }
+        };
+        canvas.addEventFilter(KeyEvent.KEY_RELEASED,keyReleased);
+        EventHandler<KeyEvent> keyPressed = new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+
+                if(mode==0){
+                    if (keyEvent.getCode() == KeyCode.SPACE && !keyLock) {
+                        bounceSound.play();
+                        keyLock=true;
+                        gravityTimeline.play();
+                        yVelocity=-6;
+
+                    }
+                }
+
+                if(mode==1){
+                    if (keyEvent.getCode() == KeyCode.W) {
+                        diagonalGravityLeftTimeline.pause();
+                        diagonalGravityRightTimeline.pause();
+                        gravityTimeline.play();
+                        yVelocity=-6;
+
+                    }
+                    if (keyEvent.getCode() == KeyCode.A){
+                        diagonalGravityLeftTimeline.play();
+                        diagonalGravityRightTimeline.pause();
+                        gravityTimeline.pause();
+                        yVelocity=-6;
+                        xVelocity=-4;
+                    }
+                    else if (keyEvent.getCode() ==KeyCode.D){
+                        diagonalGravityLeftTimeline.pause();
+                        diagonalGravityRightTimeline.play();
+                        gravityTimeline.pause();
+                        yVelocity=-6;
+                        xVelocity=4;
+                    }
                 }
             }
-        });
-
-        canvas.addEventFilter(KeyEvent.KEY_PRESSED, event->{
-            if(mode==0){
-                if (event.getCode() == KeyCode.SPACE && !keyLock) {
-                    bounceSound.play();
-                    keyLock=true;
-                    gravityTimeline.play();
-                    yVelocity=-6;
-
-                }
-            }
-
-            if(mode==1){
-                if (event.getCode() == KeyCode.W) {
-                    diagonalGravityLeftTimeline.pause();
-                    diagonalGravityRightTimeline.pause();
-                    gravityTimeline.play();
-                    yVelocity=-6;
-
-                }
-                if (event.getCode() == KeyCode.A){
-                    diagonalGravityLeftTimeline.play();
-                    diagonalGravityRightTimeline.pause();
-                    gravityTimeline.pause();
-                    yVelocity=-6;
-                    xVelocity=-4;
-                }
-                else if (event.getCode() ==KeyCode.D){
-                    diagonalGravityLeftTimeline.pause();
-                    diagonalGravityRightTimeline.play();
-                    gravityTimeline.pause();
-                    yVelocity=-6;
-                    xVelocity=4;
-                }
-            }
-
-
-        });
+        };
+        canvas.addEventFilter(KeyEvent.KEY_PRESSED, keyPressed);
 
         Random randGen = new Random();
 
@@ -707,52 +715,8 @@ public class GameState implements Serializable, Cloneable {
             public void handle(MouseEvent mouseEvent) {
                 gravityTimeline.pause();
                 rotateTimeline.pause();
-
-                canvas.removeEventFilter(KeyEvent.KEY_RELEASED,event->{
-                    if(mode==0){
-                        if (event.getCode() == KeyCode.SPACE) {
-                            keyLock=false;
-                        }
-                    }
-                });
-
-                canvas.removeEventFilter(KeyEvent.KEY_PRESSED, event->{
-                    if(mode==0){
-                        if (event.getCode() == KeyCode.SPACE && !keyLock) {
-                            bounceSound.play();
-                            keyLock=true;
-                            gravityTimeline.play();
-                            yVelocity=-6;
-
-                        }
-                    }
-
-                    if(mode==1){
-                        if (event.getCode() == KeyCode.W) {
-                            diagonalGravityLeftTimeline.pause();
-                            diagonalGravityRightTimeline.pause();
-                            gravityTimeline.play();
-                            yVelocity=-6;
-
-                        }
-                        if (event.getCode() == KeyCode.A){
-                            diagonalGravityLeftTimeline.play();
-                            diagonalGravityRightTimeline.pause();
-                            gravityTimeline.pause();
-                            yVelocity=-6;
-                            xVelocity=-4;
-                        }
-                        else if (event.getCode() ==KeyCode.D){
-                            diagonalGravityLeftTimeline.pause();
-                            diagonalGravityRightTimeline.play();
-                            gravityTimeline.pause();
-                            yVelocity=-6;
-                            xVelocity=4;
-                        }
-                    }
-
-
-                });
+                canvas.removeEventFilter(KeyEvent.KEY_RELEASED,keyReleased);
+                canvas.removeEventFilter(KeyEvent.KEY_PRESSED,keyPressed);
                 pauseSetup();
 
                 Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),
@@ -793,48 +757,9 @@ public class GameState implements Serializable, Cloneable {
         EventHandler<MouseEvent> resumeHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                canvas.addEventFilter(KeyEvent.KEY_RELEASED,event->{
-                    if(mode==0){
-                        if (event.getCode() == KeyCode.SPACE) {
-                            keyLock=false;
-                        }
-                    }
-                });
+                canvas.addEventFilter(KeyEvent.KEY_RELEASED,keyReleased);
+                canvas.addEventFilter(KeyEvent.KEY_PRESSED,keyPressed);
 
-                canvas.addEventFilter(KeyEvent.KEY_PRESSED, event-> {
-                            if (mode == 0) {
-                                if (event.getCode() == KeyCode.SPACE && !keyLock) {
-                                    bounceSound.play();
-                                    keyLock = true;
-                                    gravityTimeline.play();
-                                    yVelocity = -6;
-
-                                }
-                            }
-
-                            if (mode == 1) {
-                                if (event.getCode() == KeyCode.W) {
-                                    diagonalGravityLeftTimeline.pause();
-                                    diagonalGravityRightTimeline.pause();
-                                    gravityTimeline.play();
-                                    yVelocity = -6;
-
-                                }
-                                if (event.getCode() == KeyCode.A) {
-                                    diagonalGravityLeftTimeline.play();
-                                    diagonalGravityRightTimeline.pause();
-                                    gravityTimeline.pause();
-                                    yVelocity = -6;
-                                    xVelocity = -4;
-                                } else if (event.getCode() == KeyCode.D) {
-                                    diagonalGravityLeftTimeline.pause();
-                                    diagonalGravityRightTimeline.play();
-                                    gravityTimeline.pause();
-                                    yVelocity = -6;
-                                    xVelocity = 4;
-                                }
-                            }
-                        });
                 Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(3),
                         new EventHandler<ActionEvent>() {
                             @Override

@@ -7,18 +7,20 @@ import javafx.scene.shape.*;
 abstract class Obstacle extends GameElement {
     protected boolean inside;
     protected int rotationsCount=0;
+    protected double angle=0;
     protected double distInner, distOuter;
     protected transient Group obstacle;
     protected transient Path pink,blue,purple,yellow;
 
     public Obstacle(){
     }
-    public Obstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
+    public Obstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate,double angle){
         this.inside = false;
         this.distInner = distInner;
         this.distOuter = distOuter;
         this.yCoordinate = yCoordinate;
         this.xCoordinate = xCoordinate;
+        this.angle = angle;
     }
     public int collides(Circle ball, int color){
         if(obstacle.getBoundsInParent().intersects(ball.getBoundsInParent())){
@@ -73,6 +75,7 @@ abstract class Obstacle extends GameElement {
     }
     public void setAngleOfRotation(double rotateBy){
         this.obstacle.setRotate(this.obstacle.getRotate()+rotateBy);
+        this.angle= this.obstacle.getRotate();
         if(this.getAngleOfRotation()%360==0){
             this.rotationsCount+=1;
         }
@@ -85,8 +88,8 @@ abstract class Obstacle extends GameElement {
 
 class CircularObstacle extends Obstacle{
 
-    public CircularObstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
-        super(distInner,distOuter,yCoordinate, xCoordinate);
+    public CircularObstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate, double angle){
+        super(distInner,distOuter,yCoordinate, xCoordinate,angle);
     }
     @Override
     public int collides(Circle ball,int color) {
@@ -183,11 +186,12 @@ class CircularObstacle extends Obstacle{
         this.pink = path;
         this.purple = path2;
         this.obstacle = obstacle;
+        this.obstacle.setRotate(this.angle);
     }
 }
 class SquareObstacle extends Obstacle{
-    public SquareObstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate){
-        super(distInner,distOuter,yCoordinate, xCoordinate);
+    public SquareObstacle(double distInner, double distOuter, double yCoordinate, double xCoordinate, double angle){
+        super(distInner,distOuter,yCoordinate, xCoordinate,angle);
     }
     @Override
     public int  collides(Circle ball,int color) {
@@ -286,12 +290,14 @@ class SquareObstacle extends Obstacle{
         this.pink = path;
         this.purple = path2;
         this.obstacle = obstacle;
+        this.obstacle.setRotate(this.angle);
     }
 }
 class CrossObstacle extends Obstacle{
-    public CrossObstacle(double yCoordinate, double xCoordinate){
+    public CrossObstacle(double yCoordinate, double xCoordinate,double angle){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        this.angle= angle;
     }
     @Override
     public int collides(Circle ball,int color) {
@@ -386,12 +392,13 @@ class CrossObstacle extends Obstacle{
         this.pink = path;
         this.purple = path2;
         this.obstacle = obstacle;
+        this.obstacle.setRotate(this.angle);
     }
 }
 class BowObstacle extends Obstacle{
     protected double height;
-    public BowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height){
-        super(distInner,distOuter,yCoordinate, xCoordinate);
+    public BowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height,double angle){
+        super(distInner,distOuter,yCoordinate, xCoordinate,angle);
         this.height = height;
     }
     @Override
@@ -550,12 +557,13 @@ class BowObstacle extends Obstacle{
         this.pink = path;
         this.purple = path2;
         this.obstacle = obstacle;
+        this.obstacle.setRotate(this.angle);
     }
 }
 class HalfBowObstacle extends Obstacle{
     protected double height;
-    public HalfBowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height){
-        super(distInner,distOuter,yCoordinate, xCoordinate);
+    public HalfBowObstacle(double yCoordinate, double xCoordinate, double distInner, double distOuter, double height,double angle){
+        super(distInner,distOuter,yCoordinate, xCoordinate,angle);
         this.height = height;
     }
     @Override
@@ -698,15 +706,17 @@ class HalfBowObstacle extends Obstacle{
         this.pink = path;
         this.purple = path2;
         this.obstacle = obstacle;
+        this.obstacle.setRotate(this.angle);
     }
 }
 class ThornObstacle extends Obstacle{
     protected double thornLength;
-    public ThornObstacle(double distInner ,double yCoordinate, double xCoordinate, double thornLength){
+    public ThornObstacle(double distInner ,double yCoordinate, double xCoordinate, double thornLength,double angle){
         this.distInner = distInner;
         this.thornLength = thornLength;
         this.yCoordinate = yCoordinate;
         this.xCoordinate = xCoordinate;
+        this.angle = angle;
     }
     @Override
     public int collides(Circle ball,int color) {
@@ -787,5 +797,6 @@ class ThornObstacle extends Obstacle{
         this.pink = path;
         this.purple = path2;
         this.obstacle = obstacle;
+        this.obstacle.setRotate(this.angle);
     }
 }
