@@ -4,21 +4,21 @@ import java.io.Serializable;
 import java.util.*;
 
 public class Player implements Serializable {
-    private int totalStars;
+    private int totalStars, currentBall;
     private final Set<Integer> gameStateIDs;
     private final String playerName;
     private final ArrayList<int[]> highScores;
     private final ArrayList<GameState> savedGames;
-    private final Set<Integer> ballTypes;
+    private final boolean[] ballTypes;
     private GameState currentState;
 
     public Player(String name)  {
-        totalStars = 0;
+        totalStars = currentBall = 0;
         playerName = name;
         gameStateIDs = new HashSet<Integer>();
         highScores = new ArrayList<int[]>();
         savedGames = new ArrayList<GameState>();
-        ballTypes = new HashSet<Integer>();
+        ballTypes = new boolean[5];
         currentState = new GameState();
     }
 
@@ -44,7 +44,7 @@ public class Player implements Serializable {
 
     public ArrayList<int[]> getHighScores() { return highScores; }
 
-    public Set<Integer> getBallTypes() { return ballTypes; }
+    public boolean[] getBallTypes() { return ballTypes; }
 
     public GameState getCurrentState() { return currentState; }
 
@@ -54,11 +54,11 @@ public class Player implements Serializable {
 
     public int getTotalStars() { return totalStars; }
 
-    public void increaseTotalStars(int totalStars) {
-        this.totalStars += totalStars;
-    }
+    public void increaseTotalStars(int add) { this.totalStars += add; }
+    public void decreaseTotalStars(int sub) { this.totalStars -= sub; }
 
-    public Set<Integer> getGameStateIDs() {
-        return gameStateIDs;
-    }
+    public Set<Integer> getGameStateIDs() { return gameStateIDs; }
+
+    public int getCurrentBall() { return currentBall; }
+    public void setCurrentBall(int currentBall) { this.currentBall = currentBall; }
 }
