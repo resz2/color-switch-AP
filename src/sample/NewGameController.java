@@ -20,13 +20,13 @@ public class NewGameController {
     @FXML
     private Line line;
     @FXML
-    private Text frenzyText, gravityText, standardText;
+    private Text frenzyText, standardText;
     @FXML
-    private Circle diffBackIconCircle, gravityCircle, frenzyCircle;
+    private Circle diffBackIconCircle, frenzyCircle;
     @FXML
     private Label easyLabel, mediumLabel, hardLabel;
     @FXML
-    private ImageView diffBackgroundImage, diffBackIcon, easyImage, mediumImage, hardImage, gravityIcon, frenzyIcon;
+    private ImageView diffBackgroundImage, diffBackIcon, easyImage, mediumImage, hardImage, frenzyIcon;
     @FXML
     private AnchorPane newGameBG;
 
@@ -45,11 +45,8 @@ public class NewGameController {
                         hardImage.setOpacity(hardImage.getOpacity()+0.01);
                         diffBackIcon.setOpacity(diffBackIcon.getOpacity()+0.01);
                         diffBackIconCircle.setOpacity(diffBackIconCircle.getOpacity()+0.01);
-                        gravityCircle.setOpacity(gravityCircle.getOpacity()+0.01);
-                        gravityIcon.setOpacity(gravityIcon.getOpacity()+0.01);
                         frenzyCircle.setOpacity(frenzyCircle.getOpacity()+0.01);
                         frenzyIcon.setOpacity(frenzyIcon.getOpacity()+0.01);
-                        gravityText.setOpacity(gravityText.getOpacity()+0.01);
                         frenzyText.setOpacity(frenzyText.getOpacity()+0.01);
                         standardText.setOpacity(standardText.getOpacity()+0.01);
                         line.setOpacity(line.getOpacity()+0.01);
@@ -76,19 +73,6 @@ public class NewGameController {
         Player p = Main.getCurrentPlayer();
         p.setCurrentState(new GameState());
         p.getCurrentState().setMode(1);
-        try {
-            newGameBG.getChildren().clear();
-            p.getCurrentState().newGame(0, newGameBG);
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setModeToGravity() {
-        Player p = Main.getCurrentPlayer();
-        p.setCurrentState(new GameState());
-        p.getCurrentState().setMode(2);
         try {
             newGameBG.getChildren().clear();
             p.getCurrentState().newGame(0, newGameBG);

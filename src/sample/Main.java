@@ -18,7 +18,7 @@ import javafx.util.Duration;
 import java.io.IOException;
 
 public class Main extends Application {
-    Scene scene;
+    private Scene scene;
     private static AudioClip audio;
     private static Database db;
     private static Player currentPlayer;

@@ -67,13 +67,13 @@ public class GameOverController {
         ArrayList<int[]> hs = p.getHighScores();
         GameState state = p.getCurrentState();
         // storing total stars
-        p.increaseTotalStars(state.getNumStarsCollected());
         //storing highscore
         if(state.getMode()==0 && state.getNumStarsCollected()>0){
             if(state.getStateID()==0  || !p.getGameStateIDs().contains(state.getStateID())) {
                 if(state.getStateID()!=0)   {
                     p.getGameStateIDs().add(state.getStateID());
                 }
+                p.increaseTotalStars(state.getNumStarsCollected());
                 int[] triplet = {state.getStateID(),  state.getNumStarsCollected(), state.getDifficulty()};
                 hs.add(triplet);
                 if(hs.size()!=1)    {
@@ -85,6 +85,8 @@ public class GameOverController {
                 for(int[] triplet: p.getHighScores())   {
                     if(state.getStateID()==triplet[0])  {
                         if(state.getNumStarsCollected()>triplet[1]) {
+                            p.decreaseTotalStars(triplet[1]);
+                            p.increaseTotalStars(state.getNumStarsCollected());
                             triplet[1] = state.getNumStarsCollected();
                         }
                         break;
@@ -103,13 +105,13 @@ public class GameOverController {
         ArrayList<int[]> hs = p.getHighScores();
         GameState state = p.getCurrentState();
         // storing total stars
-        p.increaseTotalStars(state.getNumStarsCollected());
         // storing highscore
         if(state.getMode()==0 && state.getNumStarsCollected()>0){
             if(state.getStateID()==0  || !p.getGameStateIDs().contains(state.getStateID())) {
                 if(state.getStateID()!=0)   {
                     p.getGameStateIDs().add(state.getStateID());
                 }
+                p.increaseTotalStars(state.getNumStarsCollected());
                 int[] triplet = {state.getStateID(),  state.getNumStarsCollected(), state.getDifficulty()};
                 hs.add(triplet);
                 if(hs.size()!=1)    {
@@ -121,6 +123,8 @@ public class GameOverController {
                 for(int[] triplet: p.getHighScores())   {
                     if(state.getStateID()==triplet[0])  {
                         if(state.getNumStarsCollected()>triplet[1]) {
+                            p.decreaseTotalStars(triplet[1]);
+                            p.increaseTotalStars(state.getNumStarsCollected());
                             triplet[1] = state.getNumStarsCollected();
                         }
                         break;
