@@ -77,6 +77,7 @@ public class NewGameController {
         p.setCurrentState(new GameState());
         p.getCurrentState().setMode(1);
         try {
+            newGameBG.getChildren().clear();
             p.getCurrentState().newGame(0, newGameBG);
         }
         catch (Exception e) {
@@ -89,6 +90,7 @@ public class NewGameController {
         p.setCurrentState(new GameState());
         p.getCurrentState().setMode(2);
         try {
+            newGameBG.getChildren().clear();
             p.getCurrentState().newGame(0, newGameBG);
         }
         catch (Exception e) {
@@ -101,6 +103,7 @@ public class NewGameController {
         p.setCurrentState(new GameState());
         p.getCurrentState().setMode(0);
         try {
+            newGameBG.getChildren().clear();
             p.getCurrentState().newGame(0, newGameBG);
         }
         catch (Exception e) {
@@ -113,6 +116,7 @@ public class NewGameController {
         p.setCurrentState(new GameState());
         p.getCurrentState().setMode(0);
         try {
+            newGameBG.getChildren().clear();
             p.getCurrentState().newGame(1, newGameBG);
         }
         catch (Exception e) {
@@ -125,6 +129,7 @@ public class NewGameController {
         p.setCurrentState(new GameState());
         p.getCurrentState().setMode(0);
         try {
+            newGameBG.getChildren().clear();
             p.getCurrentState().newGame(2, newGameBG);
         }
         catch (Exception e) {

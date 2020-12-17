@@ -23,19 +23,19 @@ public class Clock extends GameElement {
         this.create();
     }
     public void create() {
-        InputStream stream = this.getClass().getResourceAsStream("/clock.png");
+        InputStream stream = this.getClass().getResourceAsStream("/fast.png");
         Image image = new Image(stream);
         clockBody = new ImageView();
         clockBody.setImage(image);
-        clockBody.setX(this.xCoordinate-20);
-        clockBody.setY(this.yCoordinate-20);
-        clockBody.setFitWidth(40);
+        clockBody.setX(this.xCoordinate-25);
+        clockBody.setY(this.yCoordinate-25);
+        clockBody.setFitWidth(50);
         clockBody.setPreserveRatio(true);
     }
     public void setyCoordinate(double val){
 
         this.clockBody.setLayoutY(this.clockBody.getLayoutY()+val);
-        this.yCoordinate = this.clockBody.getLayoutY();
+        this.yCoordinate += val;
 
     }
     public boolean checkCollision(Circle b){
@@ -54,7 +54,7 @@ public class Clock extends GameElement {
         ArrayList<ImageView> smallClocks = new ArrayList<>();
         InputStream stream = null;
         try {
-            stream = this.getClass().getResourceAsStream("/clock.png");
+            stream = this.getClass().getResourceAsStream("/fast.png");
         } catch (Exception e) {
             e.printStackTrace();
         }

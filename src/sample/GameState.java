@@ -32,38 +32,36 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class GameState implements Serializable, Cloneable {
-    private int mode, difficulty, nextObsIndex, prevObsIndex, newStarPosition, newClockPosition,
-            newObstaclePosition, newColorChangerPosition, numStarsCollected, numRetry;
-    private boolean over, played, keyLock, firstObstacle;
-    private double xVelocity, yVelocity, xVelocityOffset, yVelocityOffset, dist, difficultyOffset;
-    private Obstacle nextObstacle,prevObstacle, newObs;
+    private int mode, difficulty, newClockPosition=0, newObstaclePosition, newColorChangerPosition,
+            numStarsCollected, numRetry, timeLeft;
+    private boolean over, keyLock, firstObstacle;
+    private double xVelocity, yVelocity, xVelocityOffset, yVelocityOffset, difficultyOffset;
+    private Obstacle newObs;
     private Ball ball;
     private Star closestStar;
-    private Clock closestClock;
     private ColorChanger closestColorChanger;
     private ArrayList<Obstacle> circularObstacleArrayList;
     private ArrayList<Star> StarArrayList;
     private ArrayList<ColorChanger> ColorChangerArraylist;
     private ArrayList<Clock> ClockArrayList;
-    private transient Animation.Status moveCamTimelineStatus;
     private transient AudioClip crashSound,starSound,bounceSound,colorSound;
-    private transient static AudioClip audio;
     private transient Label resumeButton, saveButton, homeButton, pauseButton, scoreLabel, restartButton, timeLabel;
     private transient Rectangle overlay;
     private transient Timeline collisionTimeline;
     private transient Pane canvas;
+    private transient GameState gameOverState;
+    private transient Timeline diagonalGravityLeftTimeline,diagonalGravityRightTimeline;
 
 
     public GameState()  {
-        mode = nextObsIndex = prevObsIndex = numStarsCollected = numRetry = difficulty = 0;
-        xVelocity = yVelocity = dist = difficultyOffset = 0;
+        mode = numStarsCollected = numRetry = difficulty = 0;
+        xVelocity = yVelocity = difficultyOffset = 0;
         xVelocityOffset = 0.25;
         yVelocityOffset = 0.35;
-        newStarPosition = -200;
-        newClockPosition = -300;
         newObstaclePosition = -300;
         newColorChangerPosition = -3550;
-        over = played = keyLock =  false;
+        over = keyLock =  false;
+        timeLeft = 20;
         firstObstacle =true;
         resumeButton = new Label();
         saveButton = new Label();
@@ -113,9 +111,6 @@ public class GameState implements Serializable, Cloneable {
         }
     }
 
-    public static void setAudio(AudioClip a){
-        GameState.audio = a;
-    }
     public void createAudioClips(){
         String path = "audio/bounce.mp3";
         bounceSound = new AudioClip(new File(path).toURI().toString());
@@ -163,16 +158,21 @@ public class GameState implements Serializable, Cloneable {
         //Filling color to the label
         scoreLabel.setTextFill(Color.WHITE);
         if (mode == 1) {
-            timeLabel = new Label("15");
-            timeLabel.setContentDisplay(ContentDisplay.CENTER);
-            timeLabel.setTextAlignment(TextAlignment.CENTER);
-            timeLabel.setLayoutY(100);
+            scoreLabel.setLayoutY(75);
+            scoreLabel.setLayoutX(50);
+            timeLabel = new Label(String.valueOf(timeLeft));
+            Image img = new Image("assets/clock.png");
+            ImageView view = new ImageView(img);
+            view.setFitHeight(40);
+            view.setPreserveRatio(true);
+            timeLabel.setGraphic(view);
+            timeLabel.setLayoutY(30);
             timeLabel.setLayoutX(25);
             Font font1 = Font.font("Roboto", FontWeight.BOLD,
                     FontPosture.REGULAR, 25);
             timeLabel.setFont(font1);
             //Filling color to the label
-            timeLabel.setTextFill(Color.RED);
+            timeLabel.setTextFill(Color.LIGHTBLUE);
             canvas.getChildren().add(timeLabel);
         }
         canvas.getChildren().add(scoreLabel);
@@ -277,6 +277,30 @@ public class GameState implements Serializable, Cloneable {
         canvas.getChildren().add(c.colorChangerBody);
         collisionTimeline.play();
     }
+    public void addNewClock(ArrayList<Clock> arr){
+        collisionTimeline.pause();
+        Clock newClock;
+        try {
+            if(newClockPosition%3==1){
+                newClock = new Clock(75,newObstaclePosition+25*difficultyOffset);
+                newClockPosition++;
+            }
+            else if (newClockPosition%3==2){
+                newClock = new Clock(225,newObstaclePosition+25*difficultyOffset);
+                newClockPosition++;
+            }
+            else{
+                newClock = new Clock(375,newObstaclePosition+25*difficultyOffset);
+                newClockPosition++;
+            }
+            arr.add(newClock);
+            canvas.getChildren().add(newClock.clockBody);
+            System.out.println(newClockPosition);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        collisionTimeline.play();
+    }
     public void addNewObstacle(ArrayList<Obstacle> arr,double distanceTravelled){
         if(firstObstacle){
             firstObstacle=false;
@@ -325,6 +349,10 @@ public class GameState implements Serializable, Cloneable {
             this.difficultyOffset = 1;
         }
 
+        if(mode==1) {
+            numRetry = -1;
+        }
+
         canvas = new Pane();
 
         // Setting up Game Screen
@@ -364,29 +392,42 @@ public class GameState implements Serializable, Cloneable {
 
         // adding initial 3 stars and colorchangers
         for(int i=0;i<3;i++){
-            Star star = new Star(225,300-500*(i));
-            StarArrayList.add(star);
+            if(mode!=1){
+                Star star = new Star(225,300-500*(i));
+                StarArrayList.add(star);
+                canvas.getChildren().add(StarArrayList.get(i).starBody);
+            }
+
             if(i<2){
                 ColorChanger c = new ColorChanger(225,100-1200*(i));
                 ColorChangerArraylist.add(c);
                 canvas.getChildren().add(ColorChangerArraylist.get(i).colorChangerBody);
             }
 
-            canvas.getChildren().add(StarArrayList.get(i).starBody);
             if(mode==1){
-                Clock clock = new Clock(randGen.nextInt(390)+30,400-300*(i));
+                Clock clock;
+                if(newClockPosition%3==0){
+                    clock = new Clock(225,300-500*(i));
+                    newClockPosition++;
+                }
+                else if (newClockPosition%3==1){
+                    clock = new Clock(75,300-500*(i));
+                    newClockPosition++;
+                }
+                else{
+                    clock = new Clock(375,300-500*(i));
+                    newClockPosition++;
+                }
                 ClockArrayList.add(clock);
                 canvas.getChildren().add(ClockArrayList.get(i).clockBody);
             }
         }
 
-        nextObstacle = circularObstacleArrayList.get(nextObsIndex);
-        prevObstacle = circularObstacleArrayList.get(prevObsIndex);
-        closestStar = StarArrayList.get(0);
-        closestColorChanger = ColorChangerArraylist.get(0);
-        if(mode==1){
-            closestClock = ClockArrayList.get(0);
+        if(mode !=1){
+            closestStar = StarArrayList.get(0);
+            closestColorChanger = ColorChangerArraylist.get(0);
         }
+
         canvas.getChildren().add(ball.getBallBody());
         runGame(bgPane, canvas);
     }
@@ -414,9 +455,11 @@ public class GameState implements Serializable, Cloneable {
         }
 
         // adding initial 3 stars and colorchangers
-        for(Star s: StarArrayList)  {
-            s.create();
-            canvas.getChildren().add(s.starBody);
+        if(mode!=1){
+            for(Star s: StarArrayList)  {
+                s.create();
+                canvas.getChildren().add(s.starBody);
+            }
         }
         for(ColorChanger c: ColorChangerArraylist)  {
             c.create();
@@ -447,102 +490,104 @@ public class GameState implements Serializable, Cloneable {
 
                                 obstacle.setyCoordinate(-move);
                             }
-                            for (Star star : StarArrayList) {
-                                star.setyCoordinate(-move);
+                            if(mode!=1){
+                                for (Star star : StarArrayList) {
+                                    star.setyCoordinate(-move);
+                                }
+                            }
+                            else{
+                                for(Clock clock: ClockArrayList){
+                                    clock.setyCoordinate(-move);
+                                }
                             }
                             for (ColorChanger colorChanger : ColorChangerArraylist) {
                                 colorChanger.setyCoordinate(-move);
-                            }
-                            for(Clock clock: ClockArrayList){
-                                clock.setyCoordinate(-move);
                             }
                         }
                     }
                 }));
         gravityTimeline.setCycleCount(Timeline.INDEFINITE);
 
-        Timeline diagonalGravityLeftTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
-                new EventHandler<ActionEvent>() {
+        if(mode==1) {
+            diagonalGravityLeftTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
+                    new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent t) {
+                            if (ball.xCoordinate < 10) {
+                                ball.setxCoordinate(450);
+                                xVelocityOffset = -0.25;
+                            } else if (ball.xCoordinate > 440) {
+                                ball.setxCoordinate(0);
+                                xVelocityOffset = 0.25;
+                            }
+                            xVelocity += xVelocityOffset;
+                            yVelocity += yVelocityOffset;
+                            double move = ball.setyCoordinate(yVelocity);
+                            ball.setxCoordinate(xVelocity);
+                            if (move != 0) {
+                                for (Obstacle obstacle : circularObstacleArrayList) {
 
-                    @Override
-                    public void handle(ActionEvent t) {
-                        if(ball.xCoordinate<10){
-                            ball.setxCoordinate(450);
-                            xVelocityOffset=-0.25;
-                        }
-                        else if(ball.xCoordinate>440){
-                            ball.setxCoordinate(0);
-                            xVelocityOffset=0.25;
-                        }
-                        xVelocity+=xVelocityOffset;
-                        yVelocity+=yVelocityOffset;
-                        double move = ball.setyCoordinate(yVelocity);
-                        ball.setxCoordinate(xVelocity);
-                        if(move!=0){
-                            for (Obstacle obstacle : circularObstacleArrayList) {
-
-                                obstacle.setyCoordinate(-move);
-                            }
-                            for (Star star : StarArrayList) {
-                                star.setyCoordinate(-move);
-                            }
-                            for (ColorChanger colorChanger : ColorChangerArraylist) {
-                                colorChanger.setyCoordinate(-move);
-                            }
-                            for (Clock clock : ClockArrayList) {
-                                clock.setyCoordinate(-move);
-                            }
-                        }
-                    }
-                }));
-        diagonalGravityLeftTimeline.setCycleCount(Timeline.INDEFINITE);
-        Timeline diagonalGravityRightTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
-                new EventHandler<ActionEvent>() {
-
-                    @Override
-                    public void handle(ActionEvent t) {
-                        if(ball.xCoordinate<10){
-                            ball.setxCoordinate(450);
-                            xVelocityOffset=-0.25;
-                        }
-                        else if(ball.xCoordinate>440){
-                            ball.setxCoordinate(0);
-                            xVelocityOffset=0.25;
-                        }
-                        xVelocity-=xVelocityOffset;
-                        yVelocity+=yVelocityOffset;
-                        double move = ball.setyCoordinate(yVelocity);
-                        ball.setxCoordinate(xVelocity);
-                        if(move!=0){
-                            for (Obstacle obstacle : circularObstacleArrayList) {
-                                obstacle.setyCoordinate(-move);
-                            }
-                            for (int i=0;i< StarArrayList.size();i++) {
-                                StarArrayList.get(i).setyCoordinate(-move);
-                            }
-                            for (ColorChanger colorChanger : ColorChangerArraylist) {
-                                colorChanger.setyCoordinate(-move);
-
-                            }
-                            for (Clock clock : ClockArrayList) {
-                                clock.setyCoordinate(-move);
+                                    obstacle.setyCoordinate(-move);
+                                }
+                                for (Star star : StarArrayList) {
+                                    star.setyCoordinate(-move);
+                                }
+                                for (ColorChanger colorChanger : ColorChangerArraylist) {
+                                    colorChanger.setyCoordinate(-move);
+                                }
+                                for (Clock clock : ClockArrayList) {
+                                    clock.setyCoordinate(-move);
+                                }
                             }
                         }
-                    }
-                }));
-        diagonalGravityRightTimeline.setCycleCount(Timeline.INDEFINITE);
+                    }));
+            diagonalGravityLeftTimeline.setCycleCount(Timeline.INDEFINITE);
 
-        if(mode==1){
+            diagonalGravityRightTimeline = new Timeline(new KeyFrame(Duration.millis(16.67),
+                    new EventHandler<ActionEvent>() {
 
+                        @Override
+                        public void handle(ActionEvent t) {
+                            if(ball.xCoordinate<10){
+                                ball.setxCoordinate(450);
+                                xVelocityOffset=-0.25;
+                            }
+                            else if(ball.xCoordinate>440){
+                                ball.setxCoordinate(0);
+                                xVelocityOffset=0.25;
+                            }
+                            xVelocity-=xVelocityOffset;
+                            yVelocity+=yVelocityOffset;
+                            double move = ball.setyCoordinate(yVelocity);
+                            ball.setxCoordinate(xVelocity);
+                            if(move!=0){
+                                for (Obstacle obstacle : circularObstacleArrayList) {
+                                    obstacle.setyCoordinate(-move);
+                                }
+                                for (int i=0;i< StarArrayList.size();i++) {
+                                    StarArrayList.get(i).setyCoordinate(-move);
+                                }
+                                for (ColorChanger colorChanger : ColorChangerArraylist) {
+                                    colorChanger.setyCoordinate(-move);
+
+                                }
+                                for (Clock clock : ClockArrayList) {
+                                    clock.setyCoordinate(-move);
+                                }
+                            }
+                        }
+                    }));
+            diagonalGravityRightTimeline.setCycleCount(Timeline.INDEFINITE);
 
             Timeline timer = new Timeline(new KeyFrame(Duration.millis(1000), new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    int timeLeft = Integer.parseInt(timeLabel.getText())-1;
+                    timeLeft = Integer.parseInt(timeLabel.getText())-1;
                     timeLabel.setText(String.valueOf(timeLeft));
                     if(timeLeft==0){
                         try {
-                            gameOver(ball,canvas,gravityTimeline, bgPane);
+                            canvas.getChildren().remove(timeLabel);
+                            gameOver(gravityTimeline, bgPane);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -594,6 +639,7 @@ public class GameState implements Serializable, Cloneable {
 
                 if(mode==1){
                     if (keyEvent.getCode() == KeyCode.W) {
+                        bounceSound.play();
                         diagonalGravityLeftTimeline.pause();
                         diagonalGravityRightTimeline.pause();
                         gravityTimeline.play();
@@ -601,6 +647,7 @@ public class GameState implements Serializable, Cloneable {
 
                     }
                     if (keyEvent.getCode() == KeyCode.A){
+                        bounceSound.play();
                         diagonalGravityLeftTimeline.play();
                         diagonalGravityRightTimeline.pause();
                         gravityTimeline.pause();
@@ -608,6 +655,7 @@ public class GameState implements Serializable, Cloneable {
                         xVelocity=-4;
                     }
                     else if (keyEvent.getCode() ==KeyCode.D){
+                        bounceSound.play();
                         diagonalGravityLeftTimeline.pause();
                         diagonalGravityRightTimeline.play();
                         gravityTimeline.pause();
@@ -627,26 +675,37 @@ public class GameState implements Serializable, Cloneable {
                     public void handle(ActionEvent t) {
                         if(ball.getyCoordinate()>600){
                             try {
-                                gameOver(ball,canvas,gravityTimeline, bgPane);
+                                numRetry = -1;
+                                gameOver(gravityTimeline, bgPane);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                         for(int i=0;i<circularObstacleArrayList.size();i++){
                             int val = circularObstacleArrayList.get(i).collides(ball.getBallBody(),ball.getColor());
-//                            if(val==0 && !over){
-//                                try {
-//                                    over = true;
-//                                    crashSound.play();
-//                                    gameOver(ball,canvas,gravityTimeline, bgPane);
-//                                } catch (Exception e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
+                            if(val==0 && !over){
+                                try {
+                                    gravityTimeline.pause();
+                                    rotateTimeline.pause();
+                                    canvas.removeEventFilter(KeyEvent.KEY_RELEASED,keyReleased);
+                                    canvas.removeEventFilter(KeyEvent.KEY_PRESSED,keyPressed);
+                                    gameOverState = deepClone();
+                                    over = true;
+                                    crashSound.play();
+                                    gameOver(gravityTimeline, bgPane);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
                             if(ball.getDistanceTravelled()>=500){
                                 ball.setNumRoundsTravelled(ball.getNumRoundsTravelled()+1);
                                 addNewObstacle(circularObstacleArrayList,ball.getDistanceTravelled());
-                                addNewStar(StarArrayList);
+                                if(mode!=1){
+                                    addNewStar(StarArrayList);
+                                }
+                                else{
+                                    addNewClock(ClockArrayList);
+                                }
                                 if(ball.getNumRoundsTravelled()%2==0 || ColorChangerArraylist.size()==1){
                                     if(ball.getNumRoundsTravelled()%4==0 &&  difficultyOffset<2.5){
                                         System.out.println("Changing gears");
@@ -658,44 +717,55 @@ public class GameState implements Serializable, Cloneable {
                             }
                         }
                         if(mode==1){
-                            if(closestClock.checkCollision(ball.getBallBody())){
-                                closestClock.showAnimation(canvas);
-                                ClockArrayList.remove(closestClock);
-                                try {
-                                    Clock newClock = new Clock(225,newClockPosition);
-                                    newStarPosition-=300;
-                                    ClockArrayList.add(newClock);
-                                    Platform.runLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            canvas.getChildren().remove(closestClock);
-                                            canvas.getChildren().add(newClock.clockBody);
-                                            timeLabel.setText(String.valueOf(10));
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                            for(int i=0;i<ClockArrayList.size();i++){
+                                if(ClockArrayList.get(i).checkCollision(ball.getBallBody())){
+                                    starSound.play();
+                                    ClockArrayList.get(i).showAnimation(canvas);
+                                    numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
+                                    if(difficultyOffset<=1){
+                                        timeLeft=20;
+                                    }
+                                    else if (difficultyOffset>1 && difficultyOffset<=2){
+                                        timeLeft=15;
+                                    }
+                                    else{
+                                        timeLeft=10;
+                                    }
+                                    timeLabel.setText(String.valueOf(timeLeft));
+                                    canvas.getChildren().remove(ClockArrayList.get(i));
+                                    scoreLabel.setText(String.valueOf(numStarsCollected));
+                                    ClockArrayList.remove(i);
                                 }
-                                closestClock = ClockArrayList.get(0);
+                            }
+                            for(int i=0;i<ColorChangerArraylist.size();i++){
+                                if(ColorChangerArraylist.get(i).checkCollision(ball.getBallBody())){
+                                    colorSound.play();
+                                    int newColor = ColorChangerArraylist.get(i).showAnimation(canvas);
+                                    ball.changeColor(newColor);
+                                    canvas.getChildren().remove(ColorChangerArraylist.get(i));
+                                    ColorChangerArraylist.remove(i);
+                                }
                             }
                         }
-                        if(closestStar.checkCollision(ball.getBallBody())){
+                        if(mode==0){
+                            if(closestStar.checkCollision(ball.getBallBody())){
 
-                            closestStar.showAnimation(canvas);
-                            starSound.play();
-                            StarArrayList.remove(closestStar);
-                            numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
-                            canvas.getChildren().remove(closestStar);
-                            scoreLabel.setText(String.valueOf(numStarsCollected));
-                            closestStar = StarArrayList.get(0);
-                        }
-                        if(closestColorChanger.checkCollision(ball.getBallBody())){
-                            colorSound.play();
-                            int newColor = closestColorChanger.showAnimation(canvas);
-                            ball.changeColor(newColor);
-                            ColorChangerArraylist.remove(closestColorChanger);
-                            canvas.getChildren().remove(closestColorChanger);
-                            closestColorChanger = ColorChangerArraylist.get(0);
+                                closestStar.showAnimation(canvas);
+                                starSound.play();
+                                StarArrayList.remove(closestStar);
+                                numStarsCollected = Integer.parseInt(scoreLabel.getText())+1;
+                                canvas.getChildren().remove(closestStar);
+                                scoreLabel.setText(String.valueOf(numStarsCollected));
+                                closestStar = StarArrayList.get(0);
+                            }
+                            if(closestColorChanger.checkCollision(ball.getBallBody())){
+                                colorSound.play();
+                                int newColor = closestColorChanger.showAnimation(canvas);
+                                ball.changeColor(newColor);
+                                ColorChangerArraylist.remove(closestColorChanger);
+                                canvas.getChildren().remove(closestColorChanger);
+                                closestColorChanger = ColorChangerArraylist.get(0);
+                            }
                         }
                     }
                 }));
@@ -725,12 +795,16 @@ public class GameState implements Serializable, Cloneable {
                             public void handle(ActionEvent t) {
                                 overlay.setOpacity(overlay.getOpacity()+0.009);
                                 resumeButton.setOpacity(resumeButton.getOpacity()+0.01);
-                                resumeButton.setLayoutY(resumeButton.getLayoutY()-2);
                                 restartButton.setOpacity(restartButton.getOpacity()+0.01);
-                                restartButton.setLayoutY(restartButton.getLayoutY()-2);
                                 if(mode==0) {
+                                    resumeButton.setLayoutY(resumeButton.getLayoutY()-2);
+                                    restartButton.setLayoutY(restartButton.getLayoutY()-2);
                                     saveButton.setOpacity(saveButton.getOpacity()+0.01);
                                     saveButton.setLayoutY(saveButton.getLayoutY()-2);
+                                }
+                                else{
+                                    resumeButton.setLayoutY(resumeButton.getLayoutY()-1.5);
+                                    restartButton.setLayoutY(restartButton.getLayoutY()-2.5);
                                 }
                                 homeButton.setOpacity(homeButton.getOpacity()+0.01);
                                 homeButton.setLayoutY(homeButton.getLayoutY()+2);
@@ -792,9 +866,6 @@ public class GameState implements Serializable, Cloneable {
                         canvas.getChildren().remove(overlay);
                         gravityTimeline.play();
                         rotateTimeline.play();
-                        if(moveCamTimelineStatus== Animation.Status.RUNNING){
-                            //moveCameraTimeline.play();
-                        }
 
                     }
                 });
@@ -841,7 +912,7 @@ public class GameState implements Serializable, Cloneable {
         pausePane.getChildren().setAll(pane);
     }
 
-    public void gameOver(Ball ball,Pane canvas,Timeline gravityTimeline, AnchorPane bgPane) throws Exception{
+    public void gameOver(Timeline gravityTimeline, AnchorPane bgPane) throws Exception{
         gravityTimeline.pause();
         collisionTimeline.stop();
         Timeline enlargeTimeline = new Timeline(new KeyFrame(Duration.millis(1),
@@ -914,7 +985,7 @@ public class GameState implements Serializable, Cloneable {
                         smallBalls.add(newCircle);
                         int offset = (i/4)*2;
                         canvas.getChildren().add(newCircle);
-                        Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                        Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(5),
                                 new EventHandler<ActionEvent>() {
                                     int xVelocity = -4 -offset,yVelocity = 3 + offset;
                                     @Override
@@ -940,7 +1011,7 @@ public class GameState implements Serializable, Cloneable {
                                         }
                                     }
                                 }));
-                        moveTimeline.setCycleCount(200);
+                        moveTimeline.setCycleCount(500);
                         moveTimeline.play();
                     }
                     else if (i%4==2){
@@ -952,7 +1023,7 @@ public class GameState implements Serializable, Cloneable {
                         smallBalls.add(newCircle);
                         int offset = (i/4)*2;
                         canvas.getChildren().add(newCircle);
-                        Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                        Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(3),
                                 new EventHandler<ActionEvent>() {
                                     int xVelocity = 4 + offset,yVelocity = -3 + offset;
                                     @Override
@@ -978,11 +1049,11 @@ public class GameState implements Serializable, Cloneable {
                                         }
                                     }
                                 }));
-                        moveTimeline.setCycleCount(200);
+                        moveTimeline.setCycleCount(500);
                         moveTimeline.play();
 
                     }
-                    else if (i%4==3){
+                    else    {
                         Circle newCircle = new Circle();
                         newCircle.setRadius(2+randomGen.nextInt(8));
                         newCircle.setLayoutX(225);
@@ -991,7 +1062,7 @@ public class GameState implements Serializable, Cloneable {
                         smallBalls.add(newCircle);
                         int offset = (i/4)*2;
                         canvas.getChildren().add(newCircle);
-                        Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(2.5),
+                        Timeline moveTimeline = new Timeline(new KeyFrame(Duration.millis(5),
                                 new EventHandler<ActionEvent>() {
                                     int xVelocity = -4 + offset,yVelocity = -3 + offset;
                                     @Override
@@ -1017,7 +1088,7 @@ public class GameState implements Serializable, Cloneable {
                                         }
                                     }
                                 }));
-                        moveTimeline.setCycleCount(200);
+                        moveTimeline.setCycleCount(300);
                         moveTimeline.play();
                         moveTimeline.setOnFinished(new EventHandler<ActionEvent>() {
                             @Override
@@ -1045,6 +1116,18 @@ public class GameState implements Serializable, Cloneable {
     public int getDifficulty() { return difficulty; }
     public int getNumStarsCollected()   { return numStarsCollected; }
     public void decreaseStars() {
-        this.numStarsCollected -= 4;
+        this.numStarsCollected -= 4*numRetry;
+    }
+
+    public int getNumRetry() {
+        return numRetry;
+    }
+
+    public void incrementNumRetry() {
+        this.numRetry += 1;
+    }
+
+    public GameState getGameOverState() {
+        return gameOverState;
     }
 }

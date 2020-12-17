@@ -2,7 +2,11 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
@@ -11,13 +15,29 @@ import java.util.Comparator;
 
 public class GameOverController {
     @FXML
-    private Text scoreText;
+    private Label continueLabel;
+    @FXML
+    private ImageView continueText, continueStar;
+    @FXML
+    private Text scoreText, continueCost;
     @FXML
     private AnchorPane gameOverBG;
 
     @FXML
     public void initialize() {
-        scoreText.setText(String.valueOf(Main.getCurrentPlayer().getCurrentState().getNumStarsCollected()));
+        GameState state = Main.getCurrentPlayer().getCurrentState();
+        scoreText.setText(String.valueOf(state.getNumStarsCollected()));
+        if(state.getNumRetry()<0)   {
+            continueCost.setDisable(true);
+            continueLabel.setDisable(true);
+            continueStar.setDisable(true);
+            continueStar.setOpacity(0.5);
+            continueText.setDisable(true);
+            continueText.setOpacity(0.5);
+        }
+        else    {
+            continueCost.setText(String.valueOf(-(state.getNumRetry()+1)*4));
+        }
 
 //        Timeline enterTimeline = new Timeline(new KeyFrame(Duration.millis(5),
 //                new EventHandler<ActionEvent>() {
@@ -47,7 +67,7 @@ public class GameOverController {
         GameState state = Main.getCurrentPlayer().getCurrentState();
         // storing total stars
         Main.getCurrentPlayer().increaseTotalStars(state.getNumStarsCollected());
-        if(Main.getCurrentPlayer().getCurrentState().getMode()==0) {
+        if(state.getMode()==0 && state.getNumStarsCollected()>0) {
             int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
             hs.add(pair);
             if(hs.size()!=1)    {
@@ -66,7 +86,7 @@ public class GameOverController {
         GameState state = Main.getCurrentPlayer().getCurrentState();
         // storing total stars
         Main.getCurrentPlayer().increaseTotalStars(state.getNumStarsCollected());
-        if(Main.getCurrentPlayer().getCurrentState().getMode()==0){
+        if(state.getMode()==0 && state.getNumStarsCollected()>0){
             int[] pair = {state.getNumStarsCollected(), state.getDifficulty()};
             hs.add(pair);
             if(hs.size()!=1)    {
@@ -80,16 +100,44 @@ public class GameOverController {
         gameOverBG.getChildren().setAll(pane);
     }
 
-    public void continueGame() {
-        System.out.println("Reviving now :)");
-        // uncomment after revive implemented
-        //Main.getCurrentPlayer().getCurrentState().decreaseStars();
-        revive();
+    public void continueGame() throws Exception {
+        GameState state;
+        try {
+            state = revive();
+        }
+        catch (CannotContinueException e) {
+            // cannot continue popup
+            AnchorPane pane = FXMLLoader.load(getClass().getResource("cannotContinueScreen.fxml"));
+            gameOverBG.getChildren().setAll(pane);
+            return;
+        }
+        if(state!=null) {
+            try {
+                System.out.println("Reviving now :)");
+                Main.getCurrentPlayer().setCurrentState(state);
+                gameOverBG.getChildren().clear();
+                // setting background to black
+                Rectangle background = new Rectangle(0, 0, 450, 600);
+                background.setFill(Color.BLACK);
+                gameOverBG.getChildren().add(background);
+                state.loadGame(gameOverBG);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public void revive() {
-        // not sure how
-        // newGameBG.getChildren().setAll(Main.getCurrentPlayer().getCurrentState().getGameOverCanvas());
+    public GameState revive() throws CannotContinueException {
+        GameState state = Main.getCurrentPlayer().getCurrentState().getGameOverState();
+        if(state.getNumStarsCollected()<(state.getNumRetry()+1)*4)  {
+            throw new CannotContinueException("not enough stars");
+        }
+        else    {
+            state.incrementNumRetry();
+            state.decreaseStars();
+            return state;
+        }
     }
 
     static class hsComparator implements Comparator<int[]> {
