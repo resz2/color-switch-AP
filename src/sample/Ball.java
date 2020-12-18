@@ -9,6 +9,7 @@ public class Ball {
     protected Color ballColor;
     int color;
     double distanceTravelled;
+    int numRoundsTravelled=0;
     protected Circle ballBody;
     public  Ball(double xCoordinate, double yCoordinate, int color){
 

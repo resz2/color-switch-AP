@@ -56,7 +56,7 @@ abstract class Obstacle {
                 }
                 return 2;
             }
-            case 3 -> {
+            case 3  -> {
                 if (Shape.intersect(ball, yellow).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, pink).getBoundsInLocal().getWidth() != -1 || Shape.intersect(ball, blue).getBoundsInLocal().getWidth() != -1) {
                     return 0;
                 } else if (Shape.intersect(ball, purple).getBoundsInLocal().getWidth() != -1) {
@@ -598,7 +598,7 @@ class HalfBowObstacle extends Obstacle{
         path.getElements().add(line2);
         path.getElements().add(line3);
         path.getElements().add(line4);
-
+        path.setStroke(Color.WHITE);
 
         obstacle.getChildren().add(path);
         Path path2 = new Path();
@@ -631,12 +631,10 @@ class HalfBowObstacle extends Obstacle{
         path2.getElements().add(line3);
         path2.getElements().add(line4);
 
-
         obstacle.getChildren().add(path2);
 
         Path path3 = new Path();
         path3.setFill(Color.web("#fae100"));
-        path.setStroke(Color.RED);
         path3.setFillRule(FillRule.EVEN_ODD);
         moveTo = new MoveTo();
         moveTo.setX(this.xCoordinate-this.distOuter);
@@ -655,7 +653,7 @@ class HalfBowObstacle extends Obstacle{
         line3.setY(this.yCoordinate);
 
         line4 = new LineTo();
-        line4.setX(this.xCoordinate+this.distOuter);
+        line4.setX(this.xCoordinate-this.distOuter);
         line4.setY(this.yCoordinate);
 
 

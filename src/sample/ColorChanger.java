@@ -115,29 +115,15 @@ public class ColorChanger {
         fadeTimeline.setCycleCount(100);
         fadeTimeline.play();
         Random randomGen = new Random();
-        int newColor = 3;
+        int newColor = randomGen.nextInt(4);
         ArrayList<ImageView> smallStars = new ArrayList<>();
-        InputStream stream = null;
-        try {
-            switch(newColor){
-                case 0:
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\shutter_blue.png");
-                    break;
-                case 1:
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\shutter_yellow.png");
-                    break;
-                case 2:
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\shutter_pink.png");
-                    break;
-                case 3:
-                    stream = new FileInputStream("C:\\Users\\SAATVIK\\Desktop\\Semester3\\AP\\ColorSwitch\\color-switch-AP\\src\\assets\\shutter_purple.png");
-                    break;
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        Image image = new Image("assets/shutter_blue.png");
+        switch (newColor) {
+            case 0 -> image = new Image("assets/shutter_blue.png");
+            case 1 -> image = new Image("assets/shutter_yellow.png");
+            case 2 -> image = new Image("assets/shutter_pink.png");
+            case 3 -> image = new Image("assets/shutter_purple.png");
         }
-        Image image = new Image(stream);
         ImageView confettiBody = new ImageView();
         confettiBody.setImage(image);
         confettiBody.setPreserveRatio(true);
