@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane fx:id="infoBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: #272727;"
+            xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="sample.InfoScreenController">
+   <ImageView fitHeight="600.0" fitWidth="450.0" onMouseClicked="#goBack" opacity="0.19" pickOnBounds="true">
+      <Image url="@../assets/titlebg.jpg"/>
+   </ImageView>
+   <Label alignment="CENTER" layoutX="78.0" layoutY="113.0" prefHeight="374.0" prefWidth="293.0"
+          style="-fx-background-color: #272727; -fx-border-color: white; -fx-border-radius: 20; -fx-border-width: 5; -fx-border-insets: -6;"
+          text="Saatvik Bhatnagar&#10;Aryan GD Singh&#10;&#10;Contact us -" textAlignment="CENTER" textFill="WHITE">
+      <font>
+         <Font name="Calibri" size="24.0"/>
+      </font>
+   </Label>
+   <Circle fill="WHITE" layoutX="225.0" layoutY="561.0" onMouseClicked="#goBack" radius="25.0" stroke="BLACK"
+           strokeType="INSIDE">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+   </Circle>
+   <ImageView fitHeight="46.0" fitWidth="50.0" layoutX="202.0" layoutY="538.0" onMouseClicked="#goBack"
+              pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+      <Image url="@../assets/back.png"/>
+   </ImageView>
+   <Text fill="WHITE" layoutX="108.0" layoutY="183.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Produced By"
+         textAlignment="CENTER" wrappingWidth="234.13673400878906">
+      <font>
+         <Font name="Calibri" size="36.0"/>
+      </font>
+   </Text>
+   <ImageView fitHeight="36.0" fitWidth="35.0" layoutX="108.0" layoutY="426.0" onMouseClicked="#linkedinOne"
+              pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+      <Image url="@../assets/linkedin.png"/>
+   </ImageView>
+   <ImageView fitHeight="36.0" fitWidth="35.0" layoutX="307.0" layoutY="426.0" onMouseClicked="#linkedinTwo"
+              pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+      <Image url="@../assets/linkedin.png"/>
+   </ImageView>
+   <ImageView fitHeight="36.0" fitWidth="35.0" layoutX="159.0" layoutY="426.0" onMouseClicked="#githubOne"
+              pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+      <Image url="@../assets/github.png"/>
+   </ImageView>
+   <ImageView fitHeight="36.0" fitWidth="35.0" layoutX="255.0" layoutY="426.0" onMouseClicked="#githubTwo"
+              pickOnBounds="true" preserveRatio="true">
+      <cursor>
+         <Cursor fx:constant="HAND"/>
+      </cursor>
+      <Image url="@../assets/github.png"/>
+   </ImageView>
+   <Line endX="100.0" layoutX="224.0" layoutY="379.0" startX="-100.0" stroke="#7e7e7e"/>
+   <Text fill="WHITE" layoutX="100.0" layoutY="411.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Saatvik"
+         textAlignment="CENTER" wrappingWidth="105.4700927734375">
+      <font>
+         <Font name="Calibri" size="18.0"/>
+      </font>
+   </Text>
+   <Text fill="WHITE" layoutX="245.0" layoutY="411.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Aryan"
+         textAlignment="CENTER" wrappingWidth="105.4700927734375">
+      <font>
+         <Font name="Calibri" size="18.0"/>
+      </font>
+   </Text>
+</AnchorPane>
