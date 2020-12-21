@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+
+<AnchorPane fx:id="highScoreBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.HighScoreController">
+    <ImageView fx:id="background" fitHeight="600.0" fitWidth="450.0" opacity="0" pickOnBounds="true">
+        <Image url="@../assets/stripes.jpg"/>
+    </ImageView>
+    <ImageView fx:id="highScoreBanner" opacity="0" fitHeight="95" fitWidth="440" layoutX="6.0" layoutY="-86.0"
+               pickOnBounds="true" style="-fx-background-color: transparent">
+        <Image url="@../assets/redbanner.jpg"/>
+    </ImageView>
+    <ImageView fx:id="highScoreHeading" opacity="0" fitHeight="35.0" fitWidth="241.0" layoutX="104.0" layoutY="-71.0"
+               pickOnBounds="true">
+        <Image url="@../assets/highscores.jpg"/>
+    </ImageView>
+
+
+
+    <AnchorPane>
+        <ImageView fx:id="starImage" opacity="0" fitHeight="35.0" fitWidth="29.0" layoutX="100.0" layoutY="150.0"
+                   pickOnBounds="true" preserveRatio="true">
+            <Image url="@../assets/star.png"/>
+        </ImageView>
+        <ImageView fx:id="difficultyImage" opacity="0" fitHeight="20.0" fitWidth="109.0" layoutX="230.0" layoutY="160.0"
+                   pickOnBounds="true" preserveRatio="true">
+            <Image url="@../assets/difficulty.png"/>
+        </ImageView>
+        <ListView fx:id="highScoreList" editable="true" opacity="0" fixedCellSize="45.0" layoutX="52.0" layoutY="132.0" prefHeight="367.0" prefWidth="345.0" style="-fx-border-color: white; -fx-background-color: transparent; -fx-border-radius: 40; -fx-border-width: 3;" styleClass="list-cell" stylesheets="@highScores.css" AnchorPane.bottomAnchor="101.0" AnchorPane.leftAnchor="52.0" AnchorPane.rightAnchor="53.0" AnchorPane.topAnchor="132.0">
+            <padding>
+                <Insets bottom="40.0" left="20.0" right="20.0" top="60.0" />
+            </padding>
+        </ListView>
+    </AnchorPane>
+
+    <Circle fx:id="backCircle" centerX="422.0" centerY="540.0" fill="WHITE" layoutX="3.0" layoutY="10.0" onMouseClicked="#goBack" radius="24.0" stroke="BLACK" strokeType="INSIDE">
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor></Circle>
+    <ImageView fx:id="backIcon" fitHeight="47.0" fitWidth="53.0" layoutX="402.0" layoutY="526.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../assets/back.png" />
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </ImageView>
+
+</AnchorPane>
