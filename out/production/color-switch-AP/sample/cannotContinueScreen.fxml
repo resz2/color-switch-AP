@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="cantBG" prefHeight="600.0" prefWidth="450.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.CannotContinueController">
+    <ImageView fitHeight="150.0" fitWidth="150.0" layoutX="150.0" layoutY="14.0" pickOnBounds="true">
+        <Image url="@../assets/game-over.png" />
+    </ImageView>
+    <ImageView fitHeight="77.0" fitWidth="85.0" layoutX="30.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../assets/skull.png" />
+    </ImageView>
+    <ImageView fitHeight="77.0" fitWidth="85.0" layoutX="335.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../assets/skull.png" />
+    </ImageView>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#b46f00" height="60.0" layoutY="180.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="450.0" />
+    <ImageView fitHeight="60.0" fitWidth="160.0" layoutX="146.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
+        <Image url="@../assets/score.png" />
+    </ImageView>
+    <Text fill="WHITE" layoutX="215.0" layoutY="280.0" strokeType="OUTSIDE" strokeWidth="0.0" text="7">
+        <font>
+          <Font size="36.0" />
+        </font>
+    </Text>
+    <Circle centerX="215.0" centerY="537.0" fill="WHITE" layoutX="10.0" layoutY="17.0" radius="24.0" stroke="BLACK" strokeType="INSIDE">
+        <cursor>
+          <Cursor fx:constant="HAND" />
+        </cursor>
+    </Circle>
+    <ImageView fitHeight="47.0" fitWidth="53.0" layoutX="202.0" layoutY="530.0" pickOnBounds="true" preserveRatio="true">
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <Image url="@../assets/back.png" />
+    </ImageView>
+    <Label alignment="CENTER" layoutX="110.0" layoutY="329.0" prefHeight="64.0" prefWidth="232.0" style="-fx-border-color: white; -fx-border-width: 5; -fx-border-radius: 15;" textFill="WHITE">
+        <font>
+          <Font name="Lucida Sans Unicode" size="20.0" />
+        </font>
+        <cursor>
+          <Cursor fx:constant="HAND" />
+        </cursor>
+    </Label>
+    <ImageView fitHeight="25.0" fitWidth="138.0" layoutX="136.0" layoutY="346.0" pickOnBounds="true">
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <Image url="@../assets/restartText.png" />
+    </ImageView>
+    <ImageView fitHeight="36.0" fitWidth="47.0" layoutX="288.0" layoutY="343.0" pickOnBounds="true" preserveRatio="true">
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <Image url="@../assets/restart2.png" />
+    </ImageView>
+    <Label alignment="CENTER" layoutX="110.0" layoutY="420.0" prefHeight="64.0" prefWidth="232.0" style="-fx-border-color: white; -fx-border-width: 5; -fx-border-radius: 15;" textFill="WHITE">
+        <font>
+          <Font name="Lucida Sans Unicode" size="20.0" />
+        </font>
+        <cursor>
+          <Cursor fx:constant="HAND" />
+        </cursor>
+    </Label>
+    <ImageView fitHeight="27.0" fitWidth="138.0" layoutX="135.0" layoutY="435.0" pickOnBounds="true">
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <Image url="@../assets/continue.png" />
+    </ImageView>
+    <ImageView fitHeight="27.0" fitWidth="30.0" layoutX="295.0" layoutY="430.0" pickOnBounds="true" preserveRatio="true">
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <Image url="@../assets/star.png" />
+    </ImageView>
+    <Text fill="WHITE" layoutX="299.0" layoutY="472.0" strokeType="OUTSIDE" strokeWidth="0.0" text="---" wrappingWidth="19.406250000000114">
+        <font>
+          <Font size="14.0" />
+        </font>
+    </Text>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" height="600.0" onMouseClicked="#goBack" opacity="0.8" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="450.0" />
+    <Label alignment="CENTER" layoutX="110.0" layoutY="195.0" prefHeight="150.0" prefWidth="230.0" style="-fx-background-color: #272727; -fx-border-color: white; -fx-border-radius: 10; -fx-border-insets: -6; -fx-border-width: 5;" text="Not enough stars" textFill="WHITE">
+        <font>
+          <Font size="25.0" />
+        </font>
+    </Label>
+    <Circle centerX="215.0" centerY="537.0" layoutX="127.0" layoutY="-342.0" onMouseClicked="#goBack" radius="24.0" stroke="WHITE" strokeType="INSIDE">
+        <cursor>
+          <Cursor fx:constant="HAND" />
+        </cursor>
+    </Circle>
+    <ImageView fitHeight="60.0" fitWidth="48.0" layoutX="318.0" layoutY="171.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+        <Image url="@../assets/cross.png" />
+    </ImageView>
+</AnchorPane>
