@@ -10,9 +10,9 @@
 
 ### Video
 
-<a href="(https://www.youtube.com/watch?v=eKY_8clqa_s&feature=youtu.be">
-  <img src="/Gameplay/thumbnail.png" height="200" width="auto" />
-</a>
+ 
+[<img src="/Gameplay/thumbnail.png" height="250" width="auto">](https://www.youtube.com/watch?v=eKY_8clqa_s&feature=youtu.be)
+
 
 ## Screens
 
