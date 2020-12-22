@@ -18,15 +18,15 @@
 
 Title Screen            |  Main Menu |  Difficulty Selection                    | In game
 :-------------------------:|:------------------------:|:------------------------:|:------------------------:
-<img src="/Gameplay/gameplay12.png" height="275" width="auto" />  |  <img src="/Gameplay/gameplay9.png" height="275" width="auto" /> | <img src="/Gameplay/gameplay4.png" height="275" width="auto" /> | <img src="/Gameplay/gameplay1.png" height="275" width="auto" />
+<img src="/Gameplay/gameplay12.png" height="250" width="auto" />  |  <img src="/Gameplay/gameplay9.png" height="250" width="auto" /> | <img src="/Gameplay/gameplay4.png" height="250" width="auto" /> | <img src="/Gameplay/gameplay1.png" height="250" width="auto" />
 
 Puase Screen            |  Game Over |   Frenzy                 | Load Games
 :-------------------------:|:------------------------:|:------------------------:|:------------------------:
-<img src="/Gameplay/gameplay2.png" height="300" width="auto" />  |  <img src="/Gameplay/gameplay5.png" height="300" width="auto" /> | <img src="/Gameplay/gameplay8.png" height="300" width="auto" /> | <img src="/Gameplay/gameplay6.png" height="300" width="auto" />
+<img src="/Gameplay/gameplay2.png" height="260" width="auto" />  |  <img src="/Gameplay/gameplay5.png" height="260" width="auto" /> | <img src="/Gameplay/gameplay8.png" height="260" width="auto" /> | <img src="/Gameplay/gameplay6.png" height="260" width="auto" />
 
 High Scores            |  Add Player |   Shop                | Info Screen
 :-------------------------:|:------------------------:|:------------------------:|:------------------------:
-<img src="/Gameplay/gameplay7.png" height="275" width="auto" />  |  <img src="/Gameplay/gameplay10.png" height="275" width="auto" /> | <img src="/Gameplay/gameplay3.png" height="275" width="auto" /> | <img src="/Gameplay/gameplay11.png" height="275" width="auto" />
+<img src="/Gameplay/gameplay7.png" height="250" width="auto" />  |  <img src="/Gameplay/gameplay10.png" height="250" width="auto" /> | <img src="/Gameplay/gameplay3.png" height="250" width="auto" /> | <img src="/Gameplay/gameplay11.png" height="250" width="auto" />
 
 
 ## Highlights
