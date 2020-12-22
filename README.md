@@ -3,7 +3,7 @@
 
 ## Stack Used: JavaFX, FXML, CSS
 
-### This is our major project for the Advanced Programming Course (CSE201)
+### This is our(Saatvik & Aryan) major project for the Advanced Programming Course (CSE201)
 
 
 ## Gameplay
