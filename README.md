@@ -32,12 +32,12 @@ High Scores            |  Add Player |   Shop                | Info Screen
 ## Highlights
 <details>
   <summary markdown="span">Save a game</summary>
-  <blockquote>This feature is implemented using serialization and de-serialization of the game state object and specifies the number of stars and the difficulty of the game saved</blockquote>
+  <blockquote>This feature is implemented using serialization and de-serialization of the GameState object and specifies the number of stars and the difficulty of the game saved</blockquote>
 </details>
 <details>
   <summary markdown="span">Multiple Players can play</summary>
   
-  <blockquote>This feature ensures isolation of each player by maintaing different arraylist of the saved games, high scores and total stars for each player</blockquote>
+  <blockquote>This feature ensures isolation of each player by maintaining different arraylist of the saved games, high scores and total stars for each player</blockquote>
   
 </details>
 <details>
@@ -46,11 +46,11 @@ High Scores            |  Add Player |   Shop                | Info Screen
 </details>
 <details>
   <summary markdown="span">Frenzy Mode</summary>
-  <blockquote>Play the other game mode which pts you against time and allows you to move diagonally as well</blockquote>
+  <blockquote>Play the other game mode which puts you against time and allows you to move diagonally as well</blockquote>
 </details>
 <details>
   <summary markdown="span">Personal high score</summary>
-  <blockquote>Each individual's 10 best scores are saved in the gameState object and displayed in the high score section</blockquote>
+  <blockquote>Each individual's 10 best scores are saved in the Player object and displayed in the high score section</blockquote>
 </details>
 <details>
   <summary markdown="span">Choose a difficulty</summary>
